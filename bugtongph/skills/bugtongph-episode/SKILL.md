@@ -35,6 +35,12 @@ an answer. **TOPIC** invents a fresh subject for the run — no database, no rid
 RIDDLE is the default; TOPIC runs only on `.topic` or `.auto topic` / `.auto fresh topic`. A
 plain `.auto` starts the riddle pipeline. See `references/topic.md`.
 
+**RIDDLE is independent content, not a structural lock.** It is the only stage that can be swapped
+against a finished episode: changing the riddle leaves LOCATION, ENVIRONMENT, PROFILE, SCRIPT,
+FRAME, IMAGE, and CLIPS untouched and valid, because none of them hold the riddle's wording — the
+recitation is a beat whose text is read from the current lock at CLIPS. See §6 RIDDLE and
+`references/reroll-and-options.md` §6.
+
 `.vlog` and `.vblog` are accepted **aliases for `.topic`** everywhere it appears — `.vlog`,
 `.vblog`, `.auto vlog`, `.auto fresh vblog`.
 
@@ -244,6 +250,12 @@ Legacy name: this stage was called `pair`; `.pair`/`pair-01` mean `.profile`/`pr
 5 riddles offered from the connected Notion database, or from the bundled `assets/riddles.json`
 when Notion is unavailable. Preserve exact stored wording; keep the answer operator-only. The
 picker serves the selected language (Tagalog default, English, Bisaya).
+
+Changing the riddle **invalidates nothing** — it is independent content. No downstream stage is
+marked void, pending, or invalid, and nothing is regenerated. The recitation's wording is read from
+the current RIDDLE lock when CLIPS assembles the prompt, never from a copy held in the script. The
+swap re-checks the timing arithmetic and answers the integrity question, and reports both. See
+`references/riddle.md` "Changing the riddle" and `references/reroll-and-options.md` §6.
 
 ### TOPIC
 Model-invented, 5 topics offered as `subject — angle`, option 1 `(suggested)` is the model's

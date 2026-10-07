@@ -73,7 +73,12 @@ that steers which riddles are offered, exactly as before (`.riddle dagat`).
 The selected language is episode state: it sets the riddle's wording **and the spoken language of
 the episode**, so the SCRIPT's dialogue is written in the same language the riddle was read in.
 It is preserved through LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS, and
-changing it voids the downstream work like any other upstream lock.
+changing it voids the downstream work like any other structural lock.
+
+**The language is the exception, not the rule.** The riddle's *identity* is independent content, and
+swapping it voids nothing (`reroll-and-options.md` §6). The language is different: it is what the
+episode is spoken in, so changing it after the script is locked does invalidate the script and
+everything built on it.
 
 Pacing: the 1.5–2.2 words/second band in `tagalog-pacing.md` is calibrated for Tagalog. Bisaya
 has similar word length and can use the same band; **English is shorter per word**, so an English

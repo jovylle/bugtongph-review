@@ -107,6 +107,42 @@ A hint steers the candidates: `.riddle dagat` returns riddles that suit that dir
 
 See `reroll-and-options.md` for the blocking question and the return-to-OVERVIEW rule.
 
+## Changing the riddle — nothing downstream is invalidated
+
+The riddle is an **independent content variable**. Swapping it does not invalidate the episode.
+
+```text
+RIDDLE ────────────── independent content: swap freely
+LOCATION ────────────┐
+ENVIRONMENT ─────────┤
+PROFILE ─────────────┤  built once, and they stay
+SCRIPT ──────────────┤  valid across riddle changes
+FRAME ───────────────┤
+IMAGE ───────────────┤
+CLIPS ───────────────┘
+```
+
+Changing the riddle keeps LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS exactly
+as they are. It marks nothing void, pending, or invalid, and it regenerates nothing — not even the
+`REJECTED` pile, which is per stage.
+
+The reason this works is that the script never holds the riddle's words: the recitation is a beat
+whose text is read from the **current** RIDDLE lock when CLIPS assembles the prompt. See `script.md`
+"The riddle is a variable, never a scripted line".
+
+A swap does re-check two things, and reports both in one line — neither one regenerates anything:
+
+1. **Timing arithmetic.** The new riddle is fixed text of a different length. Re-run the count from
+   `tagalog-pacing.md`; if the locked clip count no longer holds it, re-declare the clip count.
+2. **Answer integrity.** The new answer must not already be depicted by what is locked — a prop in
+   frame, a gesture, a lit object, a panel the story no longer justifies. If the built episode would
+   leak or point at the new answer, say so plainly and let the user decide. Never regenerate
+   silently, and never discard the warning.
+
+If a swap conflicts with the locked story that badly, the fix is the user's call and it is a normal
+targeted correction on the stage that owns the problem (`reroll-and-options.md` §6) — not an
+automatic cascade.
+
 ## Riddle and story separation
 
 Never use the hidden answer to construct the story, environment, props, actions, camera emphasis, or other visual clues.

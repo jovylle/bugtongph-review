@@ -45,7 +45,9 @@ TOPIC       ✓ <topic — angle, stated openly>
    for everything else. One 8s clip holds about 11 words, so this is the number that decides
    whether the script is even possible. In the topic pipeline there is no riddle to count, so
    state the full budget the script must **spend** (~11 words for one clip) instead.
-4. **Any pending fix queue**, in upstream-first order.
+4. **Any pending fix queue**, in upstream-first order. A riddle change is never in this queue: it
+   has no dependents and voids nothing — it shows as `~ RIDDLE` alone, with every other stage still
+   `✓` (see `reroll-and-options.md` §6).
 5. **A plain warning when the void set includes IMAGE**: `void set includes IMAGE — one new
    generation after you proceed`.
 

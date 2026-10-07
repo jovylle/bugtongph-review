@@ -263,6 +263,21 @@ pipeline directly, `.auto fresh topic` resets and starts one. `.vlog` and `.vblo
 for `.topic`. Riddle and topic are the two first stages — a single episode uses exactly one of
 them.
 
+### Riddles are interchangeable
+
+The riddle is **independent content**. Swap it against a finished episode and nothing else
+changes: LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS stay locked and valid,
+and nothing is regenerated. That works because the script never holds the riddle's words — the
+recitation is a beat whose text comes from the current riddle whenever the clip prompts are built.
+
+A swap does tell you two things, without regenerating anything: the new riddle's spoken time
+(re-run the words ÷ rate arithmetic, and the clip count if it no longer fits) and whether the
+new answer is already visible in what is locked, which would be a leak.
+
+Everything else still cascades: changing the location, environment, profile, script, or frame
+voids what was built on it, and changing the riddle's *language* does too, because that changes
+what the episode is spoken in.
+
 Riddle language: `.riddle tagalog` (default), `.riddle english`, `.riddle bisaya`. The language
 sets the riddle's wording and the episode's spoken language.
 

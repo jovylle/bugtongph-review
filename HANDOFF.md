@@ -71,6 +71,12 @@ previously cached copy.
    only — never from added scenery, a new time of day, a prettier restyle of the character or
    material, or "cinematic"/poster framing. Legibility outranks beauty, and the clue rule outranks
    both.
+11. **The riddle is a content variable, not a structural lock.** Changing it voids **nothing**:
+    LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS stay valid and nothing is
+    regenerated. The recitation is a beat whose text is read from the current RIDDLE lock at CLIPS
+    — never copied into a script. A swap re-checks the timing arithmetic and the answer-integrity
+    question and reports both; it never queues as a fix. The episode *language* is still structural
+    and does cascade.
 
 ## Current pipeline
 
@@ -99,6 +105,12 @@ topic:  TOPIC  -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERV
 
 RIDDLE is the default; TOPIC runs only on `.topic` or `.auto topic` / `.auto fresh topic`
 (`.vlog` and `.vblog` are aliases for `.topic`).
+
+RIDDLE is **independent content**: it can be swapped against a finished episode without voiding
+anything downstream, because no later stage holds its wording (the recitation is a beat read from
+the current lock at CLIPS). Everything from LOCATION onward is a structural chain and does cascade
+— see `reroll-and-options.md` §6, and note that the episode *language* is structural even though the
+riddle identity is not.
 
 `.auto` is the unattended mode: takes option 1 at every gate, stops once the image is generated
 and validated. CLIPS runs only on request.

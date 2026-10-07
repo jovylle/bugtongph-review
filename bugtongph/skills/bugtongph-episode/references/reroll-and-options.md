@@ -103,11 +103,18 @@ cannot run dry.
 
 ## 6. Invalidation cascade
 
-An upstream lock change voids everything built on it. Upstream locks are always preserved.
+The pipeline has two kinds of state, and only one of them cascades.
+
+**Structural locks** are built on each other: LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME →
+IMAGE PROMPT → IMAGE → CLIPS. Changing one voids what was built on it.
+
+**The subject is a content variable, not a structural lock.** RIDDLE (and TOPIC in its own
+pipeline) is independent content: it is swapped in and out of a built episode without invalidating
+anything. The video is about the riddle, but the script, panels, image, and clip structure do not
+contain it — see `script.md` "The riddle is a variable, never a scripted line".
 
 ```text
-new riddle      -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
-new topic       -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
+new riddle      -> nothing void. Every stage stays ✓, including CLIPS.
 new location    -> ENVIRONMENT SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new environment -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new profile     -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
@@ -116,8 +123,37 @@ new frame       -> IMAGE-PROMPT IMAGE CLIPS void
 new image       -> CLIPS void
 ```
 
-The first stage is the content pipeline's own — `new riddle` in the riddle pipeline, `new
-topic` in the topic pipeline. Switching pipeline replaces it and voids the same set.
+### Changing the riddle
+
+Replacing the riddle keeps LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE PROMPT, IMAGE,
+and CLIPS exactly as they are:
+
+- do **not** mark any downstream stage `○ void`, `~ changed`, or pending;
+- do **not** regenerate, re-render, or re-plan anything;
+- do **not** queue the change as a fix that voids dependent work — it has no dependents;
+- the clip prompts are **not** stale: the recitation is a beat, and its text is read from the
+  current RIDDLE lock whenever CLIPS assembles the prompt.
+
+The new riddle shows as `~ RIDDLE` on the overview and nothing else changes. Report the swap and
+the two checks below in one line, then stop.
+
+Two things a swap does re-check, and neither regenerates anything:
+
+1. **Timing arithmetic** (`tagalog-pacing.md`). The new riddle is fixed text of a different length,
+   so re-run the words ÷ rate count and report it. If the locked clip count no longer holds it,
+   say so and **re-declare the clip count** — that is arithmetic, not regeneration, and it does not
+   void the script, the frame, or the image.
+2. **Answer integrity** (`riddle.md` §"Changing the riddle"). The new answer must not already be
+   depicted, gestured at, or lit by what is locked. If the built episode would leak it, report the
+   conflict plainly and let the user choose; never silently regenerate, and never silently ignore.
+
+The **episode language** is a structural lock, not part of the riddle variable: changing it changes
+the language the episode is spoken in, so it voids SCRIPT and everything after it as before (see
+`bundled-riddles.md`).
+
+The first stage is the content pipeline's own — `new riddle` in the riddle pipeline, `new topic` in
+the topic pipeline. Switching pipeline replaces the subject as well as the pipeline's rules, and
+still voids the downstream set as before.
 
 Never carry a clip prompt across a new image: the prompt still describes the previous
 picture, and nothing in the output reveals the mismatch.

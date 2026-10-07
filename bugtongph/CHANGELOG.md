@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.10.8 — the riddle is a content variable
+
+Changing the riddle voided the whole episode. The cascade treated the subject as the root of a
+dependency chain, so trying a different bugtong against a finished setup — script, panels, image,
+clips — threw all of it away. The subject is content, not structure: riddles are meant to be
+interchangeable with an existing production setup.
+
+### Changed
+
+- **RIDDLE is independent content.** Changing it marks no downstream stage void, pending, or
+  invalid, regenerates nothing, and never enters the PENDING FIXES queue — it has no dependents.
+  LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS stay `✓`, and a swap shows as
+  `~ RIDDLE` alone. (`reroll-and-options.md` §6, `riddle.md` "Changing the riddle", `SKILL.md` §1
+  and §6 RIDDLE.)
+- **Why it is safe: the script never held the riddle's words.** The recitation is a *beat*, and its
+  text is read from the current RIDDLE lock when CLIPS assembles the prompt. A script that quoted
+  the riddle verbatim would go stale on the first swap, so `script.md` now forbids writing the
+  riddle's wording into a script option, and `clips.md` §11 SUBJECT INTEGRITY names the lock as the
+  only source of the recited text.
+- **A swap still re-checks two things, and reports both** without regenerating anything: the timing
+  arithmetic (the new riddle is fixed text of a different length — re-run words ÷ rate, and
+  re-declare the clip count if the locked one no longer holds it) and answer integrity (the new
+  answer must not already be depicted, gestured at, or lit by what is locked; a conflict is reported
+  for the user to decide, never fixed silently).
+- **The episode language stays a structural lock.** Swapping the riddle voids nothing; changing the
+  *language* changes what the episode is spoken in, so it still voids SCRIPT and everything after
+  it. (`bundled-riddles.md`.)
+- **TOPIC and pipeline switching are unchanged** — a topic is the story rather than a swap-in
+  subject, so `new topic` and a pipeline switch still void downstream. Worth revisiting if the same
+  flexibility is wanted there.
+
 ## 0.10.7 — the place is shown, not just used
 
 The environment existed only as a correctness field: weather, time of day, and a list of physical
