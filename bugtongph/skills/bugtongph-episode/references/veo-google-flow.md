@@ -1064,6 +1064,16 @@ If a panel is a wide shot, preserve its wide composition.
 
 Maintain the environment established by the shot-reference sheet.
 
+The environment is also part of what the audience is here to see. The locked LOCATION and
+ENVIRONMENT name something worth filming — depth layers, silhouette, water holding the light,
+haze between planes, texture the light rakes across — and the clip preserves that and gives it
+room, including in the establishing shot where the characters may be small in frame.
+
+Beauty comes from those locked conditions only. Do not add scenery, effects, weather, or a new
+time of day; do not restyle the characters or the material to make a frame prettier; and never
+light, frame, or centre anything answer-related for a nicer shot. Legibility outranks beauty
+whenever the two conflict.
+
 Use believable location-specific ambience.
 
 Examples:

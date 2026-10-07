@@ -146,6 +146,19 @@ toward key-art. Strips must differ materially in camera position, shot size and 
 a strip that is merely a crop or zoom of another does not count. Thin separators are sheet
 furniture and must never appear in the video. Layout contract: `references/frame.md`.
 
+### The place is shown, not just used
+
+The environment is part of what the episode shows, so it is chosen and lit for how it looks:
+LOCATION options name what the place looks like at its best, ENVIRONMENT options name what the
+light does to it (direction, colour temperature, haze, reflections, where the shadow falls), and
+at least one strip of the sheet gives the place real room, composed for depth and light.
+
+Beauty lives in the environment, never in a restyle. The clip may not add scenery, effects,
+weather, or a new time of day; it may not prettify the frame by changing the character or the
+material; and "cinematic", poster, and comic framing stay banned. Legibility outranks beauty, and
+the clue rule outranks both: nothing answer-related may be the brightest, most central, or most
+lit thing in frame.
+
 ### The sheet is what the video is held to
 
 The video model receives exactly one image — this sheet — and nothing else. From CLIPS onward the

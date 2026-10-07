@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.10.7 — the place is shown, not just used
+
+The environment existed only as a correctness field: weather, time of day, and a list of physical
+features, with no requirement that any of it be worth looking at. The sheet was explicitly
+forbidden from being pretty in a *presentation* sense, and nothing anywhere re-asserted the
+opposite — that the audience is watching a place, and the place has to be beautiful.
+
+### Changed
+
+- **LOCATION options must name what the place looks like at its best** — the specific filmable
+  thing (layered depth, silhouette, water holding the light, a texture the light can model), not
+  adjectives. A place with nothing filmable about it is not offered. (`location.md` "The place is
+  scenery, not a backdrop".)
+- **ENVIRONMENT is the main beauty lever** (`environment.md` "Light is the main beauty lever"):
+  direction, colour temperature, atmosphere/haze, contrast and falloff, reflections and
+  translucency — chosen for what they do to the place. Conditions described only as "warm" or
+  "moody" are not specific enough to render.
+- **Beauty lives in the environment, never in the style** (`frame.md`): the place is beautiful as
+  the locked LOCATION and ENVIRONMENT define it; at least one strip gives the environment real
+  room; beauty may never buy clarity, and "cinematic", poster, and comic framing stay banned. A
+  beautiful place rendered plainly is the target; a beautiful place rendered as a poster is the
+  failure.
+- **The image prompt carries it**: the LOCATION and ENVIRONMENT LOCK clauses now state what the
+  light does to the place and what the place was chosen for, and the PURPOSE clause says the sheet
+  is still rendered beautifully — from locked light, depth, atmosphere, and texture, not from
+  presentation styling.
+- **The clip prompt carries it**: WORLD / ENVIRONMENT LOCK states that the place is shown, not
+  merely inhabited, and CAMERA RULES make the establishing shot the one that gives the place room
+  and depth. The clip must not add scenery, effects, weather, or a new time of day, and must not
+  restyle the character or material to prettify a frame.
+- **The clue rule still outranks beauty**: nothing answer-related may be the brightest, most
+  central, or most lit thing in frame, and a condition set that only works by lighting an
+  answer-related object is discarded however good it looks.
+
 ## 0.10.6 — the sheet is the character authority, and paper is not CGI
 
 A clip came back visibly worse than the sheet it was generated from: papercraft replaced by smooth

@@ -253,9 +253,16 @@ and `.auto topic`. See `references/topic.md`.
 
 ### LOCATION
 Offer 3 places. The place only — no weather, no light, no ambience. Never hint at the answer.
+Each option names what the place looks like at its best, in filmable terms — the environment is
+part of what the episode shows. See `references/location.md` "The place is scenery, not a
+backdrop".
 
 ### ENVIRONMENT
-Offer 3 condition sets: time of day, weather, light quality, atmosphere, ambience. No place.
+Offer 3 condition sets: time of day, weather, light quality and direction, colour temperature,
+atmosphere, ambience. No place. Conditions are the episode's main beauty lever, so they are chosen
+for what they do to the place — what the light rakes across, where depth separates, what reflects.
+Beauty never lights an answer-related object. See `references/environment.md` "Light is the main
+beauty lever".
 
 ### PROFILE
 Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
@@ -284,6 +291,10 @@ different camera position, shot size, and subject emphasis, in a readable shot p
 (wide → medium → tight). Text-only; never request image generation. The layout contract lives in
 `references/frame.md` and is a hard rule, not a creative preference.
 
+The place must also be shown: at least one strip gives the environment real room and is composed
+for the locked light and depth. Beauty comes from the environment — never from restyling the
+character or the material, and never from "cinematic" or poster framing.
+
 ### OVERVIEW
 Show every locked item on one screen with the panel count and its timing implication. This is
 the hub every correction returns to. Plain questions reprint any locked item, read-only;
@@ -310,6 +321,10 @@ sculptures, with smooth CGI / plastic / clay forbidden — and no section may re
 clothing, or material that the sheet already shows. A returned clip that drifts from the sheet is
 a failure, not a take: compare it against the sheet before continuing, and repair it by changing
 only the authority blocks. See `references/clips.md` "Clip acceptance".
+
+The clip also showcases the environment: the establishing shot gives the locked place room, and the
+beauty comes from the locked light, depth, and atmosphere — never from added scenery, a new time of
+day, or a prettier restyle of the character or material.
 
 ## 7. Image-generation response boundary
 

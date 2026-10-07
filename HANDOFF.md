@@ -22,7 +22,7 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.6**.
+- `dev` = all work. Currently checked out, currently **0.10.7**.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
@@ -65,6 +65,12 @@ previously cached copy.
    clay, and airbrushed surfaces forbidden), and no section may restate a face, build, clothing
    construction, or material the sheet already shows. A returned clip is compared against the
    sheet before continuing — see `clips.md` "Clip acceptance".
+10. **The environment is part of what the episode shows.** Locations are chosen for what they look
+   like at their best, conditions are chosen for what the light does to the place, and at least one
+   strip gives the environment real room. Beauty comes from the locked light, depth, and atmosphere
+   only — never from added scenery, a new time of day, a prettier restyle of the character or
+   material, or "cinematic"/poster framing. Legibility outranks beauty, and the clue rule outranks
+   both.
 
 ## Current pipeline
 
