@@ -20,9 +20,16 @@ LOCATION    ✓ <place>
 ENVIRONMENT ✓ <weather, time, ambience>
 PROFILE     ✓ <profile id — characters, style, voices>
 SCRIPT      ✓ <beat summary + spoken duration>
-FRAME       ✓ <panel count> panels — ~<seconds> per shot in an 8s clip
+FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
 
 PENDING FIXES (0)
+```
+
+In a topic-pipeline episode the first line is the invented topic instead, and there is nothing
+to hide:
+
+```text
+TOPIC       ✓ <topic — angle, stated openly>
 ```
 
 `✓` locked, `~` changed this turn, `○` void, `!` blocking.
@@ -31,20 +38,27 @@ PENDING FIXES (0)
 
 1. **Panel count and its timing implication.** For example: `3 panels — about 2.7s per shot
    inside an 8-second clip`. Lite requires 8s for ingredients, so this is the real budget.
-2. **The profile's identity mode**: reference-backed (with the asset name) or AI-invented
-   (text only), because that changes what the image stage can promise.
+2. **The profile's identity mode**: `text` (the written profile holds the character; the default,
+   no setup) or `attached` (the user supplied a turnaround image, giving an exact match), because
+   that changes what the image stage can promise.
 3. **The timing budget**: the riddle's own spoken seconds, the clip count, and the words left
    for everything else. One 8s clip holds about 11 words, so this is the number that decides
-   whether the script is even possible.
+   whether the script is even possible. In the topic pipeline there is no riddle to count, so
+   state the full budget the script must **spend** (~11 words for one clip) instead.
 4. **Any pending fix queue**, in upstream-first order.
 5. **A plain warning when the void set includes IMAGE**: `void set includes IMAGE — one new
    generation after you proceed`.
 
 ## Review
 
-`.review <stage>` reprints one locked item expanded — the full riddle record, the full
-script with dialogue, the full panel list, the locked environment, or the profile. Review is
-read-only: it never changes a lock and never voids anything.
+**Just ask.** `what's the riddle again?`, `show me the script`, `which profile?`, `what's the
+timing?` reprint the locked item expanded — the riddle record, the script with its dialogue, the
+panel list, the environment, or the profile. It is read-only: it never changes a lock and never
+voids anything. At OVERVIEW the answer stays hidden; ask for the answer explicitly and it is
+given as operator-only metadata, never as something the episode may use.
+
+`.review <stage>` is the **legacy alias** for the same thing (`.review riddle`, `.review script`).
+Prefer the plain question; the alias is kept working, not advertised.
 
 ## Exit
 

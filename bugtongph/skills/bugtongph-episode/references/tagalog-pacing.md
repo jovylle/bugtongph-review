@@ -96,10 +96,11 @@ words available = spoken allowance × rate
 **One 8-second clip holds about eleven words of speech.** Eight seconds is tiny; a script is a
 budget problem before it is a writing problem. Never write dialogue first and measure it after.
 
-## Count the riddle first
+## Count the fixed text first
 
-The riddle is fixed text from the Notion record, so its spoken length is not a creative choice.
-Compute it before anything else, at the slow recitation band:
+In the riddle pipeline the riddle is fixed text from the Notion record, so its spoken length is not a creative choice. Compute it before anything else, at the slow recitation band:
+
+**In the topic pipeline there is no fixed text to count** — a topic is not recited, and the whole spoken budget belongs to the script. Skip this table and budget from the script.
 
 | Riddle words | @1.5 w/s | @1.7 w/s |
 | --- | --- | --- |

@@ -2,9 +2,17 @@
 
 ## Absolute source rule
 
-The **only permitted operational source for a bugtong used by bugtongPH is the connected Notion database `bugtongPH Riddle Database`.**
+A bugtong used by bugtongPH comes from exactly one of two fixed sources:
 
-Every new riddle selection must originate from an actual record returned by the connected Notion database. This applies to `.riddle`, `.plot` auto-entry, `.auto`, and `.auto fresh`.
+1. the connected Notion database `bugtongPH Riddle Database` — **preferred**; or
+2. the **bundled set** committed to this repository at `assets/riddles.json` — the fallback,
+   used only when Notion is absent, unauthenticated, or returns nothing eligible.
+
+See `notion-riddle-database.md` and `bundled-riddles.md`.
+
+Every new riddle selection must originate from an actual record returned by the connected Notion
+database, or from an entry actually present in `assets/riddles.json`. This applies to `.riddle`,
+`.plot` auto-entry, `.auto`, and `.auto fresh`.
 
 Do not select, invent, paraphrase, or substitute a riddle from:
 
@@ -17,7 +25,12 @@ Do not select, invent, paraphrase, or substitute a riddle from:
 - arbitrary user-provided text unless that exact text is being explicitly added to the Notion database first;
 - a stale or cached list that has not been confirmed against the connected Notion database.
 
-If the Notion database is unavailable, inaccessible, or does not return a suitable record, stop at RIDDLE and report that the project database is unavailable or no suitable database record exists. Never fall back to another source.
+Both permitted sources are **fixed text**. The bundled set is not an exception to the no-invention
+rule — it is committed content, checked into version control, and the model reproduces it
+verbatim. What the rule forbids is the model *producing* a riddle at runtime.
+
+If Notion is unavailable and `assets/riddles.json` cannot be read either, stop at RIDDLE and
+report that no riddle source is available. Never fall back to another source.
 
 ## Database authority
 
@@ -42,14 +55,15 @@ The database record may itself contain provenance such as an external source URL
 
 When `.riddle` is invoked:
 
-1. Query the connected `bugtongPH Riddle Database`.
-2. Determine applicable constraints.
-3. Find a small batch of eligible unused records, defaulting to 5 when enough records exist.
-4. Display the exact stored Riddle wording from those returned records.
+1. Resolve the source — the connected `bugtongPH Riddle Database` when it is available, otherwise
+   the bundled `assets/riddles.json` (see `bundled-riddles.md`). State which one is in use.
+2. Determine applicable constraints, including the selected language.
+3. Find a small batch of eligible unused riddles, defaulting to 5 when enough exist.
+4. Display the exact stored wording in the selected language.
 5. Display the stored Answer because this is an internal production picker.
 6. Do not choose on the user's behalf.
 7. Wait for explicit selection.
-8. Only then set that exact Notion record as the active RIDDLE state.
+8. Only then set that exact riddle as the active RIDDLE state.
 
 ### Scope of answer visibility
 
@@ -64,13 +78,13 @@ Do not report a riddle as database-backed unless the actual selected record came
 
 ## `.auto` behavior
 
-`.auto` may auto-select a riddle, but the auto-selected riddle must be chosen from a record actually returned by the connected Notion `bugtongPH Riddle Database` during the current new run.
+`.auto` may auto-select a riddle, but the auto-selected riddle must be chosen from an actual record returned by the connected Notion `bugtongPH Riddle Database` during the current new run — or, when that source is unavailable, from an entry actually present in the bundled `assets/riddles.json`.
 
 The answer may be used internally for integrity validation, but it must remain hidden from audience-facing creative stages.
 
 ## `.auto fresh` behavior
 
-`.auto fresh` resets episode-local state and starts immediately. It must perform a fresh Notion riddle query and select a new eligible record from that query. It must not reuse the previous episode's riddle merely because it was already known in the conversation.
+`.auto fresh` resets episode-local state and starts immediately. It must perform a fresh source resolution and select a new eligible riddle from it. It must not reuse the previous episode's riddle merely because it was already known in the conversation.
 
 ## `.auto resume` behavior
 
@@ -89,9 +103,7 @@ eligible unused record. Never re-offer a record already shown in this episode, a
 re-offer one in `REJECTED`. Never edit a record to fix it — a bad recording is a Notion edit,
 not a plugin behaviour.
 
-A hint steers the candidates: `.riddle dagat` returns records that suit that direction. If
-the database has nothing eligible left, report that plainly and stop at RIDDLE; never fall
-back to another source.
+A hint steers the candidates: `.riddle dagat` returns riddles that suit that direction, and a language word (`.riddle bisaya`) sets the render language. If the current source has nothing eligible left, report that plainly and stop at RIDDLE — or, when the source is the bundled set, say it has been exhausted and offer a Notion connection. Never fall back to an invented riddle.
 
 See `reroll-and-options.md` for the blocking question and the return-to-OVERVIEW rule.
 

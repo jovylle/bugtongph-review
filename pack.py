@@ -12,9 +12,17 @@ Outputs into ./dist/:
   bugtongph-dev-<version>.zip    dev,  every command prefixed (.dev-auto, .dev-riddle, ...)
 
 The dev flavor differs only in: plugin name, display name, description banner, README
-banner, and the command prefix inside the skills. This is what lets both be installed at
-once without an ambiguous trigger: the host namespaces skills as <plugin>:<skill>, and only
-one flavor answers to any given command.
+banner, and the command prefix. This is what lets both be installed at once without an
+ambiguous trigger: the host namespaces skills as <plugin>:<skill>, and only one flavor
+answers to any given command.
+
+The prefix is applied to EVERY surface that can carry a live command, not just prose:
+  * skill Markdown (SKILL.md, references/*.md, README.md, CHANGELOG.md);
+  * the skill's frontmatter `description` (that is what routes an invocation);
+  * `skills/*/agents/openai.yaml` -> `default_prompt`;
+  * the manifest `defaultPrompt` entries, which are clickable starter prompts in the host UI.
+Missing any one of these ships a dev build whose own starter buttons fire the *production*
+plugin's commands.
 """
 
 import argparse
@@ -38,7 +46,7 @@ COMMANDS = [
     "image-prompt", "environment", "location", "overview", "profile", "produce",
     "channel", "release", "review", "workflow", "reroll", "riddle", "script",
     "render", "clips", "frame", "image", "again", "other", "drafts", "pipeline",
-    "auto", "redo", "pair", "plot", "fix", "img", "veo",
+    "auto", "redo", "pair", "plot", "fix", "img", "veo", "topic", "vblog", "vlog",
 ]
 COMMAND_RE = re.compile(r"(?<![\w.\-])\.(" + "|".join(COMMANDS) + r")\b")
 
@@ -96,17 +104,28 @@ def build_dev(version: str) -> Path:
                 if iface:
                     iface["displayName"] = iface.get("displayName", "bugtongPH Studio") + DEV_SUFFIX
                     iface["longDescription"] = DEV_BANNER + iface["longDescription"]
+                    # The starter prompts are clickable in the host UI. Left unprefixed they
+                    # would fire the *production* plugin's commands when both are installed.
+                    prompts = iface.get("defaultPrompt")
+                    if isinstance(prompts, list):
+                        prefixed = [COMMAND_RE.sub(r".dev-\1", p) for p in prompts]
+                        if prefixed != prompts:
+                            iface["defaultPrompt"] = prefixed
+                            print(f"    {rel}: defaultPrompt prefixed")
             dump_json(path, data)
 
         # 2. Commands: prefix every bugtong command so prod never answers a dev call.
+        #    Covers .md prose AND agents/*.yaml, whose `default_prompt` is also a live
+        #    command the host can send. Manifests are handled in step 1.
         rewritten = 0
-        for path in sorted(root.rglob("*.md")):
-            text = path.read_text(encoding="utf-8")
-            new, count = COMMAND_RE.subn(r".dev-\1", text)
-            if count:
-                path.write_text(new, encoding="utf-8")
-                rewritten += count
-                print(f"    {path.relative_to(root)}: {count} command(s) prefixed")
+        for pattern in ("*.md", "*.yaml"):
+            for path in sorted(root.rglob(pattern)):
+                text = path.read_text(encoding="utf-8")
+                new, count = COMMAND_RE.subn(r".dev-\1", text)
+                if count:
+                    path.write_text(new, encoding="utf-8")
+                    rewritten += count
+                    print(f"    {path.relative_to(root)}: {count} command(s) prefixed")
 
         # 3. README gets a banner so the flavor is obvious on disk.
         readme = root / "README.md"

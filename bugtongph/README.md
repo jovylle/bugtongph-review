@@ -1,9 +1,34 @@
 # bugtongPH Studio
 
-A ChatGPT/Codex plugin for producing Filipino *bugtong* (riddle) episodes: riddle
-selection from Notion, one locked Character + Art Style + Voice profile per episode, script
-and camera planning, a validated Clip 1 render, and two copy-ready Google Flow / Veo
-prompts.
+A ChatGPT/Codex plugin for producing Filipino video episodes. The subject comes from one of
+two content pipelines — a *bugtong* (riddle) selected from Notion, or a fresh topic invented by
+the model — then one locked Character + Art Style + Voice profile per episode, script and
+camera planning, a validated Clip 1 render, and two copy-ready Google Flow / Veo prompts.
+
+## Try it (30 seconds)
+
+Install the plugin and open a new chat. The composer offers three starters; the first one works
+immediately, with no setup at all:
+
+```text
+.auto - start a bugtong episode. Works with no setup.
+```
+
+`.auto` is the **unattended** path: it preselects every stage — riddle or topic, location,
+environment, profile, script, frame — on the suggested option, prints the trail as it goes, and
+runs straight through to generating the image, without asking at each gate. It stops once the
+image is validated. `.clips` is then one more command.
+
+The stage commands (`.riddle`, `.location`, `.script`, …) are the other mode: each one asks a
+single question and stops, so you can steer any single choice. Reply with the number of the
+option you want (`1`), or `go` to accept the suggested one.
+
+Once that is comfortable:
+
+- `.topic` — no riddle; the AI invents the topic.
+- `.riddle bisaya` — play in Bisaya instead of Tagalog (also `.riddle english`).
+- `.clips` — the two copy-ready Veo prompts, after the image.
+- `.img` — the quick path: one riddle, three scripts, one image, no staging.
 
 ## Install (local, personal marketplace)
 
@@ -35,8 +60,25 @@ to the marketplace root.
 
 ## Requirements
 
-The pipeline is **Notion-only** for riddles. It needs the Notion app connected and
-authorized:
+**Notion is optional.** The riddle source is the connected Notion `bugtongPH Riddle Database`
+when it is available, and the **bundled set** shipped at
+`skills/bugtongph-episode/assets/riddles.json` when it is not. So the plugin works for a fresh
+install with no setup — the bundled set carries the riddles in Tagalog, English, and Bisaya.
+Connect Notion to use your own curated records instead.
+
+**Attaching a turnaround is optional.** Character identity has two modes:
+
+| Mode | How it works |
+| --- | --- |
+| `text` — default | the written profile holds the character. No setup; identity drifts slightly between episodes. |
+| `attached` — opt-in | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+
+The plugin ships `character-turnaround.png` (profile-01) and `mich-turnaround.png`
+(profile-02-mich), but it **cannot attach them for you** — a file path inside a plugin package
+is not an image the session can supply. So the pipeline offers them, and continues in `text`
+mode if you do not attach one. It never blocks waiting for an image.
+
+To use Notion (the preferred source):
 
 - `.app.json` references the registered Notion app by id
   (`asdk_app_69c18c28f1188191bf5b8445c4ab0a2e`), declared once via `apps: "./.app.json"`
@@ -47,8 +89,9 @@ authorized:
 - The target database must be titled exactly `bugtongPH Riddle Database` in the connected
   workspace. See `skills/bugtongph-episode/references/notion-riddle-database.md`.
 
-If the app is not connected, RIDDLE blocks by design — the pipeline never falls back to
-model memory or web search for riddles.
+If Notion is not connected, RIDDLE falls back to the bundled set and says so — it never falls
+back to model memory or web search. Use `.topic` when you want the model to invent the subject
+instead of using any riddle at all.
 
 ## Layout
 
@@ -62,8 +105,8 @@ bugtongph/
 │   ├── bugtongph-episode/
 │   │   ├── SKILL.md
 │   │   ├── agents/openai.yaml
-│   │   ├── references/  # 24 topic files, indexed from SKILL.md §12
-│   │   └── assets/character-turnaround.png
+│   │   ├── references/  # 27 topic files, indexed from SKILL.md §12
+│   │   └── assets/      # character-turnaround.png + mich-turnaround.png (offered for you to attach), riddles.json (bundled fallback set)
 │   └── bugtongph-quick/
 │       ├── SKILL.md     # .img / .veo, no stages or state
 │       └── agents/openai.yaml
@@ -77,13 +120,27 @@ CLIPS`. One riddle at a time (with reroll), three scripts to pick from, one imag
 or two copy-ready Veo prompts. No stages, no checkpoints, no channels, no persisted state.
 See `skills/bugtongph-quick/`.
 
-**Staged** — `.auto`, or the same stages one at a time: `RIDDLE → LOCATION → ENVIRONMENT →
-PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE → CLIPS`. Conversational gates (one
-question, one artifact, stop for approval), locked profiles, a validated ingredient sheet,
-channel and release routing. See `skills/bugtongph-episode/`.
+**Staged** — `.auto`, or the same stages one at a time, in one of two content pipelines:
+`RIDDLE → LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE →
+CLIPS`, or the topic variant `TOPIC → …` with the first stage replaced and everything else
+identical. Conversational gates (one question, one artifact, stop for approval), locked
+profiles, a validated shot-reference sheet, channel and release routing. See
+`skills/bugtongph-episode/`.
 
-Both require the same connected Notion app; the minimal path is not a way around
-Notion, it is a way around the staging machinery.
+### The image is a shot-reference sheet, not a picture
+
+FRAME designs and IMAGE generates a **visual shot-reference sheet**: one landscape canvas of 2–5
+stacked horizontal panoramic strips, each strip a separate camera setup, read top to bottom as a
+shot sequence. Its only job is to be read by Veo when it produces Clip 1.
+
+It is deliberately *not* optimized for cinematic presentation, poster design, or comic-book
+aesthetics — and the word "cinematic" is kept out of the prompt, because it pulls the render
+toward key-art. Strips must differ materially in camera position, shot size and subject emphasis;
+a strip that is merely a crop or zoom of another does not count. Thin separators are sheet
+furniture and must never appear in the video. Layout contract: `references/frame.md`.
+
+Both require the same riddle source. The minimal path is not a way around sourcing, it is a way
+around the staging machinery.
 
 ## Dev flavor
 
@@ -99,6 +156,12 @@ The dev flavor exists so development never touches what is installed for product
 be installed at the same time: the host namespaces skills per plugin
 (`bugtongph:bugtongph-episode` vs `bugtongph-dev:bugtongph-episode`), and because every dev
 command carries the `.dev-` prefix, only one flavor ever answers a given call.
+
+The prefix is applied by `pack.py` to **every surface that can carry a live command**, not just
+prose: skill Markdown, the skill's frontmatter `description` (which is what routes an
+invocation), `skills/*/agents/openai.yaml` → `default_prompt`, and the manifest
+`defaultPrompt` starter prompts. If any of those shipped unprefixed, the dev build's own
+starter buttons would fire the production plugin's commands.
 
 Rules:
 
@@ -129,7 +192,7 @@ python3 pack.py --dev
 git commit -am "what changed"
 git switch main
 git merge --no-ff dev
-git tag -a v0.9.8 -m "bugtongPH Studio 0.9.8"
+git tag -a v0.10.5 -m "bugtongPH Studio 0.10.5"
 git switch dev
 
 # then build and verify the release artifacts
@@ -147,8 +210,20 @@ Minimal: `.img` (`.img reroll`), `.veo` (`.veo 1` / `.veo 2`)
 
 Staged:
 
-`.auto` `.riddle` `.location` `.environment` `.profile` `.script` `.frame` `.overview`
-`.image` `.clips` `.produce` `.channel` `.release` `.review` `.workflow`
+`.auto` `.riddle` `.topic` `.location` `.environment` `.profile` `.script` `.frame` `.overview`
+`.image` `.clips` `.produce` `.channel` `.release` `.workflow`
+
+To look something up you do not need a command — ask in plain words: *what's the riddle again?*,
+*what's the script?*, *which profile did we lock?* The pipeline reprints the locked item without
+changing anything. `.review <stage>` is the legacy alias.
+
+Content pipelines: `.auto riddle` (default) and `.auto topic`; `.topic` enters the topic
+pipeline directly, `.auto fresh topic` resets and starts one. `.vlog` and `.vblog` are aliases
+for `.topic`. Riddle and topic are the two first stages — a single episode uses exactly one of
+them.
+
+Riddle language: `.riddle tagalog` (default), `.riddle english`, `.riddle bisaya`. The language
+sets the riddle's wording and the episode's spoken language.
 
 Corrections work the same at every stage: `.script <hint>`, `.location <hint>`, or just
 repeat the command. Any applied fix returns to the overview and waits.

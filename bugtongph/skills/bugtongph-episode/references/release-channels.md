@@ -21,10 +21,10 @@ WORKFLOW CONTRACT
   workflow-contract-v1 (or a newer explicitly declared contract)
 
 PROFILE
-  profile-01 | profile-02 | ...
+  profile-01 | profile-02-mich | ...
 
 EPISODE
-  riddle + location + environment + profile + script + frame + image + clips
+  subject (riddle or topic) + location + environment + profile + script + frame + image + clips
 ```
 
 Do not treat any one dimension as another.
@@ -69,10 +69,12 @@ Current contract:
 ```text
 workflow-contract-v1
 
-RIDDLE → LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE → CLIPS
+riddle pipeline:  RIDDLE → LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE → CLIPS
+topic  pipeline:  TOPIC  → LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE → CLIPS
 ```
 
-The contract owns the stage boundaries and invariants.
+The contract owns the stage boundaries and invariants. The two pipelines differ only in their
+first stage; every stage from LOCATION onward is shared.
 
 Production and beta always use the exact same implementation snapshot. Development may diverge.
 

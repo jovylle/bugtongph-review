@@ -27,12 +27,13 @@ Nano Banana 2 Lite, Nano Banana 2.1).
 
 1. **Clip 1 is an ingredient generation, so it must be exactly 8 seconds.** "Approximately
    eight seconds" is no longer a preference; a 4s or 6s clip cannot use the image sheet.
-2. **Clip 2 is a text-only Extend of that 8-second clip.** No second image, no panel sheet.
+2. **Clip 2 is a text-only Extend of that 8-second clip.** No second image, no second sheet.
 3. **Lite is the only model this pipeline targets.** Fast cannot extend and Quality cannot
    take ingredients, so either choice breaks one of the two clips.
-4. **Panel count is bounded by the 8-second budget.** A 5-panel sheet splits the clip into
+4. **Panel count is bounded by the 8-second budget.** A 5-strip sheet splits the clip into
    roughly 1.6s per shot including dialogue; 2–3 panels is the sane default and 5 is reserved
-   for very short beats. Panel count is chosen at FRAME.
+   for very short beats. Panel count is chosen at FRAME, and the sheet's layout contract is in
+   `frame.md`.
 5. **One clip duration, one clip length.** Never plan dialogue that needs more than the
    available 8 seconds minus breathing, pauses, and the ending beat. Use 1.5–2.2
    words/second — natural conversational Tagalog (see `tagalog-pacing.md`).

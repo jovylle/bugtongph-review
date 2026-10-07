@@ -22,39 +22,44 @@ voice character.
 
 ```text
 1. profile-01 — Old Man + Kid with blue neck scarf, handcrafted papercraft diorama, warm
-   grandfather voice + bright child voice. (canonical reference image available) (suggested)
-2. AI-invented: Fisherman + his daughter, carved-wood puppet look, gravelly voice + soft
-   voice. (no reference image — described in text only)
-3. AI-invented: Two market vendors, paper-cut shadow style, brisk voices. (no reference
-   image)
+   grandfather voice + bright child voice. (turnaround available to attach) (suggested)
+2. profile-02-mich — Mich, photoreal live-action young woman with a front + side face
+   turnaround, warm young-adult Filipino voice. (turnaround available to attach)
+3. AI-invented: Two market vendors, paper-cut shadow style, brisk voices. (described in
+   text)
 ```
 
 A hint steers the set: `.profile horror` offers profiles that suit that tone. Repeating
 `.profile` rerolls, excluding `REJECTED`.
 
-## Two kinds of profile
+## Identity modes
 
-### 1. Reference-backed
+Every profile locks one identity mode, `text` or `attached` — full contract in
+`reference-binding.md`.
 
-The profile names a canonical visual reference asset. `profile-01` uses
-`assets/character-turnaround.png`, resolved from this skill's directory
-(`skills/bugtongph-episode/assets/character-turnaround.png`).
+- **`text` (default)** — the written profile is the identity authority: characters, art style,
+  material language, scale, clothing, voice. No asset is needed, nothing has to be attached, and
+  the image stage proceeds. Write it precisely enough to be reused. Identity is *held by
+  description*, so faces drift a little between episodes; that is the accepted trade for working
+  with no setup.
+- **`attached` (opt-in)** — the user attaches a turnaround image in the conversation, and that
+  image becomes the identity authority and the reference image input, giving an exact match.
 
-The reference image is the primary identity authority for the image stage. A text
-description is a supporting constraint and must never redesign a character that is visible
-in the reference.
+`profile-01` and `profile-02-mich` each ship a turnaround
+(`assets/character-turnaround.png`, `assets/mich-turnaround.png`). The plugin cannot attach
+those for you — a path inside the package is not an image the session can supply. So the
+turnaround is **offered** to the user to attach, and `text` proceeds if they do not.
 
-### 2. AI-invented, no reference image
+**An invented bundle is never labelled `profile-01`.** `profile-01` is one fixed identity — the
+Old Man + Kid with the blue neck scarf. An invented bundle is offered under its own descriptive
+label (or `profile-XX` when it is being promoted into the catalog). Presenting invented
+characters *as* `profile-01`, or reusing that id for different characters, points the image stage
+at the wrong identity: the script and props describe one set of people while the render produces
+the old man and the kid. The reverse is equally forbidden — never describe `profile-01` as anyone
+other than the old man and the kid.
 
-The profile has **no** reference asset and is defined in text: characters, art style,
-material language, scale, clothing, and voice. Write it precisely enough to be reused — it
-becomes the identity authority by description.
-
-This is the **sanctioned exception** to the image-stage identity gate. The gate blocks generation
-when a profile's canonical reference cannot be bound; for an AI-invented profile there is
-nothing to bind, so the written profile text is the authority and the stage proceeds. Never
-let an invented profile borrow `profile-01`'s turnaround as a shortcut, and never treat it
-as an approximation of an existing profile.
+Never let an invented profile borrow another profile's turnaround as a shortcut, and never treat
+it as an approximation of an existing profile.
 
 ## Commands
 
@@ -79,8 +84,11 @@ Material / rendering language:
   ...
 Scale conventions:
   ...
-Visual reference assets:
-  ... (or: none — described in text only)
+Visual identity mode:
+  text (written description is the authority) | attached (user supplies a turnaround)
+Speaker labels:
+  Character A: LABEL
+  Character B: LABEL
 Voice profiles:
   Character A:
     archetype / apparent age / pitch / texture / accent / energy / rhythm /
@@ -105,9 +113,73 @@ Once locked, the exact profile stays identical through:
 A later stage may not swap identities, style, reference assets, or voices. Changing the
 profile voids SCRIPT, the image prompt, the image, and the clips.
 
+## Speaker labels
+
+Fix one short uppercase label per character at profile lock (`OLD MAN`, `KID`, `MICH`) and use
+that exact label wherever a person is identified — profile, image prompt, script dialogue, and
+clip prompts. The labels are how the video model attaches a line to the right person; never use
+pronouns ("he", "the other one") in their place.
+
+## Catalog
+
+### profile-01 — production default
+
+Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama. Shipped turnaround:
+`assets/character-turnaround.png` (offered to the user to attach). Speaker labels: `OLD MAN`,
+`KID`. Must never be mutated.
+
+### profile-02-mich — permanent
+
+```text
+profile-02-mich
+Characters:
+  Mich — young Filipina woman, late teens / early twenties. Long dark-brown hair with soft
+  warm highlights, worn loose and pushed back off the face. Medium olive-warm skin. Full
+  lips, defined straight brows, dark brown eyes, a small dark beauty mark just above the
+  bridge of the nose. Neutral, calm resting expression.
+Art style:
+  Photorealistic live action. Natural skin texture with visible pores, fine marks, and
+  natural unevenness — never airbrushed, never retouched to a smooth plastic finish.
+Material / rendering language:
+  Real-world photographic realism: soft, even, diffuse light; shallow depth of field; muted
+  natural palette; no stylization, no illustration, no papercraft, no cartoon shading.
+Scale conventions:
+  Human scale, head-and-shoulders framing for the identity match; a single adult woman only.
+Visual identity mode:
+  attached (user attaches assets/mich-turnaround.png) | text (written description only)
+  assets/mich-turnaround.png — front view and right-side profile of the same face, plain
+  grey background, neutral expression, no makeup look. Offered to the user to attach; it is
+  the exact-match identity reference when they do.
+Speaker labels:
+  MICH
+Voice profiles:
+  Mich:
+    archetype: warm young-adult Filipina
+    apparent age: late teens to early twenties
+    pitch: medium, bright but not high
+    texture: clear, lightly breathy, natural
+    accent: Filipino (Manila Tagalog), light code-switching to English
+    energy: calm, conversational, unhurried
+    rhythm: even, with natural pauses
+    articulation: relaxed, natural, non-broadcast
+    emotional range: warm, curious, dry humor
+    pauses and breathing: natural breaths at line ends
+    Filipino delivery: natural conversational Tagalog, 1.5–2.2 words/second
+Status:
+  permanent, reusable — turnaround available to attach
+```
+
+`profile-02-mich` is a **real-person-style photoreal** profile, so its art direction is
+live-action realism, not papercraft. Do not render Mich in the `profile-01` papercraft style,
+and do not carry `profile-01`'s characters into her episodes. Her written description above is
+the default identity authority; the turnaround gives an exact match when the user attaches it.
+
+Mich is a single adult subject. Do not add, merge, or duplicate characters in her profile, and
+do not depict her as a minor.
+
 ## Growing the catalog
 
 `profile-01` is the default and must never be mutated. New profiles are added, not patched
-over: a new character sheet plus art direction plus voice notes becomes `profile-02`,
-`profile-03`, and so on. Episode-local profiles are scoped to their episode and never
+over: a new character sheet plus art direction plus voice notes becomes `profile-03`,
+`profile-04`, and so on. Episode-local profiles are scoped to their episode and never
 promoted silently to the catalog.

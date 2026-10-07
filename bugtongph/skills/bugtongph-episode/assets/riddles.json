@@ -1,0 +1,98 @@
+{
+  "_comment": "Bundled fallback riddles for BugtongPH. Used ONLY when the connected Notion database is unavailable. Every entry is fixed text committed to this repository — never model-generated at runtime. 'verified' means a human has confirmed the wording and the answer against a source. Entries at confidence 'medium' need that check before this plugin is distributed.",
+  "version": 1,
+  "default_language": "tagalog",
+  "languages": ["tagalog", "english", "bisaya"],
+  "riddles": [
+    {
+      "id": "r01",
+      "tagalog": "Maliit na bahay, puno ng patay.",
+      "english": "A tiny house, packed full of the dead.",
+      "bisaya": "Gamay nga balay, puno sa mga patay.",
+      "answer_tagalog": "posporo",
+      "answer_english": "matchbox (matches)",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r02",
+      "tagalog": "Hindi pari, hindi hari, nagdadamit ng sari-sari.",
+      "english": "Not a priest, not a king — yet it wears every kind of thing.",
+      "bisaya": "Dili pari, dili hari, nagsul-ob sa nagkalain-laing butang.",
+      "answer_tagalog": "sampayan",
+      "answer_english": "clothesline",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r03",
+      "tagalog": "Isang balong malalim, punong-puno ng patalim.",
+      "english": "One deep well, brimming with blades.",
+      "bisaya": "Usa ka lawom nga atabay, puno sa mga sundang.",
+      "answer_tagalog": "bibig",
+      "answer_english": "mouth (full of teeth)",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r04",
+      "tagalog": "Heto na si Kaka, bubuka-bukaka.",
+      "english": "Here comes Kaka, legs thrown wide open.",
+      "bisaya": "Ania na si Kaka, nagbuka-bukaka.",
+      "answer_tagalog": "gunting",
+      "answer_english": "scissors",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r05",
+      "tagalog": "Bumili ako ng alipin, mataas pa sa akin.",
+      "english": "I bought a slave that stands taller than I do.",
+      "bisaya": "Nipalit ako ug ulipon, mas taas pa kay kanako.",
+      "answer_tagalog": "sombrero",
+      "answer_english": "hat",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r06",
+      "tagalog": "Nagtago si Pedro, nakalabas ang ulo.",
+      "english": "Pedro went into hiding — with his head left sticking out.",
+      "bisaya": "Nagtago si Pedro, nigawas ang ulo.",
+      "answer_tagalog": "pako",
+      "answer_english": "nail (the kind you hammer)",
+      "confidence": "high",
+      "verified": false
+    },
+    {
+      "id": "r07",
+      "tagalog": "Isang butil ng palay, sakop ang buong bahay.",
+      "english": "One grain of rice, and the whole house is covered.",
+      "bisaya": "Usa ka lugas nga humay, natabunan ang tibuok balay.",
+      "answer_tagalog": "ilaw",
+      "answer_english": "light / lamp",
+      "confidence": "medium",
+      "verified": false
+    },
+    {
+      "id": "r08",
+      "tagalog": "Hindi hayop, hindi tao, nagsasalita.",
+      "english": "Not an animal, not a person — and yet it speaks.",
+      "bisaya": "Dili mananap, dili tawo, nagsulti.",
+      "answer_tagalog": "radyo",
+      "answer_english": "radio",
+      "confidence": "medium",
+      "verified": false
+    },
+    {
+      "id": "r09",
+      "tagalog": "Ako'y lumakad, siya'y lumakad; ako'y tumigil, siya'y tumigil.",
+      "english": "I walked, it walked; I stopped, it stopped.",
+      "bisaya": "Milakaw ako, milakaw siya; mihunong ako, mihunong siya.",
+      "answer_tagalog": "anino",
+      "answer_english": "shadow",
+      "confidence": "medium",
+      "verified": false
+    }
+  ]
+}

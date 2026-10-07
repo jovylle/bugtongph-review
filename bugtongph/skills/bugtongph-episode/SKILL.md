@@ -1,6 +1,6 @@
 ---
 name: bugtongph-episode
-description: Run the bugtongPH Filipino bugtong episode pipeline. Use when the user invokes .auto, .riddle, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong episode.
+description: Run the bugtongPH Filipino episode pipeline. Use when the user invokes .auto, .riddle, .topic, .vlog, .vblog, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong or topic episode.
 ---
 
 # bugtongPH Episode Pipeline
@@ -20,38 +20,72 @@ commands below. Do not run `.img` or `.veo` from here.
 
 ## 1. Execution model
 
-Canonical stage order:
+There are **two content pipelines**, and they differ only in their first stage. Everything
+from LOCATION onward is identical.
 
 ```text
-RIDDLE -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
-       -> IMAGE PROMPT -> IMAGE -> CLIPS
+riddle pipeline (default):  RIDDLE -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
+                            -> OVERVIEW -> IMAGE PROMPT -> IMAGE -> CLIPS
+topic  pipeline:            TOPIC  -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
+                            -> OVERVIEW -> IMAGE PROMPT -> IMAGE -> CLIPS
 ```
 
-**The pipeline is conversational.** Every stage:
+**RIDDLE** draws its subject from the connected Notion `bugtongPH Riddle Database` and hides
+an answer. **TOPIC** invents a fresh subject for the run — no database, no riddle, no answer.
+RIDDLE is the default; TOPIC runs only on `.topic` or `.auto topic` / `.auto fresh topic`. A
+plain `.auto` starts the riddle pipeline. See `references/topic.md`.
+
+`.vlog` and `.vblog` are accepted **aliases for `.topic`** everywhere it appears — `.vlog`,
+`.vblog`, `.auto vlog`, `.auto fresh vblog`.
+
+**A stage command is conversational.** `.riddle`, `.location`, `.environment`, `.profile`,
+`.script`, `.frame`, `.overview`, `.image-prompt`, or `.clips`:
 
 1. asks or offers with exactly **one** short question — normally three numbered options;
-2. **stops** and waits, even inside `.auto`;
+2. **stops** and waits;
 3. produces exactly **one** artifact;
 4. stops again with the approval question.
 
-Never two stages in one turn. Never the whole pipeline at once. A short reply (`1`, `A`,
-`yes`, `ok`, `go`, `proceed`, `sige`, `change it`, `make it scarier`) resolves against the
-one open question — see `references/reroll-and-options.md`.
+Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`, `go`,
+`proceed`, `sige`, `change it`, `make it scarier`) resolves against the one open question — see
+`references/reroll-and-options.md`.
 
-`.auto` is the **explicit unattended mode**: it walks the same stages in order, takes **option 1
-(suggested)** at every gate, and stops once the image has been generated and validated — CLIPS
-is the last step and runs only when asked (`.clips`, or `.auto clips`). It never takes option 2
-or 3 on its own, never invents an option when none is valid, and stops to report a blocker
-(Notion unavailable, no eligible record, reference not bound, script cannot fit its budget)
-instead of improvising. A plain stage command is always the gated conversational path and is
-unaffected.
+`.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It runs the
+whole chain in **one continuous run**, preselecting at every stage and taking **option 1
+(suggested)** each time, without asking gate questions:
+
+```text
+RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
+             -> IMAGE PROMPT -> IMAGE          <- one run, then it stops
+```
+
+It stops **once the image has been generated and validated**. CLIPS is the last step and runs
+only when asked (`.clips`, or `.auto clips`).
+
+While it runs it prints the preselected trail as a compact block — one line per stage — so the
+run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
+correct any one choice without restarting. It never takes option 2 or 3 on its own, never
+invents an option when none is valid, and stops to report a blocker (both riddle sources
+unavailable, no eligible riddle left, script cannot fit its budget, an image failing validation
+twice) rather than improvising.
+
+A plain stage command is always the gated conversational path and is unaffected.
 
 `.produce` runs the same gates from the overview through the image under the active channel.
 
 ### Explicit trigger
 
-The pipeline advances only on a bugtong command or the stage's own name. Ordinary
+The pipeline **advances** only on a bugtong command or the stage's own name. Ordinary
 conversation never opens a question, resolves one, advances a stage, or spends a generation.
+
+**Reading is not advancing.** A plain question about already-locked state — *what's the riddle?
+what's the script? which profile? how long is it? what was the answer?* — is always allowed and
+must be answered from episode state. It is read-only: it never changes a lock, never voids
+anything, and never spends a generation. Answer plainly and stay put.
+
+What ordinary conversation may not do: choose among open options, approve a gate, or move the
+pipeline forward. If a question is open and the user says something ambiguous (`ok`, `go`), it
+still means nothing.
 
 ## 2. Channel and release routing
 
@@ -69,11 +103,26 @@ version number in this file or its references.
 
 ### Plain `.auto`
 - If there is no recoverable active episode, start a new run in the `production` channel at
-  the first gate.
+  the first gate — RIDDLE, unless the topic pipeline was selected.
 - If an unfinished episode exists, resume its first incomplete checkpoint using the channel
   recorded on that run.
-- Do not silently replace an explicit riddle, location, environment, profile, script,
+- Do not silently replace an explicit riddle, topic, location, environment, profile, script,
   channel, or release.
+
+### Content pipeline selection
+The first stage is chosen by one keyword appended to `.auto`:
+
+- `.auto riddle` (also the default with no keyword) — start or restart the riddle pipeline;
+- `.auto topic` — start or restart the **topic** pipeline at TOPIC instead of RIDDLE;
+- `.auto fresh topic` — reset state and start a new topic run; `.auto fresh riddle` does the
+  same for the riddle pipeline.
+
+`.vlog` and `.vblog` are accepted aliases for the `topic` keyword, so `.auto vlog` and
+`.auto fresh vblog` behave exactly like `.auto topic` and `.auto fresh topic`.
+
+The pipeline keyword is independent of the channel keyword and may be combined:
+`.auto topic beta`, `.auto fresh topic dev`. A plain `.topic` command enters the topic pipeline
+directly, exactly as `.riddle` enters the riddle pipeline.
 
 ### Explicit channel aliases
 `.auto production` selects the production channel. `.auto beta` selects beta.
@@ -84,7 +133,7 @@ selects development.
 `.auto fresh` resets episode-local state and immediately starts a new `production` run.
 `.auto fresh beta` and `.auto fresh dev` do the same for the selected non-production channel.
 `fresh` means reset-and-start, never reset-only. `.auto resume` continues the recorded run
-without reselecting the riddle.
+without reselecting the riddle. `.auto fresh topic` combines `fresh` with the topic pipeline.
 
 ### Channel priority for new runs
 1. explicit `.auto <channel>` mode;
@@ -99,13 +148,17 @@ everything downstream of it.
 ## 3. `.auto` composition
 
 `.auto` uses the exact same stage contracts as the standalone commands. There is no
-simplified auto-only implementation and no auto-only approval bypass. It does not ask the
-gates — it takes them in order, always on **option 1 (suggested)**.
+simplified auto-only implementation and no auto-only approval bypass — it takes **option 1
+(suggested)** at every stage and does not ask the gate questions, running the whole chain in one
+continuous pass.
 
 ```text
-RIDDLE -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
-       -> IMAGE PROMPT -> IMAGE -> CLIPS
+RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
+             -> IMAGE PROMPT -> IMAGE -> CLIPS
 ```
+
+The first stage is whichever content pipeline the run selected — RIDDLE by default, TOPIC
+under `.auto topic`. Everything downstream is identical.
 
 ### Channel implementation parity
 
@@ -124,49 +177,72 @@ Development is the only channel allowed to diverge during active development.
 The output of each stage is the explicit input to the next stage. Checkpoint every stage and
 every image substage. A stage is complete only when its actual contract is satisfied.
 
-## 4. Riddle source
+## 4. Subject source
 
-Every new riddle for `.riddle`, `.auto`, and `.auto fresh` must come from an actual record
-returned by the connected Notion `bugtongPH Riddle Database` during the applicable run. See
-`references/notion-riddle-database.md`. Never use model memory, previous conversation
-content, web search, outside websites, generated riddles, or stale caches as a fallback.
+The subject of an episode comes from one of two sources, chosen by the content pipeline:
 
-If the `notion` MCP server is unavailable, unauthenticated, or no suitable record is
-returned, stop at RIDDLE and report the blocker.
+### RIDDLE — Notion preferred, bundled fallback (default)
+Every new riddle for `.riddle`, `.auto`, and `.auto fresh` comes from one of two **fixed**
+sources: the connected Notion `bugtongPH Riddle Database` when it is available, otherwise the
+bundled set committed at `assets/riddles.json`. See `references/notion-riddle-database.md` and
+`references/bundled-riddles.md`. Never use model memory, previous conversation content, web
+search, outside websites, generated riddles, or stale caches.
 
-A reroll runs a **new query**, takes a random eligible unused record, and never re-offers a
-record already shown in this episode. The stored wording is never edited.
+Notion being unconnected is **not** a blocker: the picker falls back to the bundled set and says
+so in one line. Stop at RIDDLE only when both sources fail.
 
-## 5. Profile and reference binding
+The picker serves one language at a time — `.riddle tagalog` (default), `.riddle english`, or
+`.riddle bisaya`. The chosen language is episode state: it sets the riddle's wording *and* the
+spoken language of the episode's dialogue.
+
+A reroll runs a **new query** (or takes new bundled entries), never re-offers one already shown
+in this episode, and never edits the stored wording.
+
+### TOPIC — model-invented (opt-in)
+Under the topic pipeline the subject is **invented by the model** and comes from no database.
+TOPIC offers five wildly different topics, locks the chosen one, and carries **no riddle and no
+answer**. It must never query Notion and must never present a bugtong. See `references/topic.md`.
+
+Because TOPIC is invented, a reroll cannot run dry; the only blocker is an unusable hint.
+
+## 5. Profile and identity binding
 
 Unless explicitly changed, `profile-01` is the production default: Old Man + Kid with Blue
 Neck Scarf, handcrafted Filipino papercraft diorama, with its established voice profiles.
 
-For `profile-01`, the exact canonical character reference asset is:
+Every profile locks one **identity mode**:
 
-`assets/character-turnaround.png`
+| Mode | Identity authority | Binding |
+| --- | --- | --- |
+| `text` — **default** | the written profile | nothing to attach; generation proceeds |
+| `attached` — opt-in | an image the user attaches in the conversation | that image is used as the reference image input |
 
-resolved from this skill's directory, i.e.
-`skills/bugtongph-episode/assets/character-turnaround.png`.
+Shipped turnarounds — `assets/character-turnaround.png` (`profile-01`),
+`assets/mich-turnaround.png` (`profile-02-mich`) — are the canonical definitions those written
+profiles come from, and are **offered to the user to attach**. A path inside the plugin package
+is not an image the session can supply, so a shipped asset is never automatically bound, and its
+absence is **never** grounds for blocking the image stage. Never use a previous episode's image
+as an identity reference. See `references/reference-binding.md`.
 
-A canonical visual reference is not the same thing as a text description. The image
-generation request must bind the exact reference asset when image inputs are supported.
-Do not generate characters from generic semantic descriptions when the canonical reference is
-available, and never use a previous episode's image as an identity reference.
-
-**AI-invented profiles are the sanctioned exception.** A profile may have no reference asset
-at all; its written description is then the identity authority, and the image stage proceeds
-instead of blocking. Never borrow another profile's turnaround to fill the gap.
-
-If a reference-backed profile's asset cannot be bound, block the image stage instead of
-approximating the characters.
+**Speaker labels.** Fix one short uppercase label per character at profile lock (`OLD MAN`,
+`KID`, `MICH`) and use it identically in the profile, the image prompt, the script dialogue, and
+the clip prompts. The labels are what let the video model attach each line to the right person.
+Never use pronouns in their place.
 
 Legacy name: this stage was called `pair`; `.pair`/`pair-01` mean `.profile`/`profile-01`.
 
 ## 6. Stage contracts
 
 ### RIDDLE
-Notion-only, 5 records offered. Preserve exact stored wording; keep the answer operator-only.
+5 riddles offered from the connected Notion database, or from the bundled `assets/riddles.json`
+when Notion is unavailable. Preserve exact stored wording; keep the answer operator-only. The
+picker serves the selected language (Tagalog default, English, Bisaya).
+
+### TOPIC
+Model-invented, 5 topics offered as `subject — angle`, option 1 `(suggested)` is the model's
+own pick. No Notion query, no riddle, no answer. Locks the topic and its angle only. The
+alternative first stage to RIDDLE; runs only under `.topic` (or its `.vlog` / `.vblog` aliases)
+and `.auto topic`. See `references/topic.md`.
 
 ### LOCATION
 Offer 3 places. The place only — no weather, no light, no ambience. Never hint at the answer.
@@ -175,8 +251,13 @@ Offer 3 places. The place only — no weather, no light, no ambience. Never hint
 Offer 3 condition sets: time of day, weather, light quality, atmosphere, ambience. No place.
 
 ### PROFILE
-Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones with no
-reference image. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
+Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
+text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
+
+`profile-01` is always the Old Man + Kid with the blue neck scarf — its fixed label, with
+speaker labels `OLD MAN` and `KID`. An AI-invented bundle is offered under its own descriptive
+name and is **never** labelled `profile-01`, and `profile-01` is never described as other
+characters. See `references/profile.md`.
 
 ### SCRIPT
 Offer 3 scripts: dialogue plus actions, exact lines, beats, and ending state, paced at
@@ -184,21 +265,26 @@ Offer 3 scripts: dialogue plus actions, exact lines, beats, and ending state, pa
 stated for each option. The last creative choice.
 
 ### FRAME
-Offer the panel plan for the ingredient sheet: 2–5 panels (default 2–3), each fully specified
-for independent generation. Text-only; never request image generation.
+Offer the panel plan for the **visual shot-reference sheet**: 2–5 stacked horizontal strips on one
+landscape canvas (default 2–3), each strip a fully specified camera setup with materially
+different camera position, shot size, and subject emphasis, in a readable shot progression
+(wide → medium → tight). Text-only; never request image generation. The layout contract lives in
+`references/frame.md` and is a hard rule, not a creative preference.
 
 ### OVERVIEW
 Show every locked item on one screen with the panel count and its timing implication. This is
-the hub every correction returns to. `.review <stage>` reprints one item, read-only.
+the hub every correction returns to. Plain questions reprint any locked item, read-only;
+`.review <stage>` is the legacy alias for the same thing.
 
 ### IMAGE PROMPT
-Assemble and show the exact prompt formula from the locked state. Text-only, no generation.
-This is the cheap gate in front of the expensive step.
+Assemble and show the exact prompt formula from the locked state, opening with the sheet's
+purpose clause so the generator is not told to make anything "cinematic". Text-only, no
+generation. This is the cheap gate in front of the expensive step.
 
 ### IMAGE
-Resolve and bind the profile's reference asset (or accept the AI-invented text identity),
-then generate, then validate. The only stage allowed to request image generation. Command
-`.image`; `.render` is the legacy alias.
+Generate the shot-reference sheet and validate it against the layout contract and the locked
+identity source (`text` or `attached`), then accept or regenerate. The only stage allowed to
+request image generation. Command `.image`; `.render` is the legacy alias.
 
 ### CLIPS
 Plan the shots (the retired DRAFTS step), then produce copy-ready prompts. Clip 1 uses the
@@ -217,9 +303,11 @@ generate another image merely because the stage was not yet marked complete.
 
 ## 8. Pipeline status
 
-Every command response must include exactly one stage line:
+Every command response must include exactly one stage line. The first slot is the active
+content pipeline's first stage — `RIDDLE` or `TOPIC`, never both:
 
 `RIDDLE | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS`
+`TOPIC  | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS`
 
 Use `✓` complete, `●` current, `○` pending, `~` changed this turn, `!` failed/blocking. When
 an image substage is active, name it beneath the main status.
@@ -229,6 +317,9 @@ state for routing and reported only on request, through `.channel`, `.release`, 
 The channel line is not part of a stage response.
 
 ## 9. Riddle secrecy
+
+This section applies **only to the riddle pipeline**. A topic pipeline episode has no answer
+to protect; its subject is stated openly.
 
 The stored answer is operator-visible metadata in the `.riddle` picker only (see
 `references/riddle.md`). It must never appear in, or be indicated by, any audience-facing
@@ -258,17 +349,30 @@ changes, and simultaneous major events. See `references/veo-3-1-lite.md`.
 
 Preferred:
 
-`.riddle` `.location` `.environment` `.profile` `.script` `.frame` `.overview` `.image`
-`.clips` `.produce` `.channel` `.release` `.review` `.workflow`
+`.riddle` `.topic` `.location` `.environment` `.profile` `.script` `.frame` `.overview` `.image`
+`.clips` `.produce` `.channel` `.release` `.workflow`
 
-Nested forms: `.auto production|beta|dev|fresh|resume`; `.channel list`;
-`.channel use <channel>`; `.profile list`; `.profile use <id>`; `.profile add <description>`;
-`.release info`; `.review <stage>`; `.workflow info`.
+`.vlog` and `.vblog` are aliases for `.topic`.
 
-Correction forms, identical shape at every stage: `.location <hint>`,
+Nested forms: `.auto production|beta|dev|fresh|resume`; `.auto riddle|topic` (`.vlog` /
+`.vblog` also accepted); `.auto fresh riddle|topic`; `.channel list`; `.channel use <channel>`;
+`.profile list`; `.profile use <id>`; `.profile add <description>`; `.release info`;
+`.workflow info`.
+
+**Reading a locked item needs no command.** Plain questions — `what's the riddle again?`,
+`what's the script?`, `which profile?` — reprint it, read-only. `.review <stage>` still works as
+the legacy alias, and is not advertised.
+
+Correction forms, identical shape at every stage: `.topic <hint>`, `.location <hint>`,
 `.environment <hint>`, `.profile <hint>`, `.script <hint>`, `.image-prompt`, `.image`, plus
 `.again` `.other` `.reroll` `.redo` `.fix`. Repeating a stage's own command rerolls that
 stage. See `references/reroll-and-options.md`.
+
+`.riddle` also takes a language: `.riddle tagalog` (default), `.riddle english`,
+`.riddle bisaya`. A recognised language word sets the picker language; any other word is a hint.
+
+`.topic` and `.riddle` select the content pipeline's first stage; the other of the two is
+never offered inside the same episode.
 
 `.profile` remains independent of channel and release selection.
 
@@ -297,14 +401,16 @@ files whose trigger applies.
 | `references/reroll-and-options.md` | Any stage: offering options, asking the question, taking a correction, or returning to OVERVIEW |
 | `references/notion-riddle-database.md` | Before `.riddle`, `.auto`, or `.auto fresh`, and whenever the riddle source must be resolved |
 | `references/riddle.md` | Running `.riddle`, or validating riddle integrity and provenance |
+| `references/bundled-riddles.md` | Whenever the riddle source falls back to the bundled set, or the picker language is chosen |
+| `references/topic.md` | Running `.topic` (`.vlog` / `.vblog`), or any `.auto topic` / topic-pipeline run |
 | `references/location.md` | Offering or choosing the place |
 | `references/environment.md` | Offering or choosing weather, time, light, and ambience |
 | `references/profile.md` | Selecting, defining, or inspecting a Character + Art Style + Voice profile |
 | `references/identity.md` | Any stage that must preserve character, style, or voice identity |
-| `references/active-pair-runtime.md` | Before any image-generation stage, to bind the profile's reference asset |
-| `references/reference-binding.md` | Before `.image`, when resolving and binding the canonical reference image |
+| `references/active-pair-runtime.md` | Before any image-generation stage; identity mode and profile authority |
+| `references/reference-binding.md` | Before `.image`; identity mode, and when a turnaround is attached |
 | `references/script.md` | Writing or revising the script |
-| `references/frame.md` | Choosing the panel count and writing the panel plan |
+| `references/frame.md` | Choosing the panel count, writing the panel plan, or when the shot-reference sheet layout matters |
 | `references/overview.md` | Showing the locked state, or reviewing one item |
 | `references/image-prompt.md` | Assembling the image prompt formula before generation |
 | `references/veo-3-1-lite.md` | Before planning any clip, image prompt, panel count, or timing |

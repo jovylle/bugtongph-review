@@ -7,19 +7,19 @@ Read `active-profile-runtime.md` first. It parameterizes legacy hard-coded chara
 Every Flow/Veo prompt should explicitly contain, when applicable:
 
 1. Visual reference interpretation
-2. Active-profile identity-reference priority
+2. Active-profile identity priority and identity mode (`text` or `attached`)
 3. Panel-to-shot mapping
 4. Shot starting state
 5. Character identity
 6. Character positions
 7. Physical actions
 8. Natural gaze direction
-9. Speaker identification
-10. Stable voice identity
-11. Exact dialogue
-12. Dialogue timing
+9. Speaker identification — the exact uppercase roster label per line
+10. Stable voice identity, restated next to each speaker's line
+11. Exact dialogue, every line labelled with its speaker
+12. Dialogue timing, with one speaker per window
 13. Natural pauses and breathing
-14. Listener reactions and processing time
+14. Listener reactions and processing time, including the silent listener's closed mouth
 15. Riddle constraints
 16. Shot transitions
 17. Ending reaction
@@ -51,6 +51,12 @@ Avoid vague language such as "make it cinematic" or "interact naturally".
 ## Voice language
 
 Describe the actual active profile voice profile in production terms. Never ask the model to imitate an identifiable person.
+
+## Speaker labels
+
+Write dialogue as `LABEL: "line"`, using the exact uppercase label fixed at PROFILE lock. No
+pronouns, no narration, no unattributed lines. State who is silent as well as who speaks — see
+`clips.md` "Speaker attribution — one mouth at a time".
 
 ## Clip 2
 

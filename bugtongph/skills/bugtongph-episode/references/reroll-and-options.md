@@ -5,11 +5,17 @@ correction. Stage files supply only their own menu contents and field lists.
 
 ## 0. Explicit trigger rule
 
-The pipeline advances only on a bugtong command (`.auto`, `.riddle`, `.location`,
-`.environment`, `.profile`, `.script`, `.frame`, `.overview`, `.image`, `.clips`) or the
-stage's own name. Normal conversation never opens a question, resolves one, advances a
-stage, or spends a generation. In ordinary chat the words `ok`, `go`, and `proceed` mean
-nothing.
+The pipeline **advances** only on a bugtong command (`.auto`, `.riddle`, `.topic` — or its `.vlog` /
+`.vblog` aliases — `.location`, `.environment`, `.profile`, `.script`, `.frame`, `.overview`,
+`.image`, `.clips`) or the stage's own name. Normal conversation never opens a question, resolves
+one, advances a stage, or spends a generation. In ordinary chat the words `ok`, `go`, and
+`proceed` mean nothing.
+
+**Asking is not advancing.** A plain question about locked state — `what's the riddle again?`,
+`what's the script?`, `which profile did we lock?`, `what's the timing?`, `what was the answer?` —
+is answered from episode state, read-only. It changes no lock, voids nothing, and spends no
+generation. This is the ordinary way to look something up; the user is not required to remember a
+command for it. Answering a question does not resolve an open gate or move the stage.
 
 ## 1. One question at a time
 
@@ -24,12 +30,16 @@ nothing.
 
 | Stage | Presented options |
 | --- | --- |
-| RIDDLE | 5 database records |
+| RIDDLE | 5 riddles (Notion records, or bundled entries when Notion is absent) |
+| TOPIC | 5 model-invented topics |
 | LOCATION | 3 |
 | ENVIRONMENT | 3 |
 | PROFILE | 3 |
 | SCRIPT | 3 |
-| FRAME | panel count 2–5, default 2–3 |
+| FRAME | 3 shot progressions across 2–5 stacked strips, default 2–3 |
+
+RIDDLE and TOPIC are the two first stages of the two content pipelines — only one of them
+appears in a given episode, and neither is ever offered as an option inside the other.
 
 **Option 1 is the suggested pick and is labelled `(suggested)`.** It is the safe, strong default
 — the one that best fits the locked material. Options 2 and 3 are the bolder directions. The
@@ -87,7 +97,9 @@ An unanswered question is never approval.
 
 Track a per-stage `REJECTED` list for the episode (see `runtime-state.md`). Every new option
 set excludes it and must be materially different from what was shown. If eligible material
-runs out — most likely on RIDDLE — report that plainly and stop.
+runs out — possible only on RIDDLE, whose sources are finite (the Notion database, and the
+nine-entry bundled set) — report that plainly and stop. TOPIC invents its own topics, so it
+cannot run dry.
 
 ## 6. Invalidation cascade
 
@@ -95,6 +107,7 @@ An upstream lock change voids everything built on it. Upstream locks are always 
 
 ```text
 new riddle      -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
+new topic       -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new location    -> ENVIRONMENT SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new environment -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new profile     -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
@@ -102,6 +115,9 @@ new script      -> IMAGE-PROMPT IMAGE CLIPS void
 new frame       -> IMAGE-PROMPT IMAGE CLIPS void
 new image       -> CLIPS void
 ```
+
+The first stage is the content pipeline's own — `new riddle` in the riddle pipeline, `new
+topic` in the topic pipeline. Switching pipeline replaces it and voids the same set.
 
 Never carry a clip prompt across a new image: the prompt still describes the previous
 picture, and nothing in the output reveals the mismatch.
@@ -127,7 +143,7 @@ OVERVIEW is a hub, not a one-time gate.
    2. SCRIPT   — too much dialogue
    ```
 
-6. Queue order is **upstream-first** (RIDDLE → LOCATION → ENVIRONMENT → PROFILE → SCRIPT →
+6. Queue order is **upstream-first** (RIDDLE/TOPIC → LOCATION → ENVIRONMENT → PROFILE → SCRIPT →
    FRAME → IMAGE), so a later fix cannot void work already applied to an earlier item.
    Announce the order in one line when the queue is created.
 7. Name the smallest fix that would satisfy the complaint where that is obvious
@@ -143,10 +159,12 @@ stage's own command (`.clips`, `.image`). They count **only while a question is 
 
 ## 9. Status line
 
-Every response carries **one** stage line and nothing else:
+Every response carries **one** stage line and nothing else. The first slot is the active
+content pipeline's first stage (only one applies):
 
 ```text
 RIDDLE | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS
+TOPIC  | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS
 ```
 
 `✓` complete, `●` current, `○` pending, `~` changed this turn, `!` failed/blocking.
@@ -167,16 +185,20 @@ Never print channel, release, or workflow alongside it. Those are reported only 
 `.auto` is the **explicit** unattended mode, and it is the only mode that does not ask the gate
 questions.
 
-1. It walks the stages in order — RIDDLE → LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME →
-   OVERVIEW → IMAGE PROMPT → IMAGE — taking **option 1 (suggested)** at every gate.
+1. It walks the stages in order — RIDDLE (or TOPIC, if the topic pipeline was selected) →
+   LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE — taking
+   **option 1 (suggested)** at every gate. This is **one continuous run**, not one stage per
+   turn: it does not stop between stages. It prints the preselected trail as a compact block,
+   one line per stage, as it goes.
 2. It **stops once the image has been generated and validated.** CLIPS is the last step and runs
    only when the user asks for it (`.clips`, or `.auto clips`).
 3. It never takes option 2 or 3 on its own, and never invents an option when none is valid.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
    the gated path. Unattended does not mean unchecked.
-5. It **stops and reports** rather than improvising when: the Notion database is unavailable, no
-   eligible record is returned, the profile reference cannot be bound, the script cannot fit its
-   clip budget, or an image fails validation twice.
+5. It **stops and reports** rather than improvising when: both riddle sources are unavailable
+   (Notion unconnected *and* the bundled set unreadable or exhausted), the script cannot fit its
+   clip budget, or an image fails validation twice. A profile whose turnaround simply was not
+   attached is **not** a blocker — unattended runs continue in `text` identity mode.
 6. A plain stage command (`.script`, `.location`, …) is always the gated conversational path and
    is unaffected by this. Repeating a stage command still rerolls it.
 

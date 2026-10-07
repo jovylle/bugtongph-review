@@ -27,15 +27,22 @@ Reference and asset paths below resolve relative to this skill's own directory,
 
 ## 1. The four invariants
 
-1. **Riddle provenance.** Every riddle comes from the connected Notion
-   `bugtongPH Riddle Database`, from a record actually returned by a live query in this
-   run. Preserve the stored wording verbatim. Never model memory, never web search, never
-   an invented or paraphrased riddle. If Notion is unavailable or the database will not
-   resolve to exactly one, stop and report the blocker.
-2. **Identity.** Bind the canonical pair-01 reference image
-   `../bugtongph-episode/assets/character-turnaround.png` as an **image input** to image
-   generation. Naming the path in text is not binding. Never reconstruct the characters
-   from a written description while that asset is available.
+1. **Riddle provenance.** Every riddle comes from one of two **fixed** sources, per
+   `../bugtongph-episode/references/notion-riddle-database.md` and
+   `../bugtongph-episode/references/bundled-riddles.md`: the connected Notion
+   `bugtongPH Riddle Database` when available, otherwise the bundled set at
+   `../bugtongph-episode/assets/riddles.json`. Preserve the stored wording verbatim. Never
+   model memory, never web search, never an invented or paraphrased riddle. Notion being
+   unconnected is not a blocker — fall back to the bundled set and say so. Stop only when
+   both sources fail.
+2. **Identity.** Lock an identity mode per `../bugtongph-episode/references/reference-binding.md`.
+   `text` is the default: the written `profile-01` description holds the character, and image
+   generation proceeds. `attached` is opt-in: the user attaches
+   `../bugtongph-episode/assets/character-turnaround.png` in the conversation, and that image
+   becomes the reference image input. A file path inside the plugin package is not an image the
+   session can supply, so never block waiting for one, and never claim it is bound when no image
+   is present. Fix one uppercase label per character (`OLD MAN`, `KID`) and use it for every
+   spoken line.
 3. **Answer secrecy.** The stored answer is operator-visible in the run output only. It
    must never appear in, or be indicated by, the image or the clip prompts — no text, no
    caption, no gesture toward, gaze at, or framing of an answer-related object.
@@ -59,9 +66,10 @@ Plain replies drive it: `approve` / `ok` advances, `plot 2` picks, and any descr
 
 ### Step 1 — RIDDLE
 
-Query Notion and offer **one** eligible record (prefer unused), per
-`../bugtongph-episode/references/notion-riddle-database.md`. One query per step; do not
-batch a menu.
+Query the current source and offer **one** eligible riddle (prefer unused), per
+`../bugtongph-episode/references/notion-riddle-database.md` and
+`../bugtongph-episode/references/bundled-riddles.md`. Language: the bundled set serves Tagalog,
+English, or Bisaya. One query per step; do not batch a menu.
 
 Show, clearly labelled:
 
@@ -81,7 +89,8 @@ Then stop. Do not plan, and do not choose a scene yet.
 
 Offer **exactly three** script options, numbered 1–3, with option 1 marked `(suggested)`. Each is one short paragraph that locks:
 location and atmosphere, starting positions and physical states, the beat sequence, who
-speaks, and the ending state. Each must be performable in roughly 8 seconds of Filipino
+speaks (each line written as `LABEL: "line"` with the fixed uppercase character labels), and the
+ending state. Each must be performable in roughly 8 seconds of Filipino
 dialogue, and must avoid transformations, complex choreography, and simultaneous major
 events. Use `../bugtongph-episode/references/script.md` for what a script must lock, with the
 1.5–2.2 conversational Tagalog words/second timing rule (see `../bugtongph-episode/references/tagalog-pacing.md`) and room reserved for breaths, pauses, and reactions.
@@ -98,15 +107,18 @@ Then stop.
 
 Compose and generate using `../bugtongph-episode/references/identity.md` and
 `../bugtongph-episode/references/reference-binding.md`, then generate **exactly one image**
-from the approved plot, with the turnaround bound as an image input.
+from the approved script, in the locked identity mode. In `attached` mode the user's image is
+the reference input; in `text` mode the written profile is the authority. Never block on a
+shipped asset that was not attached.
 
 The image must contain no dialogue, captions, labels, panel numbers, borders, comic
-layout, collage, grid, storyboard structure, or answer clue.
+layout, collage, grid, storyboard structure, poster treatment, cinematic key-art styling, or
+answer clue — it is a plain visual reference for the video model, not a finished picture.
 
 Then stop.
 
-- `reroll` or a described change → regenerate. Identity does not drift while the
-  turnaround stays bound, so re-rolls stay in-character.
+- `reroll` or a described change → regenerate. In `attached` mode identity does not drift while
+  the attached image is used, so re-rolls stay in-character.
 - `approve` → Step 4.
 
 ### Step 4 — CLIPS
@@ -143,13 +155,14 @@ flow can produce, because the prompt still describes the previous picture.
 | File | Load when |
 | --- | --- |
 | `../bugtongph-episode/references/notion-riddle-database.md` | Step 1, before resolving the riddle |
+| `../bugtongph-episode/references/bundled-riddles.md` | Step 1, when Notion is unavailable and the bundled set is the source |
 | `../bugtongph-episode/references/script.md` | Step 2, before writing the three scripts |
 | `../bugtongph-episode/references/veo-3-1-lite.md` | Steps 3–4, for the 8s and panel limits |
 | `../bugtongph-episode/references/identity.md` | Step 3, for character/style/voice identity |
-| `../bugtongph-episode/references/reference-binding.md` | Step 3, before generating — binding is mandatory |
+| `../bugtongph-episode/references/reference-binding.md` | Step 3, before generating — identity mode and speaker labels |
 | `../bugtongph-episode/references/clips.md` | Step 4, for the required prompt sections |
 | `../bugtongph-episode/references/veo-google-flow.md` | Step 4, for timing, shot, cut, and feasibility rules |
-| `../bugtongph-episode/assets/character-turnaround.png` | Step 3, as the bound image input |
+| `../bugtongph-episode/assets/character-turnaround.png` | Step 3, when the user attaches it for an exact identity match |
 
 Deliberately not used here: channels, release, workflow contract, `.profile` registry,
 runtime state, FRAME staging, image validation gates, legacy `.pipeline`.

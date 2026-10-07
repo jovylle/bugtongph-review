@@ -6,13 +6,12 @@ This file defines the project-level rules and source precedence for bugtongPH.
 
 ## Authoritative layers
 
-1. **Notion `bugtongPH Riddle Database`**
-   - riddle identity
-   - stored wording
-   - answer
-   - source/metadata
-   - usage status
-   - connection, resolution, and record-field contract: `notion-riddle-database.md`
+1. **Subject source** — one of two, chosen by the content pipeline:
+   - **Notion `bugtongPH Riddle Database`** (riddle pipeline) — riddle identity, stored wording,
+     answer, source/metadata, usage status; connection and record contract in
+     `notion-riddle-database.md`;
+   - **the model-invented TOPIC** (topic pipeline) — the locked topic and angle, stated openly,
+     with no answer; see `topic.md`.
 
 2. **Active Character + Art Style + Voice profile**
    - character identity
@@ -55,7 +54,9 @@ This file defines the project-level rules and source precedence for bugtongPH.
 
 ## Project identity
 
-Each episode is one setting + one believable situation + one active character profile + one database-backed bugtong.
+Each episode is one setting + one believable situation + one active character profile + one
+subject, where the subject is either a database-backed bugtong (riddle pipeline) or a
+model-invented topic (topic pipeline) — never both.
 
 The project should feel coherent within the selected profile and art direction. New profiles are allowed, but they must remain isolated from legacy or other profiles.
 

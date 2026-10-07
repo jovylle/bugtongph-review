@@ -1,14 +1,15 @@
 # .script
 
-Write the performable episode — **what is said and what is done** — from the locked riddle,
-location, environment, and profile. SCRIPT is the last choice the user makes.
+Write the performable episode — **what is said and what is done** — from the locked subject
+(riddle or topic), location, environment, and profile. SCRIPT is the last choice the user makes.
 
 ## Why SCRIPT is last
 
-SCRIPT consumes all four earlier locks: the riddle fixes what must stay hidden, LOCATION
-fixes where they stand, ENVIRONMENT fixes light and sound, PROFILE fixes who speaks with
-which voice. Writing it earlier would let a later location change leave a script describing
-the old place — a mismatch nothing in the output would reveal.
+SCRIPT consumes all four earlier locks: the subject fixes what the episode is about (the
+riddle also fixes what must stay hidden), LOCATION fixes where they stand, ENVIRONMENT fixes
+light and sound, PROFILE fixes who speaks with which voice. Writing it earlier would let a
+later location change leave a script describing the old place — a mismatch nothing in the
+output would reveal.
 
 ## Menu
 
@@ -30,11 +31,42 @@ Repeating `.script` rerolls with three fresh scripts and excludes `REJECTED`.
 ## What each option must lock
 
 - who speaks, identified before each line;
-- the exact Filipino dialogue, line by line;
+- the exact Filipino dialogue, line by line, speaker-labelled (see below);
 - starting positions and physical states;
 - the action sequence (walking, stopping, standing, sitting, looking, listening, reacting);
 - natural gaze and reactions, with listener processing time;
 - the ending state, exactly what the next beat or clip inherits.
+
+## Speaker labels — who says which line
+
+Two characters in frame is exactly the case a video model gets wrong: it hands a line to the
+wrong person, or has both mouths move at once. The defence is a fixed label, not a pronoun.
+
+At PROFILE lock, fix one short uppercase label per character (`OLD MAN`, `KID`, `MICH`). Use
+that exact label — never "he", "she", "the other one", "the character" — everywhere a person is
+identified: the profile, the image prompt, the dialogue block, and the clip prompts.
+
+Every dialogue line in every script option is written as a labelled block, never as prose:
+
+```text
+DIALOGUE
+OLD MAN: "Ano iyang nasa tubig?"
+KID: "Hindi ko po alam, Lolo."
+```
+
+Rules:
+
+1. **One label per line, immediately before the line.** No line without a speaker.
+2. **No narration and no off-screen voice.** Only labels in the active profile's roster may
+   speak. If a character is in the scene, they have a label.
+3. **Name the silent listener.** When one character speaks, the other is explicitly not
+   speaking — see `clips.md`, which carries that into the prompt as a mouth-movement rule.
+4. **Labels are per-character, not per-line.** A character keeps one label for the whole
+   episode and across both clips.
+5. **The same label spells the same in every file.** A label that changes between the script and
+   the clip prompt is how a line lands on the wrong person.
+
+The script's prose may still describe beats normally; only the dialogue block is labelled.
 
 ## Timing — compute the budget before writing
 
@@ -45,10 +77,14 @@ conversational Tagalog (≈90–135 wpm); the retired 2.5–3.5 figure was readi
 
 Work in this order, every time:
 
-1. **Count the riddle's own words** and divide by the slow recitation band (1.5–1.7 w/s). The
-   riddle is fixed Notion text — this number is not a creative choice.
+1. **Count the fixed text first** — in the riddle pipeline, the riddle's own words, divided by
+   the slow recitation band (1.5–1.7 w/s). The riddle is fixed Notion text — this number is not
+   a creative choice. **In the topic pipeline there is no fixed text:** a topic is not recited,
+   so nothing is pre-spent and **the whole ~11-word budget is available to the script.** Say
+   that plainly, then go to step 3.
 2. **Decide the clip count from that.** Over about 9 words and the riddle cannot share a clip
-   with a reaction, so the episode is 2 clips. Most bugtong episodes are.
+   with a reaction, so the episode is 2 clips. Most bugtong episodes are. A topic episode is
+   budgeted from its script alone, and a one-clip topic episode is normal.
 3. **Compute the words available**, then write only options that fit inside it.
 4. **Show the budget block before the options**, and each option's words ÷ rate against it.
 
@@ -61,9 +97,20 @@ Option 2: 16 words -> 8.4s + gaps = 10.4s  ✗ needs 2 clips
 **Hard rule:** an option whose own words exceed the clips it claims is not a valid option.
 Trim it or declare more clips. Never present a duration without the arithmetic behind it.
 
+### Topic-pipeline budget
+
+An empty budget is not a licence to write nothing. A topic episode is still a **talking**
+episode: write dialogue that *uses* the words available (~11 for one clip, ~27 for two) instead
+of defaulting to "minimal dialogue" or a silent mood piece. Waiting, walking, and reacting are
+beats, not a script. An option that spends far fewer words than its budget is a weak option —
+fill the time with spoken content, or state plainly why the silence is the point. Never let a
+topic episode come out with no dialogue at all.
+
 Do not plan a dialogue exchange *and* a long riddle inside one clip. A bugtong episode is
-normally Clip 1 = the riddle recited, Clip 2 = the thinking and the reaction. Award the
-remaining seconds to natural pauses and thought rather than to extra lines.
+normally Clip 1 = the riddle recited, Clip 2 = the thinking and the reaction. A topic episode
+has no recitation, so Clip 1 carries its spoken content directly — there is no reason for it to
+be quieter than a riddle episode. Award the remaining seconds to natural pauses and thought
+rather than to extra lines.
 
 ## Clip split
 
@@ -86,6 +133,8 @@ reacting. Avoid transformations, complex choreography, precise manipulation, ide
 changes, and many simultaneous major events. Veo 3.1 Lite will not do them reliably.
 
 ## Riddle integrity
+
+Applies to the riddle pipeline only; a topic episode has no answer.
 
 Never use the hidden answer as story inspiration, dialogue content, or visual information.
 Characters must not point at, gesture toward, reach toward, touch, inspect, stare at,

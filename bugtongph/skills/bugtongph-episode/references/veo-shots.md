@@ -2,21 +2,29 @@
 
 ## Identity authority
 
-The canonical active-profile reference image is the primary source of truth for character identity and appearance.
+Identity comes from the profile's locked **identity mode** (see `reference-binding.md`):
 
-For `profile-01`, the canonical reference asset is:
+- `attached` — the turnaround image the user attached in the conversation is the primary source
+  of truth for character identity and appearance. Use the image reference itself when available;
+  do not replace it with a newly invented textual description.
+- `text` — the default. The written profile is the source of truth, applied identically in every
+  panel.
 
-`assets/character-turnaround.png`
-
-Use the image reference itself when available. Do not replace it with a newly invented textual description.
+`profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
+`assets/mich-turnaround.png`. Those files are offered to the user to attach; a path inside the
+plugin package is not an image the session can supply, so their absence is never a failure.
 
 The validated episode IMAGE controls only the current pose, expression, gaze, hand placement, position, environment, lighting, composition, and shot state.
 
 ## Core panel principle
 
-The provided multi-panel visual shot reference is the exact visual source of truth for CLIP 1 only.
+The provided **shot-reference sheet** is the exact visual source of truth for CLIP 1 only.
 
-Each panel represents one intended camera shot. Veo should animate established visual states and connect the planned shots. It should not redesign, reinterpret, or replace the characters, environment, or visual style.
+It is one landscape canvas of 2–5 stacked horizontal panoramic strips with thin separators. Each
+strip is one intended camera shot, read top to bottom as a sequence. Veo should animate the
+established visual states and connect the planned shots. It should not redesign, reinterpret, or
+replace the characters, environment, or visual style — and it must never reproduce the sheet
+itself, its separators, its borders, or its stacked layout onscreen.
 
 ## Character continuity
 

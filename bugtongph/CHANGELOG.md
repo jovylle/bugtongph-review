@@ -1,5 +1,267 @@
 # Changelog
 
+## 0.10.5 — the image is a shot-reference sheet, plain questions read state, and `.review` retires
+
+### Reading locked state needs no command
+
+`.review <stage>` was a command for something that should never have needed one: looking
+something up. And the skill's own explicit-trigger rule ("ordinary conversation never opens a
+question, resolves one, advances a stage") risked being read as *don't answer questions either*,
+so a plain `what's the riddle again?` could be deflected.
+
+Both trigger-rule authorities (`SKILL.md` §1, `reroll-and-options.md` §0) now carry the carve-out
+explicitly: **asking is not advancing.** A plain question about locked state — *what's the riddle?*,
+*what's the script?*, *which profile?*, *what's the timing?*, *what was the answer?* — is answered
+from episode state, read-only: it changes no lock, voids nothing, and spends no generation. It
+still may not choose among open options, approve a gate, or move the stage.
+
+`.review <stage>` is now a **legacy alias** — kept working, no longer advertised, in the same way
+as `.render` → `.image` and `.pair` → `.profile`. Removed from the preferred command lists in
+`SKILL.md` §11, `overview.md`, and the README; retained in `pack.py` `COMMANDS` so the dev flavor
+still prefixes it.
+
+### The image is a shot-reference sheet, not a cinematic picture
+
+The FRAME/IMAGE artifact was being designed — and worded — as if it were something to look at.
+It is not. It is the thing Veo reads, and the old wording ("cinematic", "storyboard", "poster")
+is exactly what pulled the render toward presentation design at the cost of shot clarity.
+
+`frame.md` is now the authority for a hard layout contract, and everything downstream points at
+it.
+
+### Added
+
+- **Sheet layout contract** in `frame.md`: one landscape canvas, 2–5 **stacked horizontal
+  panoramic strips**, vertically compact and horizontally wide, thin neutral separators, strips
+  read top to bottom. Never side by side, never a grid, never one image per panel.
+- **Purpose clause** as the first section of the image prompt formula: state that the image is a
+  visual shot-reference sheet whose only job is to be read by Veo, and that it is **not**
+  optimized for cinematic presentation, poster design, or comic-book aesthetics. It goes first
+  because the generator weights the opening words.
+- **Shot progression** as a first-class idea: strips must differ materially in camera position,
+  viewing direction, shot size **and** subject emphasis, in a readable progression
+  (`WIDE → MEDIUM → TIGHT`). A sheet whose strips are the same shot at three sizes is a failed
+  sheet.
+- **Per-panel spec** extended with approximate subject scale, emotional state, and important
+  props and their position.
+- **Negatives** extended with arrows, camera annotations, storyboard notes, speech bubbles,
+  metadata, decorative UI, poster treatment, and split-screen furniture.
+- **Validation gates** 6, 7 and 12 in `render.md`: sheet-layout failure, presentation drift, and
+  strips that are merely crops/zooms of one another.
+
+### Changed
+
+- Terminology swept from "ingredient sheet" / "multi-panel visual shot reference" /
+  "cinematic image" to **visual shot-reference sheet** (short form: the sheet), across `frame.md`,
+  `image-prompt.md`, `render.md`, `clips.md`, `veo-shots.md`, `veo-google-flow.md`,
+  `veo-3-1-lite.md`, `workflow.md`, `overview.md`, `SKILL.md` §6/§12, and the README.
+- **Separators reconciled.** The old negatives forbade "borders" outright, which contradicted a
+  required gutter between strips. Thin separators between strips are now explicitly *correct* —
+  decorative frames, mattes and shadows around a strip are not — and they are sheet furniture
+  that must never appear in the generated video.
+- `workflow.md` said the sheet was "a deterministic composite of independently generated and
+  validated camera panels" and capped panels at 4. It is generated in a single request, and the
+  cap is 5 (`frame.md`). Both corrected.
+- `clips.md` panel vocabulary is now strip-based (`STRIP 1 → SHOT 1`), and never telling Veo the
+  strips are simultaneous.
+- `bugtongph-quick` negatives gained poster treatment and cinematic key-art styling, since its
+  single image is also a Veo reference.
+- README gained "The image is a shot-reference sheet, not a picture".
+
+## 0.10.4 — identity without an image channel, speaker-safe dialogue, and `.auto` that actually runs
+
+Three problems, all found by using the plugin in a real ChatGPT session.
+
+### 1. The reference-image binding could never work
+
+The IMAGE stage was instructed to bind `assets/character-turnaround.png` as an image input to
+generation. It cannot: a skill can only *name* a file, and a shipped asset is a path inside the
+plugin package — not an image the session can attach. For a remotely installed plugin there is
+often no file on disk at all. So IMAGE blocked for a reason the user had no way to fix.
+
+Identity is now a locked **mode**, in `reference-binding.md` (rewritten):
+
+- **`text` — the default.** The written profile is the identity authority. Nothing to attach,
+  nothing to block on, generation proceeds. Faces drift slightly between episodes; that is the
+  accepted trade for working with zero setup.
+- **`attached` — opt-in.** The user attaches a turnaround in the conversation, and that image is
+  used as the reference image input for an exact match.
+
+The shipped turnarounds are **offered, never assumed**: the pipeline asks once, and continues in
+`text` mode if nothing is attached. A missing shipped asset is no longer a blocker anywhere.
+The failure the old gate guarded against — a silently redesigned character — is now caught by
+IMAGE validation instead (gate 2, identity mismatch).
+
+Propagated through `render.md` (the IMAGE BLOCKED path is gone), `identity.md`,
+`active-pair-runtime.md`, `veo-shots.md`, `image-prompt.md`, `overview.md`, `profile.md`,
+`SKILL.md` §5/§6, and the `bugtongph-quick` identity invariant.
+
+### 2. Veo could hand a line to the wrong character
+
+Two characters in frame, an unattributed line, and the model picks whoever it likes — or
+animates both mouths at once.
+
+Every character now gets one short uppercase **speaker label** at profile lock (`OLD MAN`,
+`KID`, `MICH`), and that exact label is used everywhere a person is identified: the profile, the
+image prompt, the script dialogue, and the clip prompts. Pronouns in place of a label are
+banned.
+
+- `script.md` — dialogue is written as a labelled block (`OLD MAN: "…"`), never as prose.
+  Added the five label rules, including "name the silent listener".
+- `clips.md` — a required **SPEAKER ROSTER** block leads Clip 1, binding each voice to a label.
+  A new section, "Speaker attribution — one mouth at a time", adds seven rules: one label per
+  line, exact spelling, one speaker per shot with the listener's mouth explicitly closed, no
+  narrator or overlapping lines, voice characteristics restated beside each line, roster
+  restated in Clip 2, and no line changing speaker between script and prompt.
+- `veo-prompt.md` — the construction checklist now requires the roster label per line and the
+  silent listener's closed mouth.
+
+### 3. `.auto` contradicted itself and did not run
+
+`SKILL.md` §1 said `.auto` "stops and waits, **even inside `.auto`**" while §3 said it "does not
+ask the gates". §1 had it also stopping after every stage, so an unattended run could not reach
+the image.
+
+`.auto` is now unambiguously one **continuous run**: it preselects every stage on option 1,
+prints the trail one line per stage as it goes, runs straight through IMAGE PROMPT into IMAGE,
+and stops once the image is validated. `.clips` remains a separate command. Stage commands
+(`.riddle`, `.script`, …) keep the one-question-and-stop behaviour, so any single choice can
+still be steered. Rewritten in §1, §3, and `reroll-and-options.md` §11.
+
+## 0.10.3 — first-run starters a stranger can actually use
+
+### Changed
+
+- **The three composer starters were rewritten for a first-time user.** They previously read
+  "run the riddle or topic episode pipeline one stage at a time", "invent a fresh topic for a new
+  episode, then lock location, environment, and profile", and "turn a validated image into two
+  copy-ready Google Flow / Veo prompts" — internal jargon ("pipeline", "lock"), and `.clips` is
+  unusable on a cold start because no image exists yet. They are now:
+
+  ```text
+  .auto - start a bugtong episode. Works with no setup.
+  .topic - no riddle? Let the AI invent a topic instead.
+  .riddle bisaya - play in Bisaya instead of Tagalog.
+  ```
+
+  `.auto` is the hero because the bundled riddle set (0.10.2) makes it work with zero
+  configuration, and each of the three is actionable from a brand-new chat. `.clips` moved out of
+  the starters — it needs a validated image first.
+- The skill-level `default_prompt` in `skills/*/agents/openai.yaml` was de-jargoned to match
+  ("start a bugtong episode one step at a time", "the quick path: one riddle, three scripts, one
+  image").
+- README gained a **Try it (30 seconds)** section documenting the starters and the
+  reply-with-a-number interaction.
+
+## 0.10.2 — Notion is now optional: bundled fallback riddle set, and a picker language
+
+### Added
+
+- **A bundled riddle set** at `assets/riddles.json` — nine traditional, public-domain Filipino
+  bugtong as fixed committed text, each with Tagalog, English, and Bisaya renderings plus its
+  answer. New reference: `references/bundled-riddles.md`.
+- **Notion is now optional.** RIDDLE resolves to the connected `bugtongPH Riddle Database` when
+  it is available, and falls back to the bundled set when it is not, stating which source is in
+  use in one line. This is what makes the plugin installable by other people: before this, a
+  user without the author's private Notion database got a blocked RIDDLE and nothing else ran.
+- **A picker language** — `.riddle tagalog` (default), `.riddle english`, `.riddle bisaya`. A
+  recognised language word sets the render language; any other word stays a steering hint. The
+  language is episode state: it sets the riddle's wording *and* the spoken language of the
+  episode's dialogue, and changing it invalidates downstream work like any upstream lock.
+
+### Changed
+
+- The not-invention rule is now stated precisely. Both permitted sources are **fixed text**;
+  the bundled set is not an exception, because it is committed content reproduced verbatim. What
+  the rule forbids is the model *producing* a riddle at runtime. `riddle.md` §"Absolute source
+  rule" says this explicitly.
+- RIDDLE's blocked state narrowed: Notion being unconnected is **not** a blocker any more. It
+  blocks only when Notion is unavailable *and* the bundled set is unreadable or exhausted
+  (`notion-riddle-database.md`, `reroll-and-options.md` §11).
+- The bundled set is finite, so a RIDDLE reroll can now run dry on it; the reroll rules say to
+  report that and offer a Notion connection.
+- The `bugtongph-quick` skill's provenance invariant points at both sources, so `.img` works
+  without Notion too.
+
+### Verified
+
+- `validate-plugin.py` → 58 checks, 0 failed; both zips install and resolve cleanly.
+
+### Needs before public distribution
+
+- Every bundled entry is `verified: false`. The wording and answers must be checked against a
+  source and flipped to `verified: true`, and anything unconfirmable removed. The Bisaya column
+  holds **translations** of the Tagalog riddles, not attested traditional Cebuano *tigmo*
+  wording, and needs a Cebuano speaker's check.
+
+## 0.10.1 — fixes found while testing the two-pipeline build
+
+### Fixed
+
+- **The dev flavor leaked unprefixed commands on two surfaces**, so with prod and dev both
+  installed the dev build's own starter prompts fired the *production* plugin's commands:
+  `skills/*/agents/openai.yaml` → `default_prompt` (`.auto`, `.img`) and the manifest
+  `defaultPrompt` entries (`.auto`, `.topic`, `.clips`). `pack.py` now prefixes both — along
+  with the skill frontmatter `description`, which was already covered — making `.dev-auto`,
+  `.dev-img`, `.dev-topic`, `.dev-clips` the only dev-visible forms. Dev ships **436** prefixed
+  command tokens.
+- **Topic-mode scripts came out silent.** "The whole spoken budget belongs to the script" was read
+  as *spend nothing*: a real topic run produced SCRIPT = "minimal dialogue, suspenseful pacing"
+  with no lines at all. `script.md` now says the budget is **available and must be spent**
+  (~11 words for one clip, ~27 for two), adds a "Topic-pipeline budget" rule that a topic episode
+  is still a talking episode and never ships with no dialogue, and notes that a topic's Clip 1
+  carries its spoken content directly. `overview.md` reports the budget to spend.
+- **An invented bundle could be labelled `profile-01`.** A topic run rendered
+  `PROFILE ✓ profile-01 — fisherman + child`, which is not profile-01; the image stage would then
+  have bound `character-turnaround.png` (the Old Man + Kid) against a fisherman script.
+  `profile.md` and `SKILL.md` §6 state that `profile-01` is always the Old Man + Kid with the blue
+  neck scarf, that an invented bundle is offered under its own descriptive name and is never
+  labelled `profile-01`, and that `profile-01` is never described as other characters.
+
+## 0.10.0 — two content pipelines, and the profile-02-mich catalog profile
+
+### Added
+
+- **The topic pipeline.** `.topic` (and `.auto topic` / `.auto fresh topic`) starts an episode
+  whose subject is **invented by the model** instead of drawn from Notion. TOPIC is the freeform
+  alternative to RIDDLE: it offers five wildly different topics as `subject — angle`, with option
+  1 `(suggested)` being the model's own pick, and locks the chosen topic and angle only.
+  - No Notion query, no riddle, and **no answer** — a topic has nothing to hide, so §9 riddle
+    secrecy and the clip/image "RIDDLE INTEGRITY" sections become "SUBJECT INTEGRITY" and state
+    the topic openly in this pipeline.
+  - It cannot run dry on reroll, unlike the finite riddle database.
+  - RIDDLE remains the default; a plain `.auto` still starts the riddle pipeline. New reference:
+    `references/topic.md`.
+  - **`.vlog` and `.vblog` are accepted aliases for `.topic`** — as a stage command and as the
+    `.auto` keyword (`.auto vlog`, `.auto fresh vblog`). Both work in the dev flavor as
+    `.dev-vlog` / `.dev-vblog`.
+- **Everything after the first stage is shared.** `RIDDLE|TOPIC → LOCATION → ENVIRONMENT →
+  PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE → CLIPS`. The status line's first
+  slot is whichever pipeline is active; the invalidation cascade gained `new topic`, identical
+  to `new riddle`; runtime state gained a `CONTENT SOURCE` field.
+- **`profile-02-mich`** — a second permanent, **reference-backed** profile: Mich, a photoreal
+  live-action Filipina subject with a front + side face turnaround at
+  `assets/mich-turnaround.png`. It is documented in full (characters, art style, material
+  language, scale, voice profiles) in `references/profile.md`, and its asset is wired into
+  `identity.md`, `reference-binding.md`, and `active-pair-runtime.md` alongside `profile-01`.
+
+### Changed
+
+- **`clips.md` no longer hard-codes "papercraft".** Clip 1's master instruction now names the
+  active profile's art style (papercraft diorama for `profile-01`, photoreal live action for
+  `profile-02-mich`), so the profile is not contradicted at the clip stage.
+- **Timing wording:** "count the riddle first" became **"count the fixed text first"** — the
+  rule still governs the riddle pipeline, and the topic pipeline is told plainly that it has no
+  fixed text and the whole spoken budget belongs to the script (`script.md`, `tagalog-pacing.md`).
+- Manifest `description`, `longDescription`, `shortDescription`, `keywords`, and `defaultPrompt`
+  updated for two pipelines; starter prompts are now `.auto`, `.topic`, `.clips`. Version
+  `0.9.7 → 0.10.0`.
+
+### Compatibility
+
+Riddle-pipeline behavior, stage contracts, channels, and the workflow contract are unchanged.
+`.topic` is new; nothing existing was renamed or removed.
+
 ## 0.9.6 — option 1 is the suggested pick, and options must be wildly different
 
 ### Added
