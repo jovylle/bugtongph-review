@@ -113,6 +113,34 @@ python3 pack.py            # both flavors
 python3 pack.py --dev      # dev only
 ```
 
+## Version control
+
+- **`main` = production.** Every commit on `main` is what ships, and each release is tagged
+  `vX.Y.Z`. The tag points at the exact tree state that produced the shipped zip.
+- **`dev` = development.** All work happens here; `main` only ever receives finished work.
+
+Promotion flow:
+
+```bash
+# on dev — build the dev flavor, install it, test it
+python3 pack.py --dev
+
+# when it is good
+git commit -am "what changed"
+git switch main
+git merge --no-ff dev
+git tag -a v0.9.8 -m "bugtongPH Studio 0.9.8"
+git switch dev
+
+# then build and verify the release artifacts
+python3 pack.py
+python3 validate-plugin.py bugtongph
+python3 ~/.hermes/skills/software-development/codex-plugin-packaging/scripts/verify_plugin_install.py dist/*.zip
+```
+
+`dist/` is ignored on purpose: zips are artifacts, and any commit can rebuild them exactly.
+Never commit an installed copy, and never edit a build output.
+
 ## Commands
 
 Minimal: `.img` (`.img reroll`), `.veo` (`.veo 1` / `.veo 2`)
