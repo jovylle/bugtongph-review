@@ -10,15 +10,19 @@ Unless the user explicitly selects another profile, the active production profil
 
 `profile-01` is the Old Man + Kid with Blue Neck Scarf handcrafted Filipino papercraft profile.
 
-## Canonical reference asset
+## Identity modes
 
-For `profile-01` the exact visual reference asset is:
+Each profile resolves to one identity mode at PROFILE lock (see `reference-binding.md`):
 
-```text
-assets/character-turnaround.png
-```
+- `text` — **default**. The written profile is the identity authority. Nothing to attach;
+  generation proceeds.
+- `attached` — **opt-in**. The user attaches a turnaround image in the conversation, and that
+  image becomes the identity authority and the reference image input.
 
-The asset path must be resolved from the plugin package and supplied as an actual image/reference input to `.render` when supported by the image-generation capability.
+Shipped turnarounds — `assets/character-turnaround.png` for `profile-01`,
+`assets/mich-turnaround.png` for `profile-02-mich` — are the canonical definitions those written
+profiles come from. They are **offered to the user to attach**, never assumed bound: a path
+inside a plugin package is not something the session can attach by itself.
 
 ## Mandatory substitution rule
 
@@ -32,22 +36,26 @@ For any episode:
 
 ```text
 ACTIVE PROFILE
-  ├── Characters
-  ├── Canonical reference asset(s)
+  ├── Characters (with their uppercase speaker labels)
+  ├── Identity mode (text | attached) + attached image when there is one
   ├── Art style
   ├── Visual/material language
   ├── Scale conventions
   └── Voice/speech profiles
 ```
 
-The canonical reference asset is the primary visual identity authority.
+The locked identity source — the written profile in `text` mode, the user's attached image in
+`attached` mode — is the primary visual identity authority.
 
 ## Render rule
 
 The validated IMAGE controls the current episode pose, expression, gaze, hand placement, position, lighting, composition, and environment for Clip 1.
 
-The canonical active-profile reference controls identity.
+The locked identity source controls identity.
 
-Do not let a semantic prompt description replace or redesign the canonical visual reference.
+Do not let a semantic prompt description replace or redesign a character that conflicts with
+the locked identity source.
 
-If the reference asset cannot be bound to the image-generation request, IMAGE must block instead of generating an approximate replacement character.
+If the identity source cannot be honoured — an `attached` image that the render does not match —
+the render fails validation and is regenerated; it is never silently accepted as an
+approximation. A `text`-mode profile has nothing to bind, so it never blocks the stage.

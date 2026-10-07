@@ -12,7 +12,9 @@ The runtime should always be able to reconstruct:
 EPISODE
 CHANNEL
 RELEASE
-RIDDLE
+CONTENT SOURCE    riddle | topic
+RIDDLE            (riddle pipeline only)
+TOPIC             (topic pipeline only)
 LOCATION
 ENVIRONMENT
 PROFILE
@@ -30,10 +32,14 @@ REJECTED           per stage
 CORRECTION         stage, round
 ```
 
+`CONTENT SOURCE` records which pipeline the run belongs to. Exactly one of `RIDDLE` and `TOPIC`
+is present in a run; the other is absent, not empty.
+
 ## Stage ownership
 
 ```text
 RIDDLE       text-only
+TOPIC        text-only
 LOCATION     text-only
 ENVIRONMENT  text-only
 PROFILE      text-only

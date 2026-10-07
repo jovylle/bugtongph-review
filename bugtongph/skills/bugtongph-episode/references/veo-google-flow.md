@@ -2,12 +2,19 @@
 
 ## 1. Core Principle
 
-The provided **multi-panel visual shot reference** is the exact visual source of truth for **CLIP 1 only**.
+The provided **visual shot-reference sheet** is the exact visual source of truth for **CLIP 1 only**.
 
-The image contains the minimum number of visually separated panels needed
+It is one landscape canvas of 2–5 stacked horizontal panoramic strips with thin neutral
+separators, each strip vertically compact and horizontally wide. Strips are read top to bottom.
+
+The image contains the minimum number of visually separated strips needed
 for Clip 1, normally 2 for a simple ~8-second interaction.
 
-Each panel represents one intended camera shot.
+Each strip represents one intended camera shot. The strips are **sequential shots, never
+simultaneous scenes**, and no strip may be a crop or zoom of another.
+
+The sheet exists to be read by the video generator, not to be looked at. Do not optimize it for
+cinematic presentation, poster design, or comic-book aesthetics.
 
 Veo should animate the established visual states and connect the planned shots. It should not redesign, reinterpret, or replace the characters, environment, or visual style.
 
@@ -68,7 +75,7 @@ Written descriptions such as "elderly fisherman" or "young fisherman" are
 semantic identifiers only. They must not be used as a substitute for the
 supplied facial reference.
 
-The multi-panel reference establishes the planned camera sequence.
+The shot-reference sheet establishes the planned camera sequence.
 
 Within a clip, the panels represent sequential camera shots. Veo should
 execute one shot at a time and cut between the planned shots. The panel
@@ -89,20 +96,29 @@ The panels are **editorial shot references**, not objects that exist inside the 
 
 Do not render panel borders, panel layout, separators, or the reference
 image structure as part of the video scene. Never treat the complete
-multi-panel sheet as one scene that should be animated simultaneously.
+sheet as one scene that should be animated simultaneously.
+
+The thin separators between strips are **sheet furniture**: they belong in the reference sheet
+and must never be reproduced in the video. A frame, matte, or shadow drawn around a single strip
+is a defect in the sheet itself — the sheet's only decorative element is the gutter between
+strips.
 
 ---
 
-# 2. Multi-Panel Shot Reference
+# 2. Shot-Reference Sheet
 
-The multi-panel image is a storyboard-like camera reference for CLIP 1
+The shot-reference sheet is a strip-by-strip camera reference for CLIP 1
 only. It is not a reference for the entire two-clip episode.
 
 The intended meaning is:
 
-    PANEL 1 → CAMERA SHOT 1
-                 ↓ CUT
-    PANEL 2 → CAMERA SHOT 2
+    STRIP 1 (top)    -> CAMERA SHOT 1
+                          ↓ hard CUT
+    STRIP 2          -> CAMERA SHOT 2
+
+The strips are stacked top to bottom on one landscape canvas, vertically compact with thin
+separators between them. Strips are sequential shots — never simultaneous scenes, never a
+side-by-side grid, and never the same shot at three sizes.
 
 Additional panels may exist only when Clip 1 genuinely requires them.
 Do not create extra panels simply to provide more visual coverage.
@@ -438,7 +454,7 @@ Plot
 ↓
 Veo feasibility
 ↓
-Multi-panel shot design
+Shot-reference sheet design
 ↓
 Video prompt
 ```
@@ -813,7 +829,7 @@ Use the available panels as sequential camera shots within the clip when
 timing allows. Do not animate multiple panels simultaneously. If a panel
 reference cannot be reliably interpreted as sequential shots by the video
 generator, the final CLIPS prompt should fall back to separate shot
-references rather than allowing the panel sheet to become the visible
+references rather than allowing the shot-reference sheet to become the visible
 scene.
 
 ### Cut Priority
@@ -853,7 +869,7 @@ Continuity and readable acting are more important than montage.
 The default production uses **two clips**, with each clip targeting
 approximately **8 seconds**. Each clip is a separate Veo generation unit,
 but each clip may contain multiple planned camera shots from the
-corresponding multi-panel reference.
+corresponding shot-reference sheet.
 
 The combined target is approximately 16 seconds of video. Never force the
 characters to speak faster, add unnecessary actions, or add unnecessary
@@ -888,7 +904,7 @@ Each final Veo prompt must clearly identify:
 
 ## 18.1 Clip 1 vs Clip 2 Reference Rule
 
-CLIP 1 is the only clip that uses the rendered multi-panel image as its
+CLIP 1 is the only clip that uses the rendered shot-reference sheet as its
 visual shot reference. The image should normally contain 2 shots for a
 simple 8-second interaction.
 
@@ -1016,7 +1032,7 @@ If a panel is a wide shot, preserve its wide composition.
 
 # 20. Environment and Audio
 
-Maintain the environment established by the multi-panel reference.
+Maintain the environment established by the shot-reference sheet.
 
 Use believable location-specific ambience.
 
@@ -1087,7 +1103,7 @@ The visual reference panels may contain different camera framings, but they must
 
 # 22. Plot Design Rules
 
-Before generating a multi-panel visual shot reference, evaluate whether the story is actually suitable for Veo.
+Before generating a shot-reference sheet, evaluate whether the story is actually suitable for Veo.
 
 Prefer scripts that rely on:
 
@@ -1125,10 +1141,16 @@ Then propose a simpler replacement script with the same intended effect.
 
 ---
 
-# 23. Multi-Panel Reference Construction
+# 23. Shot-Reference Sheet Construction
 
-The image-generation stage should create a single visual reference for
-CLIP 1 containing the minimum number of clearly separated panels.
+The image-generation stage creates one visual reference for
+CLIP 1, containing the minimum number of clearly separated camera setups.
+
+**Layout contract: `frame.md`.** One landscape canvas, 2–5 stacked horizontal panoramic strips,
+vertically compact with thin neutral separators, read top to bottom as sequential shots. The
+strips are not simultaneous scenes, and no strip may be a crop or zoom of another. The sheet is a
+production instrument: do not optimize it for cinematic presentation, poster design, or
+comic-book aesthetics.
 
 STRICT IMAGE-PROMPT ISOLATION
 
@@ -1142,15 +1164,15 @@ When a shortcut command internally plans the shots before IMAGE, that plan must
 remain isolated from the image-generation prompt. The image generator must receive
 only the clean visual specification from FRAME plus the canonical visual references.
 
-Default: 2 panels for a simple ~8-second clip.
-3 panels only when a third shot is genuinely useful.
-4 panels only when unavoidable for clear Clip 1 coverage.
+Default: 2 strips for a simple ~8-second clip.
+3 strips only when a third shot is genuinely useful.
+4–5 strips only when unavoidable for clear Clip 1 coverage, 5 being the ceiling.
 
-Each panel must be:
+Each strip must be:
 
 - visually readable
 - compositionally distinct
-- consistent with the other panels
+- consistent with the other strips
 - simple enough for video generation
 - free from unnecessary text
 - free from speech bubbles
@@ -1163,9 +1185,9 @@ that accidentally appears in the generated image is non-canon and must
 not be copied into the Veo prompt or script. If it materially changes the
 scene, regenerate the visual reference.
 
-The panels should clearly communicate different camera views.
+The strips should clearly communicate different camera views.
 
-Do not create panels that differ only trivially.
+Do not create strips that differ only trivially.
 
 Preferred minimal panel progression for Clip 1:
 
@@ -1284,9 +1306,9 @@ Every Flow/Veo prompt should explicitly contain:
 Use this structure:
 
 ```text
-MULTI-PANEL VISUAL REFERENCE
+SHOT-REFERENCE SHEET
         ↓
-PANEL-TO-SHOT MAPPING
+STRIP-TO-SHOT MAPPING
         ↓
 SHOT 1 STARTING STATE
         ↓

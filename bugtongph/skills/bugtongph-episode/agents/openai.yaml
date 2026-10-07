@@ -3,5 +3,5 @@ interface:
   short_description: "Bugtong episode production"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  default_prompt: ".auto - run the staged bugtong episode pipeline in production, resuming the first incomplete checkpoint."
+  default_prompt: ".auto - start a bugtong episode one step at a time. Works with no setup."
 

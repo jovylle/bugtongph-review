@@ -11,22 +11,27 @@ Characters do not inherit identities, styles, clothing, props, or voices from an
 The active profile defines:
 
 - canonical character identity and appearance;
-- exact visual reference asset(s);
+- identity mode (`text` or `attached`) and the reference image when one is attached;
 - art/material style;
 - scale conventions;
 - clothing and accessories;
 - voice identity;
 - speech characteristics.
 
-For `profile-01`, the canonical visual identity reference is `assets/character-turnaround.png`.
+Shipped turnarounds, offered to the user to attach (see `reference-binding.md`):
+
+| Profile | Turnaround |
+| --- | --- |
+| `profile-01` | `assets/character-turnaround.png` |
+| `profile-02-mich` | `assets/mich-turnaround.png` |
 
 The validated IMAGE defines the current episode pose, expression, gaze, hand placement, position, lighting, composition, and environment for Clip 1.
 
 ## Identity precedence
 
-Use the active-profile canonical reference image as the primary identity authority. Text descriptions are supporting constraints and must not redesign a character that is visible in the canonical reference.
+In `attached` mode the user's attached image is the primary identity authority, and text descriptions are supporting constraints that must not redesign a character visible in it.
 
-Never use a previous episode render as the identity source.
+In `text` mode — the default — the written profile is the authority, applied consistently across every panel and clip. Neither mode may ever use a previous episode render as the identity source.
 
 ## Continuity
 

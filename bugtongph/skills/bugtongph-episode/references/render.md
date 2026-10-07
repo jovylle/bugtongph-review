@@ -1,7 +1,11 @@
-# .image / .render — generate and validate the ingredient sheet
+# .image / .render — generate and validate the shot-reference sheet
 
 Generate the Clip 1 visual reference from the approved image prompt. `.render` is the legacy
 name; `.image` is the command users type.
+
+The artifact is the **visual shot-reference sheet** — a production instrument read by Veo 3.1
+Lite, not a finished picture. Its layout contract lives in `frame.md`; this stage generates it
+and validates it against that contract.
 
 ## Hard boundary
 
@@ -11,11 +15,11 @@ This is the **only** stage allowed to request image generation. `.script`, `.fra
 ## Required inputs
 
 - active channel and recorded release;
-- locked PROFILE, with its identity mode;
+- locked PROFILE, with its identity mode (`text` or `attached`);
 - locked LOCATION, ENVIRONMENT, and SCRIPT;
 - FRAME panel plan;
 - the approved image prompt from `.image-prompt`;
-- for a reference-backed profile, the exact canonical reference asset.
+- for an `attached`-mode profile, the image the user attached in the conversation.
 
 ## Channel parity
 
@@ -31,26 +35,24 @@ Development may experiment; development-only behavior must never leak into produ
 
 ## Identity binding gate
 
-Resolve and bind the canonical profile reference asset **before** any generation request. For
-`profile-01`:
+Identity mode is locked at PROFILE (see `reference-binding.md`).
 
-```text
-assets/character-turnaround.png
-```
+**`text` mode — the default.** The written profile is the identity authority. There is nothing
+to resolve and nothing to attach; proceed to generation and hold the character from the profile
+text, identically in every panel. Do not block.
 
-The request must actually use the asset as an image input where the capability supports image
-inputs. Naming the file in prose is not binding, and the reference outranks descriptive text
-for visible identity.
+**`attached` mode.** The user attached a turnaround image in this conversation. That image must
+actually be used as the reference image input, and it outranks descriptive text for anything
+visible in it. If the user asked for `attached` but no image is present in the conversation, ask
+once for it; if it still does not arrive, continue in `text` mode and say so in one line.
 
-If a reference-backed profile's asset cannot be supplied, stop:
+Never block IMAGE waiting for a reference the plugin cannot supply: a file path inside the
+plugin package is not an image the session can attach, so a shipped `assets/*.png` alone is
+never grounds for blocking.
 
-```text
-IMAGE BLOCKED: canonical profile reference asset is not bound to the generation request.
-```
-
-**Sanctioned exception:** an **AI-invented profile has no reference asset**. For those
-profiles the written profile text is the identity authority and generation proceeds — do not
-block, and do not borrow another profile's turnaround as a substitute.
+This replaces the older rule that treated a missing canonical asset as an automatic IMAGE
+block. The failure that rule was guarding against — a silently redesigned character — is now
+caught by validation instead: a render that contradicts the locked identity source fails gate 2.
 
 ## State machine
 
@@ -64,8 +66,8 @@ FAILED_REQUIRES_REGENERATION
 ```
 
 - **READY_FOR_GENERATION** — the approved prompt is complete and an image is actually needed.
-- **REFERENCE_BOUND** — the canonical reference is resolved and bound (or the profile is
-  AI-invented and text-defined).
+- **REFERENCE_BOUND** — the identity source is settled and available: the profile is in `text`
+  mode, or in `attached` mode with the user's image present in the conversation.
 - **GENERATION_REQUESTED** — mark this immediately before requesting. The request must match
   the current prompt and profile.
 - **IMAGE_PRESENT_PENDING_VALIDATION** — an image arrived. Inspect it before requesting
@@ -100,13 +102,21 @@ Reject and regenerate only the failed artifact for:
 
 1. camera/view/shot-size mismatch;
 2. profile identity or reference mismatch;
-3. character position, pose, gaze, hands, props, or physical-state mismatch;
-4. location, environment, lighting, scale, or continuity mismatch;
+3. character position, pose, gaze, hands, props, physical-state, or scale mismatch;
+4. location, environment, lighting, or continuity mismatch;
 5. art/material language mismatch;
-6. text or text-like marks, labels, panel numbers, borders;
-7. answer clue or answer-directed behavior;
-8. accidental extra shot, collage, comic/poster treatment, or wrong panel structure;
-9. missing, duplicated, or merged panels against the FRAME count.
+6. sheet-layout failure — not one landscape canvas, or side-by-side/grid panels instead of
+   stacked horizontal strips (see `frame.md`);
+7. presentation drift — the render reads as a poster, comic page, storyboard, or "cinematic"
+   key art rather than a production reference sheet;
+8. text or text-like marks, labels, panel numbers, arrows, annotations, watermark, or a frame
+   drawn around a strip. *Thin separators between strips are expected and correct — they are
+   not a defect;* frames, mattes and shadows around a strip are;
+9. answer clue or answer-directed behavior;
+10. accidental extra shot, collage, or a panel count that disagrees with FRAME;
+11. missing, duplicated, or merged panels against the FRAME count;
+12. panels that are merely crops, zooms or re-frames of the same shot instead of materially
+    different camera setups.
 
 ## Riddle secrecy
 

@@ -2,65 +2,100 @@
 
 ## Purpose
 
-Prevent semantic re-creation of characters when a canonical visual reference asset exists.
+Decide, once per episode, **where a character's identity comes from** — so the render is never
+silently re-created from a description when a real reference exists, and never blocked when one
+does not.
 
-## Canonical profile-01 asset
+## Why this file changed its rule
 
-For `profile-01`, the canonical character identity reference asset is exactly:
+Skills can only *name* a file. A plugin cannot hand the session an image: a shipped
+`assets/*.png` is a path inside the package, not something the model can attach to a generation
+request. There is no file handle and, for a remotely installed plugin, often no file on disk at
+all. So "bind the canonical asset as an image input" was an instruction the runtime could not
+carry out, and IMAGE blocked for a reason the user could not fix.
+
+Identity therefore has **two modes**, and only one of them involves an image.
+
+## Identity modes
+
+Lock exactly one mode at PROFILE:
+
+| Mode | Identity authority | Binding step |
+| --- | --- | --- |
+| `text` — **default** | the written profile: characters, appearance, clothing, material, scale, voice | none. There is nothing to attach; generation proceeds. |
+| `attached` — **opt-in** | an image the **user attaches in the conversation** | that attached image must actually be used as the reference image input |
+
+`text` is the default and needs no setup. Use it unless the user asks for an exact identity
+match.
+
+## Shipped turnarounds are offered, never assumed
+
+`profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
+`assets/mich-turnaround.png`. These remain the canonical *definitions* of those characters, and
+they are what the written profile text is derived from.
+
+They are **not** automatically bound. When the active profile has a shipped turnaround, offer it
+once, plainly:
 
 ```text
-assets/character-turnaround.png
+profile-01 has a turnaround image. Attach it in this chat and I'll use it as the
+identity reference — or say "text only" and I'll hold the character from the written
+profile instead. (text only is the default)
 ```
 
-This asset is the visual authority for character identity and appearance.
+Then:
+
+- an image actually present in the conversation → mode `attached`, bind it;
+- the user declines, or nothing arrives after one ask → mode `text`, proceed, and say in one
+  line that identity will be held by description rather than matched to the reference.
+
+Never block IMAGE waiting for an image the runtime may never deliver. Never claim an image is
+bound when none is present in the conversation.
 
 ## Authority order
 
-For character identity, use this precedence:
+For character identity, use the mode's authority, and nothing else:
 
-1. canonical active-profile reference image asset;
-2. explicit profile definition derived from that asset;
-3. textual continuity rules only for properties not directly visible in the asset.
+1. `attached` — the attached image outranks every written description for anything visible in it;
+2. `text` — the written profile is the authority, and is applied consistently across every panel
+   and every clip;
+3. continuity rules for properties neither source covers.
 
-Textual character descriptions must never override or redesign a visible canonical reference.
+Textual descriptions must never override or redesign a character that is visible in an attached
+reference.
 
-## Mandatory render binding
+## What still fails
 
-Before `.render` image generation:
+A render is a failure, and must be regenerated, when:
 
-```text
-ACTIVE PROFILE
-→ RESOLVE REFERENCE ASSET
-→ BIND REFERENCE AS IMAGE INPUT
-→ GENERATE
-```
+- mode is `attached`, an image is present in the conversation, and the render does not match it;
+- mode is `text` and the render contradicts the written profile — wrong character count, wrong
+  clothing, wrong apparent age, wrong material or art style, or characters swapped with each
+  other.
 
-The exact active-profile reference asset must be available to the image-generation request as an image/reference input when the generation capability supports image inputs.
-
-Do not treat merely naming the asset path in a text prompt as equivalent to supplying the image.
-
-## No semantic fallback
-
-If the active-profile reference asset cannot be supplied to the image-generation capability, do not silently reconstruct the characters from descriptive text. Stop IMAGE and report:
-
-```text
-IMAGE BLOCKED: canonical active-profile reference asset is not bound to the image-generation request.
-```
-
-A visually plausible but newly invented character is a failed render, not an acceptable fallback.
+Character **swap** is the most common of these: two characters delivered with each other's
+appearance, clothing, or voice. It is a failure in either mode.
 
 ## Reference vs episode render
 
-The canonical profile reference defines who the characters are.
+The identity source defines who the characters are.
 
-The current episode IMAGE defines the current pose, expression, gaze, hand placement, position, environment, lighting, composition, and shot state.
+The current episode IMAGE defines the current pose, expression, gaze, hand placement, position,
+environment, lighting, composition, and shot state.
 
-Never use a previous episode IMAGE as a substitute for the canonical profile reference.
+Never use a previous episode IMAGE as a substitute for the identity source.
 
 ## Frame restriction
 
-FRAME may describe camera composition, but it must not redefine character identity. Descriptions such as age, facial structure, clothing colors, hairstyle, or accessories are continuity constraints only and do not replace the canonical visual reference.
+FRAME may describe camera composition, but it must not redefine character identity. Age, facial
+structure, clothing colours, hairstyle, and accessories are continuity constraints, and do not
+replace the identity authority.
 
-## Identity validation
+## Speaker labels
 
-A render passes identity validation only when the generated characters are recognizably the same canonical profile as the bound reference, allowing only the pose, expression, camera, environment, lighting, and other episode-state changes explicitly required by FRAME.
+Identity includes **who is who by name**. At PROFILE lock, fix one short uppercase label per
+character (`OLD MAN`, `KID`, `MICH`) and reuse that exact label everywhere a person is
+identified — written profile, image prompt, script dialogue, and clip prompts.
+
+Labels are what let the video model attach a line to a person. See `script.md` for the dialogue
+format and `clips.md` for the voice map.

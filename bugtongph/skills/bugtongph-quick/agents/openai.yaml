@@ -1,5 +1,5 @@
 interface:
   display_name: "bugtongPH Quick"
   short_description: "One image, one Veo prompt"
-  default_prompt: ".img - pick a riddle from Notion, choose from 3 plots, generate the image, then the Veo clips."
+  default_prompt: ".img - the quick path: one riddle, three scripts, one image."
 

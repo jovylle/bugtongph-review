@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "bugtongph",
-  "version": "0.9.7",
-  "description": "Conversational, gated production pipeline for Filipino bugtong episodes: Notion-backed riddle, location, environment, locked character/style/voice profiles, script, ingredient-sheet image, and copy-ready Google Flow / Veo 3.1 Lite clip prompts.",
+  "version": "0.10.5",
+  "description": "Conversational, gated production pipeline for Filipino video episodes: a Notion-backed bugtong riddle or a model-invented topic, then location, environment, locked character/style/voice profiles, script, a stacked-strip shot-reference sheet image, and copy-ready Google Flow / Veo 3.1 Lite clip prompts.",
   "author": {
     "name": "Jovylle Bermudez",
     "url": "https://jovylle.com"
@@ -12,6 +12,7 @@
   "keywords": [
     "bugtong",
     "riddle",
+    "topic",
     "filipino",
     "veo",
     "google-flow",
@@ -24,8 +25,8 @@
       "apps": "./.app.json",
       "interface": {
         "displayName": "bugtongPH Studio",
-        "shortDescription": "Bugtong episode production",
-        "longDescription": "Conversational, checkpoint-safe production pipeline for Filipino bugtong episodes. Each stage offers options, asks one short question, and waits. Selects riddles only from the connected Notion bugtongPH Riddle Database, then locks location, environment, and one Character + Art Style + Voice profile, writes the script, plans the ingredient-sheet panels, shows a full overview, and only then generates and validates the image before emitting two copy-ready Google Flow / Veo 3.1 Lite prompts. Runs under explicit production, beta, and development channels.",
+        "shortDescription": "Filipino episode production",
+        "longDescription": "Conversational, checkpoint-safe production pipeline for Filipino video episodes. Each stage offers options, asks one short question, and waits. The subject comes from one of two content pipelines: a riddle selected only from the connected Notion bugtongPH Riddle Database, or a fresh model-invented topic. It then locks location, environment, and one Character + Art Style + Voice profile, writes the script, plans the ingredient-sheet panels, shows a full overview, and only then generates and validates the image before emitting two copy-ready Google Flow / Veo 3.1 Lite prompts. Runs under explicit production, beta, and development channels.",
         "developerName": "Jovylle Bermudez",
         "category": "Creative",
         "capabilities": [
@@ -33,9 +34,9 @@
         ],
         "websiteURL": "https://jovylle.com",
         "defaultPrompt": [
-          ".auto - run the bugtong episode pipeline one stage at a time, resuming the first incomplete checkpoint.",
-          ".riddle - pick a riddle from the Notion bugtongPH Riddle Database, then lock a location, environment, and profile.",
-          ".clips - turn a validated image into two copy-ready Google Flow / Veo prompts, one per clip."
+          ".auto - start a bugtong episode. Works with no setup.",
+          ".topic - no riddle? Let the AI invent a topic instead.",
+          ".riddle bisaya - play in Bisaya instead of Tagalog."
         ],
         "brandColor": "#B4531F",
         "composerIcon": "./assets/composer-icon.png",

@@ -55,12 +55,15 @@ silently delete or archive a record.
 
 ## Blocked states
 
-Report the blocker and stop at RIDDLE when any of these is true:
+Notion being unavailable is **no longer a blocker** — the picker falls back to the bundled set
+(`bundled-riddles.md`) and states that it has done so.
 
-- the `notion` MCP server is unavailable or unauthenticated;
-- the `bugtongPH Riddle Database` cannot be resolved to exactly one database;
-- the query returns no record with usable riddle text.
+Report the blocker and stop at RIDDLE only when:
 
-Never fall back to model memory, earlier conversation content, web search, generated
-riddles, or a stale cached list. A blocked RIDDLE is a correct outcome; an invented
-riddle is a pipeline failure.
+- the `notion` MCP server is unavailable or unauthenticated **and** `assets/riddles.json` cannot
+  be read;
+- the `bugtongPH Riddle Database` resolves but returns no record with usable riddle text **and**
+  the bundled set is exhausted or unreadable.
+
+Never fall back to model memory, earlier conversation content, web search, or a generated
+riddle. A blocked RIDDLE is a correct outcome; an invented riddle is a pipeline failure.
