@@ -30,8 +30,12 @@ Assemble in this order, every section present, nothing invented:
    optimized for cinematic presentation, poster design, or comic-book aesthetics. This clause
    goes first because the generator weights the opening words, and "cinematic" is the single
    most damaging word to put near a reference sheet.
-2. **STYLE LOCK** — the profile's art style and material/rendering language, and the
-   handcrafted miniature scale conventions.
+2. **STYLE LOCK** — the profile's material and rendering language stated as a physical fact: these
+   are real paper-and-cardboard sculptures photographed in a real miniature set, with visible
+   cut-paper edges, layered paper surfaces, folds and creases, paper fibres, matte finish, and
+   handmade asymmetry. Name the forbidden render families as well — smooth 3D/CGI, plastic, clay,
+   airbrushed. The sheet has to carry the material the clip prompt is later told to preserve, and
+   it is the image the video is matched against: a style noun here costs fidelity twice.
 3. **IDENTITY LOCK** — characters with their uppercase speaker labels, canonical appearance,
    clothing, and the identity mode in force: an attached reference image when the user supplied
    one, or the exact written description that stands in for it in `text` mode.

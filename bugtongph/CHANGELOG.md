@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.10.6 — the sheet is the character authority, and paper is not CGI
+
+A clip came back visibly worse than the sheet it was generated from: papercraft replaced by smooth
+CGI surfaces, faces regenerated as generic, proportions and clothing reinterpreted. The prompt was
+doing what this tree told it to do.
+
+### The prompt contract ordered the opposite of the rules
+
+`clips.md` §1 told the prompt to render "in the active profile's art style (papercraft diorama …)",
+§3 told it to "instantiate the actual active profile's identity, appearance, scale, clothing,
+material", and `veo-prompt.md` opened with "ACTIVE PROFILE IDENTITY LOCK: use the active profile as
+the authoritative source for character identity, art style" while scoping the supplied image to
+"pose, expression, gaze, hand placement, position, environment, lighting, and camera composition".
+Text outranked the image on every property that was drifting.
+
+The rule that would have prevented it — "Do not reconstruct their faces from generic semantic
+descriptions" (`veo-google-flow.md` §1) — existed only as an instruction to the assistant, was
+conditioned on an attached turnaround, and never appeared in the emitted prompt. Identity mode
+defaults to `text`, so the clause was switched off by a condition that never fires.
+
+### Changed
+
+- **The validated sheet is the character authority at CLIPS**, above both an attached turnaround
+  and the written profile. The profile survives in the prompt as voice, speaker labels, and what
+  the sheet cannot show. (`clips.md`, `reference-binding.md`, `identity.md`, `veo-shots.md`,
+  `active-pair-runtime.md`, `SKILL.md` §6.)
+- **New required prompt sections: REFERENCE AUTHORITY and MATERIAL REALITY**, stated first,
+  because the generator weights the opening words. The material block says the characters are real
+  paper-and-cardboard sculptures photographed in a real miniature set, names what must survive
+  (cut edges, layered surfaces, folds, fibres, matte finish, handmade asymmetry), and forbids what
+  replaces them (smooth 3D/CGI, plastic, clay, airbrushed, generated generic faces).
+- **No prompt section may restate a visible property.** Face, build, clothing construction, and
+  surface material come from the sheet; describing them in words is an instruction to rebuild the
+  character. The Clip 1 word budget is unchanged, but is no longer spent on re-description.
+- **The speaker roster carries voice only.** The "elderly fisherman" style descriptor is gone from
+  it — that phrasing is the semantic identifier the tree already warns against.
+- **Style labels are banned from the clip prompt.** "Papercraft diorama" names a genre the model
+  then re-renders from words; the sheet carries the material instead. Same clause added to the
+  image prompt's STYLE LOCK so the sheet is built to the target the video must match.
+- **Clip acceptance is now a gate.** A returned clip is compared against the sheet on material,
+  faces, build, clothing, and framing. On failure only the authority blocks change — never more
+  character description, which is the cause rather than the fix.
+- **Asset availability decides the suggested profile.** With no character image in the
+  conversation, a catalog character is no longer the suggested default: its shipped turnaround
+  cannot be attached, so a text-only description was promising an exact match it could never
+  deliver. An AI-invented profile leads instead, with the catalog profiles listed for a user who
+  will supply the image. With an image attached, the matching catalog profile leads again.
+- **The sheet must carry the face it is the authority for** (`frame.md` rule 9): at least one strip
+  shows each speaking character's face closely enough to read its paper construction.
+- **Sheet validation gate strengthened** (`render.md`): a render that reads as smooth CGI / plastic
+  / clay instead of photographed paper now fails, as does a face too small to read.
+- `veo-prompt.md` pointed at `active-profile-runtime.md`, a file that does not exist; corrected to
+  `active-pair-runtime.md`.
+
 ## 0.10.5 — the image is a shot-reference sheet, plain questions read state, and `.review` retires
 
 ### Reading locked state needs no command

@@ -20,14 +20,34 @@ episodes means `profile-01`.
 Offer **exactly three** profiles, numbered 1–3, each one line stating characters, style, and
 voice character.
 
+**Which one is suggested depends on whether a character image exists in this conversation.** An
+identity that cannot be bound must never be offered as if it could: the catalog turnarounds ship
+inside the plugin package and the session cannot attach them, so a catalog character with no image
+is a description holding an identity it can never match. Full rule in `reference-binding.md`
+"Which profile is offered, by asset availability".
+
+**No image from the user** — an invented profile leads, because it promises nothing it cannot
+deliver:
+
 ```text
-1. profile-01 — Old Man + Kid with blue neck scarf, handcrafted papercraft diorama, warm
-   grandfather voice + bright child voice. (turnaround available to attach) (suggested)
-2. profile-02-mich — Mich, photoreal live-action young woman with a front + side face
-   turnaround, warm young-adult Filipino voice. (turnaround available to attach)
-3. AI-invented: Two market vendors, paper-cut shadow style, brisk voices. (described in
-   text)
+1. AI-invented: two market vendors, paper-cut diorama style, brisk voices. (described in text) (suggested)
+2. profile-01 — Old Man + Kid with blue neck scarf, handcrafted papercraft diorama, warm
+   grandfather voice + bright child voice. (attach character-turnaround.png to match it exactly)
+3. profile-02-mich — Mich, photoreal live-action young woman. (attach mich-turnaround.png to
+   match her exactly)
 ```
+
+**An image is present** — the user attached a turnaround or a character sheet, so the catalog
+profile it belongs to leads in `attached` mode and an exact match is achievable:
+
+```text
+1. profile-01 — Old Man + Kid with blue neck scarf, matching the attached turnaround. (suggested)
+2. profile-02-mich — Mich, matching the attached image.
+3. AI-invented: two market vendors, paper-cut diorama style, brisk voices. (described in text)
+```
+
+State in one line which case applies and why the suggestion follows it: a catalog character is
+suggested only when the image that defines it is actually in the conversation.
 
 A hint steers the set: `.profile horror` offers profiles that suit that tone. Repeating
 `.profile` rerolls, excluding `REJECTED`.
@@ -37,11 +57,11 @@ A hint steers the set: `.profile horror` offers profiles that suit that tone. Re
 Every profile locks one identity mode, `text` or `attached` — full contract in
 `reference-binding.md`.
 
-- **`text` (default)** — the written profile is the identity authority: characters, art style,
-  material language, scale, clothing, voice. No asset is needed, nothing has to be attached, and
-  the image stage proceeds. Write it precisely enough to be reused. Identity is *held by
-  description*, so faces drift a little between episodes; that is the accepted trade for working
-  with no setup.
+- **`text`** — the written profile is the identity authority: characters, art style, material
+  language, scale, clothing, voice. No asset is needed, nothing has to be attached, and the image
+  stage proceeds. Write it precisely enough to be reused. Identity is *held by description*, so
+  the sheet is what fixes the look for the episode — and at CLIPS the validated sheet, not the
+  description, is what the video is held to.
 - **`attached` (opt-in)** — the user attaches a turnaround image in the conversation, and that
   image becomes the identity authority and the reference image input, giving an exact match.
 

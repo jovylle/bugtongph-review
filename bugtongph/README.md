@@ -70,13 +70,20 @@ Connect Notion to use your own curated records instead.
 
 | Mode | How it works |
 | --- | --- |
-| `text` — default | the written profile holds the character. No setup; identity drifts slightly between episodes. |
-| `attached` — opt-in | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+| `text` | the written profile holds the character while the sheet is designed. No setup; the sheet, not the description, is what the video is later held to. |
+| `attached` | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+
+Which profile is **suggested** depends on whether an image is actually in the chat. With a
+character image attached, the matching catalog profile leads and an exact match is achievable.
+With no image, an **AI-invented profile** leads instead, and the catalog profiles stay listed for
+someone who will supply the image — because a catalog character's turnaround cannot be attached
+for you, so offering it as a text-only default would promise a match it can never deliver.
 
 The plugin ships `character-turnaround.png` (profile-01) and `mich-turnaround.png`
 (profile-02-mich), but it **cannot attach them for you** — a file path inside a plugin package
-is not an image the session can supply. So the pipeline offers them, and continues in `text`
-mode if you do not attach one. It never blocks waiting for an image.
+is not an image the session can supply. Attach one and it becomes the authority; do not, and the
+episode either invents its own characters or holds the catalog one by description. It never blocks
+waiting for an image.
 
 To use Notion (the preferred source):
 
@@ -139,6 +146,27 @@ toward key-art. Strips must differ materially in camera position, shot size and 
 a strip that is merely a crop or zoom of another does not count. Thin separators are sheet
 furniture and must never appear in the video. Layout contract: `references/frame.md`.
 
+### The sheet is what the video is held to
+
+The video model receives exactly one image — this sheet — and nothing else. From CLIPS onward the
+sheet, not the written profile, is the authority for everything visible: face, build, clothing
+construction, surface material, scale, composition. Both clip prompts open with a **REFERENCE
+AUTHORITY** block (the sheet is the visual authority; do not rebuild faces, proportions, clothing,
+or materials from any text) and a **MATERIAL REALITY** block (real paper-and-cardboard sculptures
+photographed in a real miniature set; smooth 3D/CGI, plastic, clay, and airbrushed surfaces
+forbidden). No later section may restate a property the sheet already shows — that text is read as
+an instruction to rebuild the character. The written profile survives in the prompt as voice,
+speaker labels, and what the sheet cannot show.
+
+Two consequences worth knowing:
+
+- **The sheet has to carry the face it is the authority for.** At least one strip must show each
+  speaking character's face closely enough to read its paper construction, and its material must
+  already read as photographed paper — a smooth CGI sheet teaches the video a smooth CGI look.
+- **A returned clip is compared against the sheet** before continuing, on material, faces, build,
+  clothing, and framing. If it drifted, only the authority blocks change: adding more character
+  description is the cause of the drift, not the fix. See `references/clips.md` "Clip acceptance".
+
 Both require the same riddle source. The minimal path is not a way around sourcing, it is a way
 around the staging machinery.
 
@@ -192,7 +220,7 @@ python3 pack.py --dev
 git commit -am "what changed"
 git switch main
 git merge --no-ff dev
-git tag -a v0.10.5 -m "bugtongPH Studio 0.10.5"
+git tag -a v0.10.6 -m "bugtongPH Studio 0.10.6"
 git switch dev
 
 # then build and verify the release artifacts

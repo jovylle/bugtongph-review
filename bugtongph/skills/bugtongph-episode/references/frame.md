@@ -49,6 +49,12 @@ TIGHT CLOSE-UP — SHOT 3
    without relying on its neighbours.
 7. **Reading order is top → bottom**, and Clip 1 walks the shots in that order.
 8. **No panel may be a crop, zoom, or re-frame of another panel.**
+9. **At least one strip must show each speaking character's face closely enough to read its paper
+   construction** — face shape, eye and brow placement, the cut-paper edges around the jaw and
+   hair. The sheet is the only thing the video model sees: it is the authority for the character's
+   face, and a face it cannot read is a face the clip prompt will be tempted to invent. A
+   progression that ends on a tight close-up satisfies this; a sheet of three identical wide
+   shots does not.
 
 ## Shot progression
 

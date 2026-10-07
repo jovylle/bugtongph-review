@@ -22,7 +22,7 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.9.7**.
+- `dev` = all work. Currently checked out, currently **0.10.6**.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
@@ -44,7 +44,8 @@ previously cached copy.
 1. **One question, one artifact, then stop.** Never two stages in one turn, never the whole
    pipeline at once.
 2. **Explicit trigger only.** Ordinary conversation never advances a stage or spends a
-   generation.
+   generation. (Asking is not advancing — plain questions about locked state are answered
+   read-only; see `clips.md` / `SKILL.md` §11.)
 3. **≥3 options everywhere**, **option 1 marked `(suggested)`**, and the options must be
    wildly different from each other — different direction, not different wording. If two
    options could be described by the same sentence, they are one option.
@@ -58,6 +59,12 @@ previously cached copy.
    clips. Never state a duration without its clip count and its arithmetic.
 7. **The status line is the stage line only.** No channel, release, or workflow.
 8. **Veo 3.1 Lite is the only target.** Veo 3.2 is not in Flow; do not target it.
+9. **At CLIPS the validated sheet is the character authority**, above the attached turnaround and
+   above the written profile. Both clip prompts open with a REFERENCE AUTHORITY block and a
+   MATERIAL REALITY block (real paper sculptures photographed in a real set; smooth CGI, plastic,
+   clay, and airbrushed surfaces forbidden), and no section may restate a face, build, clothing
+   construction, or material the sheet already shows. A returned clip is compared against the
+   sheet before continuing — see `clips.md` "Clip acceptance".
 
 ## Current pipeline
 
@@ -97,6 +104,14 @@ and validated. CLIPS runs only on request.
 | `profile-01` | production default | `assets/character-turnaround.png` |
 | `profile-02-mich` | permanent, reference-backed | `assets/mich-turnaround.png` |
 
+Which profile is **suggested** at PROFILE depends on whether a character image is actually in the
+conversation: with one attached, the matching catalog profile leads in `attached` mode; with none,
+an AI-invented profile leads and the catalog profiles are listed for a user who will supply the
+image. A catalog character is never suggested as a text-only description — the shipped turnaround
+cannot be attached, so a description would promise a match it cannot deliver. See
+`reference-binding.md` "Which profile is offered, by asset availability". At CLIPS the validated
+sheet overrides the profile for everything visible.
+
 ## Which file is the authority for what
 
 - Stage order, execution model, stage contracts, status line: `skills/bugtongph-episode/SKILL.md`
@@ -108,7 +123,11 @@ and validated. CLIPS runs only on request.
 - Veo 3.1 Lite limits, silent-Extend causes: `references/veo-3-1-lite.md`
 - Riddle provenance and integrity: `references/riddle.md`, `references/notion-riddle-database.md`
 - Bundled fallback riddle set (Notion optional) + picker language: `references/bundled-riddles.md`, `assets/riddles.json`
-- Identity modes (`text` default / `attached` PNG) and speaker labels: `references/reference-binding.md`, `references/identity.md`
+- Identity modes (`text` / `attached`), asset availability, and what outranks what:
+  `references/reference-binding.md`
+- Sheet-vs-text authority at CLIPS, the REFERENCE AUTHORITY and MATERIAL REALITY blocks, and clip
+  acceptance: `references/clips.md`, `references/veo-prompt.md`
+- Speaker labels and voice binding: `references/identity.md`, `references/reference-binding.md`
 - Shot-reference sheet layout contract (strips, not cinematic key-art): `references/frame.md`, `references/image-prompt.md`, `references/render.md`
 - Speaker-safe Veo dialogue (roster, one mouth at a time): `references/clips.md`, `references/script.md`
 - Topic pipeline (freeform subject, no Notion, no answer): `references/topic.md`
@@ -156,6 +175,11 @@ survive. A green local validator is not host proof — run the probe against the
 
 ## Open items
 
+- **The 0.10.6 fidelity clauses are unproven against a real generation.** They are the correct
+  reading of the failure (text outranking the sheet) and they are now first in the prompt, but no
+  clip has been generated and compared since. Generate one Clip 1 from an existing validated sheet
+  and run the `clips.md` "Clip acceptance" checklist before trusting them. If a property still
+  drifts with the authority blocks explicit, the sheet is the weak link, not the prompt.
 - **Two images in one request** is unverified — the plugin asks for 2 candidates and falls back
   to 1. Do not assert the host supports it.
 - **Veo 3.1 Lite output resolution** is not stated by Google, so the plugin asserts none.

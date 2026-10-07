@@ -214,8 +214,15 @@ Every profile locks one **identity mode**:
 
 | Mode | Identity authority | Binding |
 | --- | --- | --- |
-| `text` — **default** | the written profile | nothing to attach; generation proceeds |
-| `attached` — opt-in | an image the user attaches in the conversation | that image is used as the reference image input |
+| `text` | the written profile, while the sheet is being designed | nothing to attach; generation proceeds |
+| `attached` | an image the user attaches in the conversation | that image is used as the reference image input |
+| `clips` (automatic) | the validated shot-reference sheet, for everything visible | the sheet is the Ingredient input; the profile supplies only voice and labels |
+
+Which profile is `(suggested)` depends on whether a character image is actually in the
+conversation: with one attached, the matching catalog profile leads; with none, an AI-invented
+profile leads and the catalog profiles stay listed for a user who will supply the image. A catalog
+character is never suggested as a text-only description. See `references/reference-binding.md`
+"Which profile is offered, by asset availability".
 
 Shipped turnarounds — `assets/character-turnaround.png` (`profile-01`),
 `assets/mich-turnaround.png` (`profile-02-mich`) — are the canonical definitions those written
@@ -254,6 +261,12 @@ Offer 3 condition sets: time of day, weather, light quality, atmosphere, ambienc
 Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
 text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
 
+Which bundle is `(suggested)` depends on whether a character image is in the conversation: with an
+attached image the matching catalog profile leads in `attached` mode; with no image an AI-invented
+bundle leads, and the catalog profiles are listed as further choices for a user who will supply
+the image. A catalog character is never suggested as a text-only description, because its shipped
+turnaround cannot be bound and the match would be unwinnable. See `reference-binding.md`.
+
 `profile-01` is always the Old Man + Kid with the blue neck scarf — its fixed label, with
 speaker labels `OLD MAN` and `KID`. An AI-invented bundle is offered under its own descriptive
 name and is **never** labelled `profile-01`, and `profile-01` is never described as other
@@ -290,6 +303,13 @@ request image generation. Command `.image`; `.render` is the legacy alias.
 Plan the shots (the retired DRAFTS step), then produce copy-ready prompts. Clip 1 uses the
 validated sheet as the Ingredient reference at 8 seconds; Clip 2 is text-only Extend from
 Clip 1's final visual/audio state. Never generate an image here.
+
+At this stage the validated sheet is the character authority, not the profile text. Both prompts
+open with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — photographed paper
+sculptures, with smooth CGI / plastic / clay forbidden — and no section may restate a face, build,
+clothing, or material that the sheet already shows. A returned clip that drifts from the sheet is
+a failure, not a take: compare it against the sheet before continuing, and repair it by changing
+only the authority blocks. See `references/clips.md` "Clip acceptance".
 
 ## 7. Image-generation response boundary
 
