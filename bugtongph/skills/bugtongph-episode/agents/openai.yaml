@@ -1,0 +1,7 @@
+interface:
+  display_name: "bugtongPH Episode"
+  short_description: "Bugtong episode production"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  default_prompt: ".auto - run the staged bugtong episode pipeline in production, resuming the first incomplete checkpoint."
+

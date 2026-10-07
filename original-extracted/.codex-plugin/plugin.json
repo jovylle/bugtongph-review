@@ -1,0 +1,32 @@
+{
+  "interface": {
+    "displayName": "bugtongPH Studio",
+    "shortDescription": "Build Filipino bugtong episodes from riddle to Veo clips",
+    "longDescription": "Production pipeline for Filipino bugtong episodes with explicit production, beta, and development release channels; beta parity with production at the current release; reference-bound Character + Art Style + Voice pairs; checkpoint-safe multi-turn execution; validated renders; deterministic multi-panel composition where enabled; and detailed Veo / Google Flow prompts optimized for reliable .auto execution.",
+    "developerName": "Jovylle Bermudez",
+    "category": "Creative",
+    "capabilities": ["Instructions"],
+    "websiteURL": "https://jovylle.com",
+    "defaultPrompt": [
+      ".auto - start or resume the staged production workflow in production by default; new riddles must come only from the Notion bugtongPH Riddle Database.",
+      ".auto beta - run the beta channel. Beta is currently code-identical to production and isolated so future beta-only changes can be tested without changing production behavior.",
+      ".auto dev - run the development channel without changing production or beta.",
+      ".riddle - choose an eligible bugtong strictly from the Notion database.",
+      ".channel - inspect or switch runtime channels.",
+      ".release - inspect the current package/release identity.",
+      ".workflow - inspect the workflow contract.",
+      ".pair - inspect or switch locked Character + Art Style + Voice pairs.",
+      ".plot - create and lock story, environment, identity, speech, physical state, timing, and feasibility.",
+      ".frame - create separate standalone camera-panel specifications; text only.",
+      ".drafts - plan Clip 1 and Clip 2 prompts; text only.",
+      ".render - generate and validate using the exact bound active-pair reference asset; never substitute text-only character reconstruction when the reference is unavailable.",
+      ".clips - output detailed copy-ready Google Flow prompts using the validated RENDER."
+    ]
+  },
+  "name": "bugtongph",
+  "version": "0.4.22",
+  "description": "Production pipeline for Filipino bugtong episodes with explicit production, beta, and development release channels; beta parity with production at the current release; reference-bound Character + Art Style + Voice pairs; checkpoint-safe multi-turn execution; validated renders; deterministic multi-panel composition where enabled; and detailed Veo / Google Flow prompts optimized for reliable .auto execution.",
+  "author": {"name": "Jovylle Bermudez"},
+  "keywords": ["bugtong","riddle","filipino","veo","google-flow","storyboard","video-prompts","multi-shot","voice","automation","pipeline","beta","reference-lock","release-channel"],
+  "skills": "./skills"
+}

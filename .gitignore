@@ -1,0 +1,13 @@
+# Build output — the tree is the source of truth, zips are artifacts.
+dist/
+*.zip
+
+# Agent scratch (plans, session notes)
+.hermes/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
