@@ -281,10 +281,11 @@ character is never suggested as a text-only description. See `references/referen
 
 Shipped turnarounds — `assets/character-turnaround.png` (`profile-01`),
 `assets/mich-turnaround.png` (`profile-02-mich`) — are the canonical definitions those written
-profiles come from, and are **offered to the user to attach**. A path inside the plugin package
-is not an image the session can supply, so a shipped asset is never automatically bound, and its
-absence is **never** grounds for blocking the image stage. Never use a previous episode's image
-as an identity reference. See `references/reference-binding.md`.
+profiles come from. At the IMAGE gate, if the locked profile has a shipped turnaround and no
+image is yet in the session, the skill attempts to self-supply it: first via `read_skill_file`,
+then via GitHub raw URL, then falls back to `text` mode. A missing turnaround is **never**
+grounds for blocking the image stage. Never use a previous episode's image as an identity
+reference. See `references/reference-binding.md` "Shipped turnarounds — automatic binding".
 
 **Speaker labels.** Fix one short uppercase label per character at profile lock (`OLD MAN`,
 `KID`, `MICH`) and use it identically in the profile, the image prompt, the script dialogue, and

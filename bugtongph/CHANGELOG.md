@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.10.16 — catalog turnarounds self-supply at IMAGE
+
+Catalog profiles (`profile-01`, `profile-02-mich`) now try to put their own shipped turnaround
+into the session automatically — so the user doesn't have to find and attach the file manually.
+
+### Changed
+
+- **`capabilities` now includes `"Read"`** in both manifests. The `"Read"` capability registers
+  the `read_skill_file` tool, which returns skill assets as `ImageContent` — a multimodal content
+  part placed directly in the session, identical to a user-attached image.
+- **Automatic binding at the IMAGE gate** (`reference-binding.md`, `SKILL.md` §5): when the
+  locked profile has a shipped turnaround and no image is yet in the conversation, the skill
+  attempts to self-supply in three steps:
+  1. `read_skill_file("bugtongph-episode", "assets/<turnaround>")` — if the host returns
+     `ImageContent`, the image is in the session; proceed as `attached` mode.
+  2. GitHub raw URL fallback — presents the direct link and asks the user to drag/paste the
+     image in; if it arrives, proceed as `attached` mode.
+  3. `text` mode — if both fail, proceed from the written profile description. Never blocks.
+- **`reference-binding.md`** rewritten: the `text` / `attached` identity mode table simplified;
+  old "Shipped turnarounds are offered, never assumed" section replaced with the three-step
+  "Shipped turnarounds — automatic binding" procedure.
+
+### Not changed
+
+- The PROFILE suggestion rule is unchanged — this needs a real session confirmation that
+  `read_skill_file` works before updating the suggestion logic.
+- Fallback to `text` mode when both binding steps fail is identical to current behavior.
+
+---
+
 ## 0.10.15 — five bugs fixed, Clip 3 documented
 
 Five cross-file inconsistencies fixed, and the 3-clip CLIPS contract completed.

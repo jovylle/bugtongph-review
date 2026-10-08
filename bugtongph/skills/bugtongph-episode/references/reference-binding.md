@@ -6,57 +6,61 @@ Decide, once per episode, **where a character's identity comes from** — so the
 silently re-created from a description when a real reference exists, and never blocked when one
 does not.
 
-## Why this file changed its rule
-
-Skills can only *name* a file. A plugin cannot hand the session an image: a shipped
-`assets/*.png` is a path inside the package, not something the model can attach to a generation
-request. There is no file handle and, for a remotely installed plugin, often no file on disk at
-all. So "bind the canonical asset as an image input" was an instruction the runtime could not
-carry out, and IMAGE blocked for a reason the user could not fix.
-
-Identity therefore has **two modes**, and only one of them involves an image.
-
 ## Identity modes
 
 Lock exactly one mode at PROFILE:
 
-| Mode | Identity authority | Binding step |
+| Mode | Identity authority | How the image enters |
 | --- | --- | --- |
-| `text` | the written profile: characters, appearance, clothing, material, scale, voice — while a panel is being designed | none. There is nothing to attach; generation proceeds. |
-| `attached` | an image the **user attaches in the conversation** | that attached image must actually be used as the reference image input |
+| `text` | the written profile: characters, appearance, clothing, material, scale, voice | no image; generation proceeds from description |
+| `attached` | an image present in the conversation | skill-supplied via `read_skill_file`, or user-attached — both result in `attached` mode |
 
 Neither mode is the whole story. Once the episode reaches CLIPS the **validated sheet** outranks
 both for everything visible — see "Authority order" and "Which profile is offered, by asset
 availability" below.
 
-`text` needs no setup and is fine for an invented profile. For a catalog character it is used only
-when the user chose that profile explicitly without an image; it is never the suggested default in
-that case, because the shipped turnaround cannot be bound and the description would promise a
-match it cannot deliver.
+`text` needs no setup and is fine for an invented profile. For a catalog character with a shipped
+turnaround, the skill now attempts to self-supply the image at the IMAGE gate before falling back
+to `text` — see "Shipped turnarounds — automatic binding" below.
 
-## Shipped turnarounds are offered, never assumed
+## Shipped turnarounds — automatic binding
 
 `profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
-`assets/mich-turnaround.png`. These remain the canonical *definitions* of those characters, and
-they are what the written profile text is derived from.
+`assets/mich-turnaround.png`. These are the canonical definitions of those characters and the
+source of the written profile text.
 
-They are **not** automatically bound. When the active profile has a shipped turnaround, offer it
-once, plainly:
+When the locked profile has a shipped turnaround and no image is yet in the conversation, the
+IMAGE gate attempts to self-supply it in this order:
+
+**Step 1 — `read_skill_file` (try first)**
+
+Call:
+```text
+read_skill_file("bugtongph-episode", "assets/character-turnaround.png")
+```
+(or `"assets/mich-turnaround.png"` for `profile-02-mich`)
+
+If the host returns `ImageContent`, the image is now in the session as a content part — exactly
+as if the user had attached it. Proceed as `attached` mode.
+
+**Step 2 — GitHub raw URL fallback (if Step 1 fails or is unsupported)**
+
+Present the direct link and ask the user to drag or paste the image into the chat:
 
 ```text
-profile-01 has a turnaround image. Attach it in this chat and I'll use it as the
-identity reference — or say "text only" and I'll hold the character from the written
-profile instead. (text only is the default)
+profile-01 turnaround: https://raw.githubusercontent.com/jovylle/bugtongph-review/main/bugtongph/skills/bugtongph-episode/assets/character-turnaround.png
+
+profile-02-mich turnaround: https://raw.githubusercontent.com/jovylle/bugtongph-review/main/bugtongph/skills/bugtongph-episode/assets/mich-turnaround.png
 ```
 
-Then:
+If the image arrives → `attached` mode. If the user declines or nothing arrives → Step 3.
 
-- an image actually present in the conversation → mode `attached`, bind it;
-- the user declines, or nothing arrives after one ask → mode `text`, proceed, and say in one
-  line that identity will be held by description rather than matched to the reference.
+**Step 3 — text mode (if both fail)**
 
-Never block IMAGE waiting for an image the runtime may never deliver. Never claim an image is
-bound when none is present in the conversation.
+Proceed as `text` mode and say in one line that identity will be held by description rather than
+matched to the reference.
+
+Never block IMAGE. Never claim an image is bound when none is present in the conversation.
 
 ## Authority order
 
