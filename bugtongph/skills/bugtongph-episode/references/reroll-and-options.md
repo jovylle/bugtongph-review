@@ -237,6 +237,17 @@ questions.
 3. It never takes option 2 or 3 on its own, and never invents an option when none is valid.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
    the gated path. Unattended does not mean unchecked.
+
+   - **The trail is mandatory.** One line per stage, in order, printed as the run goes. A stage that
+     produced nothing, or was skipped, is a **failed run** and is reported as one — never passed
+     over in silence. The trail is also where a hint's routing is stated (`SKILL.md` §2 "Hints on
+     `.auto`").
+   - **Hints route; PROFILE hints only filter.** A hint goes to the stage it describes; a PROFILE
+     hint narrows the eligible set *before* the random draw and never decides it.
+   - **IMAGE produces the sheet, never a finished picture.** A single composed scene or artwork, a
+     poster or key-art treatment, side-by-side panels, or a grid instead of stacked strips is not an
+     IMAGE artifact: it fails validation and is regenerated from the same locked prompt
+     (`render.md`, `image-prompt.md` "Sheet, not artwork").
 5. It **stops and reports** rather than improvising when: both riddle sources are unavailable
    (Notion unconnected *and* the bundled set unreadable or exhausted), **no eligible profile can
    be drawn** (`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` —

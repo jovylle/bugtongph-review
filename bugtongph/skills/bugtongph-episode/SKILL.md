@@ -133,6 +133,32 @@ The pipeline keyword is independent of the channel keyword and may be combined:
 `.auto topic beta`, `.auto fresh topic dev`. A plain `.topic` command enters the topic pipeline
 directly, exactly as `.riddle` enters the riddle pipeline.
 
+### Hints on `.auto`
+
+Tokens after `.auto` are **parsed**, not free-associated. Recognised keywords come first: the
+pipeline keyword (`riddle` / `topic` / `fresh …`), the channel keyword, and a language word
+(`tagalog`, `english`, `bisaya`) — the language routes to RIDDLE and becomes episode state (see
+`bundled-riddles.md`).
+
+**Everything else is a stage hint**, and a hint belongs to the stage it describes. Route it by what
+it is about, state the routing in the trail, and never let it change the option-1 discipline:
+
+```text
+a place, scenery or setting            -> LOCATION
+light, time of day, weather, mood      -> ENVIRONMENT
+a character, style, material, era,
+or a voice                             -> PROFILE
+tone or pacing                         -> the creative stages (LOCATION, SCRIPT)
+```
+
+- **A PROFILE hint filters the eligible set; it never names the winner.** `anime`, `non-human`,
+  `elderly`, `photoreal` narrow the pool, and the draw then picks one at random exactly as §5
+  requires. "Build the set from the hint, then draw" is the entire behaviour — a hint is not a
+  licence to force a profile.
+- A hint that fits no stage is reported as **unused**, never silently applied or dropped.
+- Hints never make `.auto` stop to ask: an ambiguous hint is applied at the closest stage and named
+  in the trail, so the run stays reviewable and one stage command can correct it.
+
 ### Explicit channel aliases
 `.auto production` selects the production channel. `.auto beta` selects beta.
 `.auto experimental` is a deprecated compatibility alias for `.auto beta`. `.auto dev`

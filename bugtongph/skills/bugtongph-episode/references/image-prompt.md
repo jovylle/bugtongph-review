@@ -70,6 +70,21 @@ Assemble in this order, every section present, nothing invented:
 11. **ASPECT RATIO** — the episode's ratio. Do not force 9:16 here; that belongs to the final
     video unless the user asked otherwise.
 
+## Sheet, not artwork — check before sending
+
+The artifact is a **shot-reference sheet**: one landscape canvas, N stacked panoramic strips, read
+top → bottom as sequential shots. It is not a picture of a scene. Confirm all four before the
+generation is requested, and make the first one explicit in the emitted prompt:
+
+- one landscape canvas, strips stacked with thin separators — no grid, no side-by-side panels;
+- every strip a different camera setup, with the progression visible (wide → medium → tight);
+- the rendering is the locked material (photographed paper sculpture), not a cinematic finish;
+- nothing that *presents*: no poster composition, no title, no border, no matte, no key art.
+
+A returned image that reads as one composed scene, as artwork, or as a poster is **not** this
+stage's artifact. It fails validation (`render.md` gate 7) and is regenerated from the same
+prompt; the fix is never to relax the layout.
+
 ## Presentation
 
 Show the assembled prompt as one copy-ready block, then a single line stating the panel

@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.10.11 — `.auto` parses its input, and a language is not a translation
+
+A real `.auto bisaya bugton character anime non human` run improvised: it took a Tagalog Notion
+riddle and wrote its own Bisaya version, invented the location and environment with no option
+trail, forced an anime non-human profile instead of drawing one, skipped OVERVIEW and IMAGE PROMPT,
+and produced finished key art instead of the shot-reference sheet.
+
+### Changed
+
+- **`.auto` input is parsed** (`SKILL.md` §2 "Hints on `.auto`"). The pipeline keyword, the channel
+  keyword and a language word are recognised; every other token is a **stage hint**, routed to the
+  stage it describes (a place → LOCATION; light, time or weather → ENVIRONMENT; a character, style,
+  material, era or voice → PROFILE; tone → the creative stages) and named in the trail. A hint that
+  fits no stage is reported as unused, never silently applied or dropped.
+- **A PROFILE hint filters the eligible set before the draw — it never names the winner.** `anime`,
+  `non-human`, `photoreal` narrow the pool; the random draw still decides (see §5).
+- **A language selects stored wording, never a wording to be produced** (`riddle.md` "The selected
+  language is not a translation instruction"). A record with an empty cell for the selected language
+  is ineligible and skipped (`notion-riddle-database.md`, `bundled-riddles.md`); if no available
+  source carries the language, say so and fall back or stop at RIDDLE. This binds `.auto` as well:
+  an unattended run may auto-select a record, and may never auto-**write** one.
+- **The `.auto` trail is mandatory** (`reroll-and-options.md` §11): one line per stage as the run
+  goes, and a stage that produced nothing or was skipped is reported as a failed run.
+- **IMAGE is the sheet, not a picture of a scene** (`image-prompt.md` "Sheet, not artwork"): one
+  landscape canvas, stacked strips, no grid, no poster or key-art treatment. A returned artwork
+  fails validation and is regenerated from the same prompt — the layout is never relaxed to fit it.
+
 ## 0.10.10 — one command set, flavor chosen per session
 
 The dev flavor prefixed every command (`.dev-riddle`, `.dev-script`) so that two installed flavors

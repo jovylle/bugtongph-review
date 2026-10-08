@@ -58,7 +58,9 @@ When `.riddle` is invoked:
 1. Resolve the source — the connected `bugtongPH Riddle Database` when it is available, otherwise
    the bundled `assets/riddles.json` (see `bundled-riddles.md`). State which one is in use.
 2. Determine applicable constraints, including the selected language.
-3. Find a small batch of eligible unused riddles, defaulting to 5 when enough exist.
+3. Find a small batch of eligible unused riddles, defaulting to 5 when enough exist. **A riddle is
+   eligible only if the selected language has stored wording for it** — an empty or missing
+   language column makes the record ineligible, and it is skipped without comment.
 4. Display the exact stored wording in the selected language.
 5. Display the stored Answer because this is an internal production picker.
 6. Do not choose on the user's behalf.
@@ -104,6 +106,25 @@ re-offer one in `REJECTED`. Never edit a record to fix it — a bad recording is
 not a plugin behaviour.
 
 A hint steers the candidates: `.riddle dagat` returns riddles that suit that direction, and a language word (`.riddle bisaya`) sets the render language. If the current source has nothing eligible left, report that plainly and stop at RIDDLE — or, when the source is the bundled set, say it has been exhausted and offer a Notion connection. Never fall back to an invented riddle.
+
+## The selected language is not a translation instruction
+
+The language selects **which stored wording is read**, never a wording to be produced. The picker
+has exactly two honest answers when the selected language is scarce:
+
+- the source holds a record with wording in that language → offer that stored text;
+- the source holds none → the language is unavailable from that source. Say so, and fall back
+  (Notion → bundled set) or stop at RIDDLE. Do not translate, romanize, adapt, or "render into"
+  the language yourself.
+
+A translation the pipeline produced has no stored wording, no provenance, and no operator review —
+it is invented content wearing a source's authority. That is the failure this rule exists to
+prevent, and it applies to `.auto` exactly as it applies to `.riddle`: an unattended run may
+auto-select a *record*, and may never auto-**write** one. If the episode needs a language the
+sources do not carry, the fix is a source edit, not a stage behaviour.
+
+The bundled set's own language columns are stored text written before the episode (see
+`bundled-riddles.md`) — reading one of those is selection, not translation.
 
 See `reroll-and-options.md` for the blocking question and the return-to-OVERVIEW rule.
 

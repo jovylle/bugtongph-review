@@ -46,6 +46,11 @@ change it, treat the result as generated content, not as the database original.
   actually returned by the current query.
 - `.auto fresh` must run a new query and pick a new eligible record.
 - `.auto resume` keeps the riddle already recorded in the active checkpoint.
+- **A record with an empty cell for the selected language is not eligible.** Skip it. Never
+  translate, romanize, or adapt another language's wording to fill that gap. If the query returns
+  no record carrying the selected language, report the language as unavailable from this source,
+  fall back (bundled set), or stop at RIDDLE — see `riddle.md` "The selected language is not a
+  translation instruction".
 
 ## Marking usage
 

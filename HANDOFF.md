@@ -22,7 +22,7 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.9**.
+- `dev` = all work. Currently checked out, currently **0.10.11**.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
@@ -208,6 +208,11 @@ survive. A green local validator is not host proof — run the probe against the
   correct per the bug report (no profile is preferred), but the generated sheet becomes the only
   identity anchor for that episode. Narrow the pool to AI-invented + image-bound profiles if an
   exact catalog match must be guaranteed.
+- **The 0.10.11 `.auto` fixes are prose, and the run they came from was a prose failure.** Hint
+  parsing, the no-translation rule, the mandatory trail and the sheet-not-artwork check are all
+  instructions; nothing enforces them. Re-run the same command on this build and check four things:
+  the trail names every stage, the hint routing is stated in it, the profile was *drawn* rather than
+  forced, and IMAGE came back as stacked strips rather than artwork.
 - **Two images in one request** is unverified — the plugin asks for 2 candidates and falls back
   to 1. Do not assert the host supports it.
 - **Veo 3.1 Lite output resolution** is not stated by Google, so the plugin asserts none.

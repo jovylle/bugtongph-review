@@ -24,6 +24,8 @@ produced the text.
   in Notion and not in `assets/riddles.json` must not be offered, prompted, or paraphrased.
 - **The stored wording is never edited, translated on the fly, or "improved".** Each language
   column is written text; the picker reproduces the one that matches the selected language.
+- **An entry with an empty cell for the selected language is skipped.** If the set holds nothing in
+  that language, say so — the picker never fills the gap by translating another column.
 - **The answer stays operator-only**, exactly as for a Notion riddle: it may appear in the picker
   and is used for integrity validation, and it must never reach LOCATION, ENVIRONMENT, SCRIPT,
   FRAME, the image prompt, the image, or the clips.
