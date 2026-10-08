@@ -193,21 +193,19 @@ around the staging machinery.
 `pack.py` builds two flavors from this one tree:
 
 ```text
-dist/bugtongph-<version>.zip        prod — commands as written (.auto, .riddle, ...)
-dist/bugtongph-dev-<version>.zip    dev  — plugin name bugtongph-dev, every command
-                                           prefixed (.dev-auto, .dev-riddle, ...)
+dist/bugtongph-<version>.zip        prod
+dist/bugtongph-dev-<version>.zip    dev — plugin name bugtongph-dev, `[DEV build]` banner
 ```
 
-The dev flavor exists so development never touches what is installed for production. Both can
-be installed at the same time: the host namespaces skills per plugin
-(`bugtongph:bugtongph-episode` vs `bugtongph-dev:bugtongph-episode`), and because every dev
-command carries the `.dev-` prefix, only one flavor ever answers a given call.
+Both flavors carry the **same commands** (`.auto`, `.riddle`, ...). The dev flavor exists so
+development never touches what is installed for production, and it is told apart by *which plugin
+the session is using*: the host namespaces skills per plugin
+(`bugtongph:bugtongph-episode` vs `bugtongph-dev:bugtongph-episode`), and a conversation runs
+against one selected plugin.
 
-The prefix is applied by `pack.py` to **every surface that can carry a live command**, not just
-prose: skill Markdown, the skill's frontmatter `description` (which is what routes an
-invocation), `skills/*/agents/openai.yaml` → `default_prompt`, and the manifest
-`defaultPrompt` starter prompts. If any of those shipped unprefixed, the dev build's own
-starter buttons would fire the production plugin's commands.
+**Enable one flavor per conversation.** Install both if you like, but with both active in the same
+conversation a bare command has two claimants — which is the ambiguity the old `.dev-` command
+prefix existed to remove. Pick the flavor you want for the session and leave the other off.
 
 Rules:
 

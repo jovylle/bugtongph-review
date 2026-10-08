@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.10 — one command set, flavor chosen per session
+
+The dev flavor prefixed every command (`.dev-riddle`, `.dev-script`) so that two installed flavors
+could never answer the same call. A session now runs against one selected plugin, and the host
+already namespaces skills per plugin — so `.riddle` reaches whichever flavor that conversation is
+using, and the prefix was solving a problem that no longer exists.
+
+### Changed
+
+- **`pack.py` no longer rewrites commands.** The dev flavor differs only in plugin name, the
+  display-name suffix, the long-description banner, and the README banner; its command surface is
+  identical to production, including its clickable starter prompts.
+- The `COMMANDS` list and the prefixer are gone from `pack.py`; the docstring now states why the
+  flavor is still built and what keeps it unambiguous.
+- **Documented precondition.** Keep **one flavor enabled per conversation** (README "Dev flavor",
+  `HANDOFF.md`, `pack.py`). Install both side by side if useful, but with both active a bare command
+  has two claimants — the ambiguity the prefix used to remove.
+
+Older installs keep working: `.dev-*` commands no longer exist in any build, so a dev build that was
+installed before this must be reinstalled to pick up the unprefixed command set.
+
 ## 0.10.9 — the profile is drawn, not defaulted
 
 `.auto` could run an entire episode on `profile-01` because a default was written into the profile
