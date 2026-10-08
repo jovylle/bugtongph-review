@@ -214,6 +214,12 @@ survive. A green local validator is not host proof — run the probe against the
 
 ## Open items
 
+- **0.10.22 `.image clean` is an A/B test, not a default.** Some Clip 1 videos reproduce the
+  sheet's separators / stacked layout as a split screen despite every prompt forbidding it. Run one
+  episode with `.image clean`, generate Clip 1 A (sheet) and B (clean image) in Flow, and compare:
+  lines or split screen, identity and material, cuts. If B wins, IMAGE switches to a clean frame
+  and the panel plan stays text; if A wins, keep the sheet and try dropping the separators.
+
 - **The 0.10.21 profile record is prose.** Re-run `.auto` with an invented profile (the 3D CGI
   anime case) and check: the PROFILE trail entry is the full record, not a style label; the image
   prompt's IDENTITY LOCK matches it; the clips' MOTION LANGUAGE and roster are the record's text

@@ -383,3 +383,6 @@ CLIP 2 — GOOGLE FLOW / VEO EXTEND PROMPT
 CLIP 3 — GOOGLE FLOW / VEO EXTEND PROMPT  ← 3-clip episodes only
 [full copy-ready prompt]
 ```
+
+When a validated `.image clean` image exists, Clip 1 is written twice — `CLIP 1 — A: SHEET` and
+`CLIP 1 — B: CLEAN IMAGE` — per `clean-image.md` "What CLIPS does with it". Clips 2–3 stay single.

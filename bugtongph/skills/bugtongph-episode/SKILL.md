@@ -432,6 +432,11 @@ Generate the shot-reference sheet and validate it against the layout contract an
 identity source (`text` or `attached`), then accept or regenerate. The only stage allowed to
 request image generation. Command `.image`; `.render` is the legacy alias.
 
+**`.image clean`** (experimental, opt-in, never run by `.auto`) — once the sheet is validated,
+makes one clean single-frame reference image of the sheet's first shot, no panels and no lines, so
+the user can test it against the sheet as Clip 1's Ingredient. CLIPS then writes Clip 1 twice, A
+(sheet) and B (clean image). See `references/clean-image.md`.
+
 ### CLIPS
 Plan the shots (the retired DRAFTS step), then produce one copy-ready prompt per clip — 1, 2, or
 3, the locked clip count. Clip 1 uses the validated sheet as the Ingredient reference at 8
@@ -527,7 +532,7 @@ Preferred:
 Nested forms: `.auto production|beta|dev|fresh|resume|draft`; `.auto riddle|topic` (`.vlog` /
 `.vblog` also accepted); `.auto fresh riddle|topic`; `.channel list`; `.channel use <channel>`;
 `.profile list`; `.profile use <id>`; `.profile add <description>`; `.release info`;
-`.workflow info`.
+`.workflow info`; `.image clean` / `.image clean wide` (experimental A/B test, see §6 IMAGE).
 
 `.auto draft` — full pipeline, no image generation. Produces the IMAGE PROMPT (text only)
 and all clip prompts, marked DRAFT, in one run. Generate the sheet from the image prompt, bring it
@@ -590,6 +595,7 @@ files whose trigger applies.
 | `references/veo-3-1-lite.md` | Before planning any clip, image prompt, panel count, or timing |
 | `references/tagalog-pacing.md` | Writing or timing any dialogue, or whenever a duration or clip count must be justified |
 | `references/render.md` | Running `.image`, or resuming at an image-generation boundary |
+| `references/clean-image.md` | Running `.image clean`, or writing CLIPS when a clean image exists |
 | `references/runtime-state.md` | Checkpointing, resuming, or recovering after an image-generation boundary |
 | `references/clips.md` | Planning the shots and writing the clip prompts (Clips 1–3) |
 | `references/release-channels.md` | `.channel`, `.release`, or any channel and version reasoning |

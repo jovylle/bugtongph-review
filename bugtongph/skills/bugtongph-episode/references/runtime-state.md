@@ -31,6 +31,7 @@ IMAGE
   substage
   artifact status
 IMAGE PROMPT
+CLEAN IMAGE        optional, experimental: prompt, artifact status (clean-image.md)
 CLIPS
   clip count         1 | 2 | 3
   draft              true while written without a validated sheet (.auto draft)

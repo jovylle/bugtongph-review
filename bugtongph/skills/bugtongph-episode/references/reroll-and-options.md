@@ -125,7 +125,8 @@ new profile     -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new identity mode (same profile) -> IMAGE-PROMPT IMAGE CLIPS void
 new script      -> IMAGE-PROMPT IMAGE CLIPS void
 new frame       -> IMAGE-PROMPT IMAGE CLIPS void
-new image       -> CLIPS void
+new image       -> CLEAN-IMAGE CLIPS void
+new clean image -> CLIPS (Clip 1 B) void
 ```
 
 ### Changing the riddle

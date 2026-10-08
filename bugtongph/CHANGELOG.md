@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.22 — `.image clean`, an A/B test against the sheet
+
+Some Clip 1 videos reproduce the shot-reference sheet itself — its separator lines, its stacked
+strips as a split screen — instead of cutting between the strips, although every clip prompt
+forbids it. More wording will not fix an input image: Google describes Ingredients as clean
+references of characters, objects and style, and a multi-panel sheet is this project's own use.
+
+### Added — `.image clean` / `.image clean wide` (experimental, opt-in)
+
+After the sheet validates, `.image clean` prints a prompt for **one clean frame** of the sheet's
+first shot — same style, identity, location and environment locks, no panels or lines, 9:16
+(`wide`: 16:9) — and generates it on approval in a turn of its own. It is validated on identity,
+place, material and pose, readable faces, text marks, the answer clue, and any panel structure.
+CLIPS then writes **Clip 1 twice** — `A: SHEET` and `B: CLEAN IMAGE`, identical except the
+REFERENCE AUTHORITY wording and B's shot plan in words — and Clips 2–3 once. `.auto` never runs
+it, and the sheet stays the default until the comparison says otherwise.
+(`references/clean-image.md` new; `SKILL.md` §6, §11, §12; `clips.md`; `runtime-state.md`;
+`reroll-and-options.md` §6; `render.md`; README; HANDOFF)
+
+---
+
 ## 0.10.21 — the profile owns every character trait, including how they move
 
 From a real `.auto` run with an invented 3D CGI anime profile. The PROFILE trail line said only

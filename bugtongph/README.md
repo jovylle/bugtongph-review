@@ -282,6 +282,15 @@ staged command, a plain "make me a bugtong video", a resumed episode — means t
 `.clips` and `.veo` are not the same command: `.clips` builds the prompts from the validated
 shot-reference sheet, `.veo` produces them from a plain quick-path image.
 
+### Testing a clean image instead of the sheet (experimental)
+
+Some Clip 1 videos show the sheet's divider lines or play its strips as a split screen. To compare,
+after the sheet is validated run `.image clean` (or `.image clean wide` for 16:9): it prints a
+prompt for one clean picture of the first shot, no panels and no lines, and generates it on `go`.
+`.clips` then writes Clip 1 twice — **A** for the sheet, **B** for the clean image — with
+everything else the same. Run both in Flow and compare lines/split screen, faces and material, and
+whether the cuts follow the prompt. `.auto` never uses it.
+
 ### Clip prompts are whole prompts
 
 `.clips` returns **one complete, independently pasteable prompt per clip** (1–3). None refers to

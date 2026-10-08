@@ -9,7 +9,8 @@ and validates it against that contract.
 
 ## Hard boundary
 
-This is the **only** stage allowed to request image generation. `.script`, `.frame`,
+This is the **only** stage allowed to request image generation (`.image clean` is part of it —
+see `clean-image.md`). `.script`, `.frame`,
 `.overview`, `.image-prompt`, and `.clips` must never invoke it.
 
 ## Required inputs
