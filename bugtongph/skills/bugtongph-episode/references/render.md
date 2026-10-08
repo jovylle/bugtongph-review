@@ -35,7 +35,9 @@ Development may experiment; development-only behavior must never leak into produ
 
 ## Identity binding gate
 
-Identity mode is locked at PROFILE (see `reference-binding.md`).
+Identity mode is locked at PROFILE (see `reference-binding.md`). The profile *itself* is already in
+episode state by the time this stage runs — it was selected before SCRIPT — so the image stage
+never selects or re-selects a profile, and a regeneration reuses the same lock.
 
 **`text` mode.** The written profile is the identity authority while the sheet is being designed.
 There is nothing to resolve and nothing to attach; proceed to generation and hold the character
@@ -112,7 +114,10 @@ failed.
 Reject and regenerate only the failed artifact for:
 
 1. camera/view/shot-size mismatch;
-2. profile identity or reference mismatch;
+2. profile identity or reference mismatch — the image is compared against the **locked profile in
+   episode state**, never against `profile-01` by assumption and never against whichever profile
+   happens to fit the render. A mismatch regenerates under the same lock; the profile is never
+   changed to make an image pass;
 3. character position, pose, gaze, hands, props, physical-state, or scale mismatch;
 4. location, environment, lighting, or continuity mismatch;
 5. material language mismatch — the render reads as smooth 3D/CGI, plastic, clay, or airbrushed

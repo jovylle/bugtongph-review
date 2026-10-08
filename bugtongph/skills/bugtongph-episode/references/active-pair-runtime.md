@@ -4,11 +4,29 @@
 
 Bind the selected profile's canonical identity and visual reference into every image-generation stage — and hand the validated sheet to CLIPS as the character authority for everything visible.
 
-## Default profile
+## Profile selection — no default
 
-Unless the user explicitly selects another profile, the active production profile is `profile-01`.
+There is **no default profile**. `profile-01` has no special priority: it is one candidate in the
+eligible set, and it is never an implicit fallback.
 
-`profile-01` is the Old Man + Kid with Blue Neck Scarf handcrafted Filipino papercraft profile.
+PROFILE is an explicit step, and it runs **before any episode asset is generated**:
+
+```text
+load eligible profiles
+  -> drop rejected / invalid / unavailable ones
+  -> draw ONE at random
+  -> write it to episode state (the PROFILE lock)
+  -> only then SCRIPT -> FRAME -> IMAGE -> CLIPS
+```
+
+- `.auto` **draws at random** from the eligible set and prints the draw in its trail.
+- An interactive `.profile` offers three choices and locks the user's pick; which one is marked
+  `(suggested)` follows `reference-binding.md` "Which profile is offered, by asset availability".
+- If no profile can be selected, `.auto` **stops** rather than improvising:
+  `AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile`. It never
+  proceeds with `profile-01`.
+- The locked profile is what the image is validated against, and regenerating an image never
+  re-selects the profile. Full contract: `profile.md` "Selection".
 
 ## Identity modes
 
@@ -33,7 +51,7 @@ authority".
 
 ## Mandatory substitution rule
 
-When a profile other than `profile-01` is active, every stage must use that profile's canonical identifiers, visual traits, relationships, clothing, props, voice profiles, and reference assets.
+When the active profile is not `profile-01`, every stage must use that profile's canonical identifiers, visual traits, relationships, clothing, props, voice profiles, and reference assets.
 
 Legacy hard-coded character descriptions are examples only. They are never permission to redesign the active profile.
 

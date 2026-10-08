@@ -49,8 +49,60 @@ profile it belongs to leads in `attached` mode and an exact match is achievable:
 State in one line which case applies and why the suggestion follows it: a catalog character is
 suggested only when the image that defines it is actually in the conversation.
 
+The suggestion is a convenience for the gated path — it is **not** a default, and it does not
+decide an unattended run. `.auto` never takes the suggested profile by position: it selects by
+draw. See **Selection** below.
+
 A hint steers the set: `.profile horror` offers profiles that suit that tone. Repeating
 `.profile` rerolls, excluding `REJECTED`.
+
+## Selection
+
+**No profile is the default.** `profile-01` has no priority: it is one candidate among the
+eligible ones, and it is never a fallback.
+
+Selection is an explicit step that happens **before any episode asset exists** — before SCRIPT,
+FRAME, the image prompt, the image, and the clips. Until it happens, the episode has no profile.
+
+```text
+AUTO START
+  -> load eligible profiles
+  -> drop rejected / invalid / unavailable ones
+  -> draw ONE at random
+  -> persist it as the episode PROFILE
+  -> lock it
+  -> SCRIPT -> FRAME -> IMAGE PROMPT -> IMAGE -> CLIPS
+```
+
+**Eligible set.** Every profile that can actually be represented in this episode: the
+AI-invented route (always eligible), each catalog profile whose definition is intact, and any
+`reusable` or episode-local profile defined for this episode. Drop:
+
+- anything the user `REJECTED` this episode, and anything excluded by a `.profile <hint>` hint;
+- anything whose definition is missing or invalid, or whose identity mode cannot be honoured;
+- duplicates of a profile already in the set.
+
+**Draw.** `.auto` takes one eligible profile **at random**. Position in the list carries no
+weight: the first-listed profile is not preferred, and a draw is never skipped because the
+suggested option looks adequate. Print the draw, so the episode log identifies both the profile
+and how it was chosen (`selected: random | user | suggested`).
+
+**Failure is a stop, not a fallback.** If the eligible set is empty, or no draw can be made,
+`.auto` stops and reports:
+
+```text
+AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile
+```
+
+It never proceeds with `profile-01`, never reuses the previous episode's profile without saying
+so, and never invents an option to keep moving.
+
+**Locked means locked.** The selected profile is written to episode state before any asset is
+generated, and every downstream stage references that one profile. Regenerating an image never
+re-selects the profile — a mismatch regenerates against the same lock. A *new episode* is what
+draws again; repeating `.auto` on an unfinished episode resumes the locked profile. An explicit
+`.profile use <id>` or a user's choice is a deliberate change and voids SCRIPT, the image prompt,
+the image, and the clips — it is never something the pipeline does on its own.
 
 ## Identity modes
 
@@ -86,7 +138,7 @@ it as an approximation of an existing profile.
 | Command | Meaning |
 | --- | --- |
 | `.profile` | Show the active profile, or offer 3 choices when none is locked |
-| `.profile list` | List available profiles, marking the production default |
+| `.profile list` | List every available profile — id, characters, style, status — and mark which is locked |
 | `.profile use <id>` | Lock that profile for the episode |
 | `.profile add <description>` | Define a new reusable profile (see schema) |
 | `.profile <hint>` | Steer the offered set |
@@ -116,7 +168,7 @@ Voice profiles:
   Character B:
     ...
 Status:
-  production default | reusable | episode-local | experimental
+  shipped | reusable | episode-local | experimental
 ```
 
 Use generic voice archetypes. Never request imitation of a named real person, and never
@@ -130,8 +182,11 @@ Once locked, the exact profile stays identical through:
 .location → .environment → .script → .frame → .image → .clips
 ```
 
-A later stage may not swap identities, style, reference assets, or voices. Changing the
-profile voids SCRIPT, the image prompt, the image, and the clips.
+The lock is written **before** SCRIPT runs, so no episode asset is ever made against a profile
+that has not been selected yet. A later stage may not swap identities, style, reference assets, or
+voices. Regenerating the image (or any artifact) does not re-select the profile: the same lock is
+reused. Substituting a different profile voids SCRIPT, the image prompt, the image, and the
+clips.
 
 ## Speaker labels
 
@@ -142,7 +197,7 @@ pronouns ("he", "the other one") in their place.
 
 ## Catalog
 
-### profile-01 — production default
+### profile-01 — shipped, never mutated
 
 Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama. Shipped turnaround:
 `assets/character-turnaround.png` (offered to the user to attach). Speaker labels: `OLD MAN`,
@@ -199,7 +254,7 @@ do not depict her as a minor.
 
 ## Growing the catalog
 
-`profile-01` is the default and must never be mutated. New profiles are added, not patched
+`profile-01` is a shipped profile and must never be mutated. New profiles are added, not patched
 over: a new character sheet plus art direction plus voice notes becomes `profile-03`,
 `profile-04`, and so on. Episode-local profiles are scoped to their episode and never
 promoted silently to the catalog.

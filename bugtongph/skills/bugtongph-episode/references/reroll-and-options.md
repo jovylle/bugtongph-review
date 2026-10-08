@@ -46,6 +46,10 @@ appears in a given episode, and neither is ever offered as an option inside the 
 suggestion exists so an unattended `.auto` run has one defined choice; it is not a claim that
 option 1 is creatively the best.
 
+**PROFILE is the exception.** Its suggestion only guides the gated path: an unattended run does
+not take it — it draws one eligible profile at random, so no profile is preferred and none is a
+fallback. See `profile.md` "Selection".
+
 ```text
 1. <option> (suggested)
 2. <option>
@@ -223,7 +227,9 @@ questions.
 
 1. It walks the stages in order — RIDDLE (or TOPIC, if the topic pipeline was selected) →
    LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE — taking
-   **option 1 (suggested)** at every gate. This is **one continuous run**, not one stage per
+   **option 1 (suggested)** at every gate, **except PROFILE**, where it takes no position and
+   instead draws one eligible profile at random (`profile.md` "Selection"). This is **one
+   continuous run**, not one stage per
    turn: it does not stop between stages. It prints the preselected trail as a compact block,
    one line per stage, as it goes.
 2. It **stops once the image has been generated and validated.** CLIPS is the last step and runs
@@ -232,11 +238,14 @@ questions.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
    the gated path. Unattended does not mean unchecked.
 5. It **stops and reports** rather than improvising when: both riddle sources are unavailable
-   (Notion unconnected *and* the bundled set unreadable or exhausted), the script cannot fit its
-   clip budget, or an image fails validation twice. A profile whose turnaround simply was not
-   attached is **not** a blocker — unattended runs continue in `text` identity mode.
+   (Notion unconnected *and* the bundled set unreadable or exhausted), **no eligible profile can
+   be drawn** (`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` —
+   never a fallback to `profile-01`), the script cannot fit its clip budget, or an image fails
+   validation twice. A profile whose turnaround simply was not attached is **not** a blocker —
+   unattended runs continue in `text` identity mode.
 6. A plain stage command (`.script`, `.location`, …) is always the gated conversational path and
    is unaffected by this. Repeating a stage command still rerolls it.
 
 Because of this, the suggested option must always be a *defensible* option: it is what gets made
-when no human is watching.
+when no human is watching. PROFILE is the exception — the unattended run draws instead of
+inheriting the suggestion.

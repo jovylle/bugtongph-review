@@ -85,6 +85,11 @@ is not an image the session can supply. Attach one and it becomes the authority;
 episode either invents its own characters or holds the catalog one by description. It never blocks
 waiting for an image.
 
+**No profile is the default.** `.auto` does not take the suggested option at PROFILE: it loads the
+eligible profiles, drops the invalid and rejected ones, **draws one at random**, and locks it
+before the script is written. `profile-01` has no priority and is never a fallback — if no profile
+can be drawn, the run stops and reports it instead of proceeding.
+
 To use Notion (the preferred source):
 
 - `.app.json` references the registered Notion app by id

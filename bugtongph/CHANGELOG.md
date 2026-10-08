@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.10.9 — the profile is drawn, not defaulted
+
+`.auto` could run an entire episode on `profile-01` because a default was written into the profile
+rules: the unattended run took option 1 at the profile gate, and several files described
+`profile-01` as "the production default". Episodes therefore coupled themselves to one character —
+and because the sheet is later the video's visual authority, a wrongly-defaulted profile could
+invalidate a whole run downstream.
+
+### Changed
+
+- **No profile is the default.** `profile-01` has no priority and is never a fallback. The
+  "production default" wording is gone from `SKILL.md` §5, `profile.md` (menu, commands table,
+  schema status value, catalog heading, growing the catalog) and `active-pair-runtime.md`, which no
+  longer opens with a default profile at all.
+- **PROFILE is an explicit selection step, and it runs before any episode asset exists.** The
+  eligible set is loaded — the AI-invented route, intact catalog profiles, reusable and
+  episode-local ones — rejected/invalid entries are dropped, one profile is **drawn at random**,
+  and it is persisted to episode state as the PROFILE lock *before* SCRIPT. Full contract in
+  `profile.md` "Selection".
+- **A failed draw stops the run.** `.auto` reports
+  `AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` instead of
+  proceeding, in `SKILL.md` §1/§5/§6, `reroll-and-options.md` §0/§11, `runtime-state.md` and
+  `overview.md`.
+- **The lock is visible and durable.** Episode state carries the profile id, its
+  `selection source` (`random` | `user` | `suggested`) and the identity mode; the overview's state
+  line and its pre-image checklist report them, so the log answers *which profile, and why*.
+- **Regeneration never re-selects.** `render.md`'s identity gate and validation gate 2 compare the
+  render against the locked profile in episode state, regenerate under the same lock, and state
+  that the profile is never changed to make an image pass. `profile.md`'s propagation invariant and
+  `runtime-state.md` say the same.
+- **The suggestion still guides the gate, not the unattended run** (`reroll-and-options.md` §0):
+  with no image in the conversation an AI-invented profile leads the menu, and `.auto` draws
+  regardless.
+
 ## 0.10.8 — the riddle is a content variable
 
 Changing the riddle voided the whole episode. The cascade treated the subject as the root of a

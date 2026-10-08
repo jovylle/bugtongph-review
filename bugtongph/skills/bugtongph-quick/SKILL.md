@@ -37,7 +37,7 @@ Reference and asset paths below resolve relative to this skill's own directory,
    both sources fail.
 2. **Identity.** Lock an identity mode per `../bugtongph-episode/references/reference-binding.md`.
    `attached` means the user attached an image in the conversation, and that image is the
-   reference input; `text` means the written `profile-01` description holds the character while
+   reference input; `text` means the written profile description holds the character while
    the image is designed. A file path inside the plugin package is not an image the session can
    supply, so never block waiting for one, and never claim it is bound when no image is present.
    When no image is in the conversation, do not present a catalog character as the suggested

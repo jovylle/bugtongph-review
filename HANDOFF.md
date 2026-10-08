@@ -22,7 +22,7 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.7**.
+- `dev` = all work. Currently checked out, currently **0.10.9**.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
@@ -198,6 +198,17 @@ survive. A green local validator is not host proof — run the probe against the
   clip has been generated and compared since. Generate one Clip 1 from an existing validated sheet
   and run the `clips.md` "Clip acceptance" checklist before trusting them. If a property still
   drifts with the authority blocks explicit, the sheet is the weak link, not the prompt.
+- **The 0.10.9 profile draw is prose, not code.** Nothing enforces "draw at random" but the model
+  reading the rule. Confirm it on a real run: the trail line must name the drawn profile, repeating
+  `.auto` on a *new* episode must be able to produce a different profile when more than one is
+  eligible, and a resumed episode must keep the profile it already locked. A run that reports
+  `AUTO_PROFILE_SELECTION_FAILED` has hit the empty-set path — check whether the pool was really
+  empty before believing it.
+- **The draw can pick a catalog character that cannot be matched here.** The eligible set includes
+  catalog profiles whose turnaround is not attached, so a drawn `profile-01` runs in `text` mode:
+  correct per the bug report (no profile is preferred), but the generated sheet becomes the only
+  identity anchor for that episode. Narrow the pool to AI-invented + image-bound profiles if an
+  exact catalog match must be guaranteed.
 - **Two images in one request** is unverified — the plugin asks for 2 candidates and falls back
   to 1. Do not assert the host supports it.
 - **Veo 3.1 Lite output resolution** is not stated by Google, so the plugin asserts none.

@@ -58,7 +58,8 @@ Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`,
 
 `.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It runs the
 whole chain in **one continuous run**, preselecting at every stage and taking **option 1
-(suggested)** each time, without asking gate questions:
+(suggested)** each time, without asking gate questions — except at **PROFILE**, where it takes no
+position at all: it draws one eligible profile at random (see §5):
 
 ```text
 RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
@@ -72,8 +73,10 @@ While it runs it prints the preselected trail as a compact block — one line pe
 run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
 correct any one choice without restarting. It never takes option 2 or 3 on its own, never
 invents an option when none is valid, and stops to report a blocker (both riddle sources
-unavailable, no eligible riddle left, script cannot fit its budget, an image failing validation
-twice) rather than improvising.
+unavailable, no eligible riddle left, no eligible profile to draw, script cannot fit its budget,
+an image failing validation twice) rather than improvising. PROFILE is the one stage where the
+suggested option is not taken: it is a random draw, and an empty eligible set stops the run
+instead of falling back to `profile-01`.
 
 A plain stage command is always the gated conversational path and is unaffected.
 
@@ -213,8 +216,18 @@ Because TOPIC is invented, a reroll cannot run dry; the only blocker is an unusa
 
 ## 5. Profile and identity binding
 
-Unless explicitly changed, `profile-01` is the production default: Old Man + Kid with Blue
-Neck Scarf, handcrafted Filipino papercraft diorama, with its established voice profiles.
+**There is no default profile.** `profile-01` has no priority: it is one candidate in the eligible
+set, and it is never an implicit fallback.
+
+PROFILE is an explicit selection step, and it runs **before any episode asset is generated**:
+eligible profiles are loaded, rejected/invalid ones are dropped, and one is chosen — at random
+under `.auto`, by the user at the gate — and written to episode state as the PROFILE lock *before*
+SCRIPT runs. Every downstream stage uses that one profile. If no profile can be selected, `.auto`
+stops: `AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile`. It never
+proceeds with `profile-01`. See `references/profile.md` "Selection".
+
+`profile-01` is the Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama,
+with its established voice profiles.
 
 Every profile locks one **identity mode**:
 
@@ -280,11 +293,19 @@ beauty lever".
 Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
 text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
 
+Selection is **explicit and precedes every episode asset**: eligible profiles are loaded, invalid
+or rejected ones dropped, and one is chosen — a random draw under `.auto`, the user's pick at the
+gate — then persisted and locked before SCRIPT runs. No profile has positional priority:
+`profile-01` is never preferred and never a fallback, and an empty eligible set stops the run with
+`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile`. Regenerating the
+image later never re-selects the profile. See `references/profile.md` "Selection".
+
 Which bundle is `(suggested)` depends on whether a character image is in the conversation: with an
 attached image the matching catalog profile leads in `attached` mode; with no image an AI-invented
 bundle leads, and the catalog profiles are listed as further choices for a user who will supply
 the image. A catalog character is never suggested as a text-only description, because its shipped
-turnaround cannot be bound and the match would be unwinnable. See `reference-binding.md`.
+turnaround cannot be bound and the match would be unwinnable. The suggestion guides the gate only —
+it does not decide an unattended run. See `reference-binding.md`.
 
 `profile-01` is always the Old Man + Kid with the blue neck scarf — its fixed label, with
 speaker labels `OLD MAN` and `KID`. An AI-invented bundle is offered under its own descriptive
