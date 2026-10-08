@@ -3,5 +3,5 @@ interface:
   short_description: "Bugtong episode production"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  default_prompt: ".auto - start a bugtong episode one step at a time. Works with no setup."
+  default_prompt: ".auto - make a whole episode. Send .auto again at each pause."
 

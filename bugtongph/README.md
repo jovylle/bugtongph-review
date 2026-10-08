@@ -8,11 +8,13 @@ camera planning, a validated Clip 1 render, and one to three copy-ready Google F
 
 ## Try it (30 seconds)
 
-Install the plugin and open a new chat. The composer offers three starters; the first one works
-immediately, with no setup at all:
+Install the plugin and open a new chat. The composer offers three starters, and all of them work
+with no setup at all:
 
 ```text
-.auto - start a bugtong episode. Works with no setup.
+.auto - make a whole episode. Send .auto again at each pause.
+.riddle - build it step by step and choose at every stage.
+.auto draft - get the image prompt and clip prompts, no image made.
 ```
 
 `.auto` is the **unattended** path: it preselects every stage — riddle or topic, location,
@@ -22,8 +24,9 @@ each time showing what is done and what is not: after the **image prompt** (read
 with `.image-prompt <change>`), after the **image** (send `.auto` again and it generates the sheet
 in a turn of its own, then checks it), and after the **clip prompts** (one more `.auto`). The
 image gets its own turn because generating it in the same turn as every other stage produced
-grids and answer clues; one stage at a time did not. `.auto draft` does everything except generate the image: it prints the image prompt
-and the clip prompts in one go, and you bring the generated sheet back for `.image` to check it.
+grids and answer clues; one stage at a time did not. `.auto draft` does everything except
+generate the image: it prints the image prompt and the clip prompts in one go, and you bring the
+generated sheet back for `.image` to check it.
 
 The stage commands (`.riddle`, `.location`, `.script`, …) are the other mode: each one asks a
 single question and stops, so you can steer any single choice. Reply with the number of the

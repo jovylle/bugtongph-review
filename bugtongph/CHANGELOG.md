@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.10.20 — a plugin page that says what the plugin does
+
+The plugin page showed internal wording ("checkpoint-safe", "content pipelines", "ingredient-sheet
+panels", "channels") and a false claim (riddles "only" from Notion; the bundled set is the
+fallback).
+
+- **shortDescription:** "Short Filipino videos for Veo" — riddles and topics, not only bugtong.
+- **longDescription:** what you get (one shot-reference image in ChatGPT, 1–3 copy-ready 8-second
+  Flow prompts), how to start (`.auto` and its three pauses, or the step commands), `.auto draft`,
+  answer secrecy, languages, and that Notion is optional.
+- **Starters:** `.auto` (whole episode), `.riddle` (step by step — the path that has produced
+  correct sheets), `.auto draft` (prompts only). `.topic` and `.riddle bisaya` move into the
+  description. README "Try it" and the episode skill's `default_prompt` match.
+
+The Notion section and the data-sharing paragraph on that page come from Notion's app listing
+and from ChatGPT, not from this plugin.
+
+---
+
 ## 0.10.19 — `.auto` gives the image a turn of its own
 
 Observed in use: running the stages one at a time produces a correct sheet; a single `.auto` turn
