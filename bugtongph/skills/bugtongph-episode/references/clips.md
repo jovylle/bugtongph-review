@@ -2,16 +2,29 @@
 
 ## Core contract
 
-Return **one, two, or three independently copy-ready prompts** — one per clip in the episode's
-locked clip count — and nothing that substitutes for them.
+Return **one, two, or three independently copy-ready prompts** — exactly the clip count SCRIPT
+locked, one per clip — and nothing that substitutes for them. **Never write an Extend the script
+did not plan.** A 1-clip episode is Clip 1 alone: its final beat ends the episode, and no Clip 2 is
+offered, drafted, or "suggested for later".
+
+**CLIPS translates locks; it decides nothing about the characters.** How they look, what they are
+made of, how they move, and how they sound come from the profile record (`profile.md` "The profile
+record") and are copied; what they do and say comes from the locked SCRIPT. Every spoken line in
+every clip is a SCRIPT line, verbatim, in the clip SCRIPT assigned it — never a new line, not even a
+filler like "Hmm…". If a clip seems to need a trait or a line that is not locked, that is a gap in
+PROFILE or SCRIPT: report it, do not improvise it.
 
 **Each prompt stands alone.** The reader pastes one prompt into Google Flow with no other text. A
-prompt that says "continue from the final frame", "as before", "same as above", or otherwise leans
-on another clip is not an artifact — it is a note about one. Clips 2 and 3 are text-only Extends,
-but every state each inherits is *restated in full* (see "Clip 2 — Extend continuation" and "Clip 3
-— second Extend"); the inheritance is never referred to. Each prompt also carries the whole shared
-preamble — REFERENCE AUTHORITY, MATERIAL REALITY, the supplemental text rule and the speaker
-roster — so no prompt depends on another having been read first.
+prompt that says "continue from the final frame", "as before", "same as above", "established in
+Clip 1", or otherwise leans on another clip is not an artifact — it is a note about one. Clips 2 and
+3 are text-only Extends, but every state each inherits is *restated in full* (see "Clip 2 — Extend
+continuation" and "Clip 3 — second Extend"); the inheritance is never referred to.
+
+**Write the shared preamble once, then paste it unchanged into every prompt.** MATERIAL REALITY,
+MOTION LANGUAGE, the supplemental text rule and the speaker roster are the same text, word for word,
+in Clip 1, Clip 2 and Clip 3. REFERENCE AUTHORITY has two fixed wordings — one for Clip 1, one for
+an Extend — below. Assembling the preamble per clip is how a block goes missing in the second
+prompt.
 
 The final prompts must instantiate actual episode details from the locked subject (RIDDLE or TOPIC) + LOCATION + ENVIRONMENT + PROFILE + SCRIPT + FRAME + the validated IMAGE sheet. Do not merely list generic prompt categories.
 
@@ -106,9 +119,18 @@ proportions, clothing, or materials from any text below. Face and body detail co
 sheet.
 ```
 
-**MATERIAL REALITY — second.** State what these characters physically are, **taken from the locked
-PROFILE's material and rendering language**, then forbid the families that would replace it. Paper
-is the default, not the rule — the block is instantiated from the profile:
+For an Extend (Clip 2, Clip 3) no sheet is attached, so the block reads instead:
+
+```text
+REFERENCE AUTHORITY — READ FIRST
+The video being extended is the primary visual authority. Continue the characters exactly as they
+appear in its final second. Do not redesign, restyle, or re-render them, and do not rebuild faces,
+proportions, clothing, or materials from any text below.
+```
+
+**MATERIAL REALITY — second.** State what these characters physically are — the profile record's
+**Material / rendering** line — then forbid only the families its **Drifts toward** line names. The
+block is instantiated from the record:
 
 - **A papercraft profile** (`profile-01`, or any profile whose material is cut paper) uses this
   block:
@@ -122,11 +144,10 @@ is the default, not the rule — the block is instantiated from the profile:
   designed in the sheet.
   ```
 
-- **Any other profile** states *its own* material as the same kind of physical fact, and forbids the
-  families that would replace it. A profile locking stylized 3D animation says so, and forbids
-  photographed paper, clay and airbrushed surfaces; a photoreal profile says so, and forbids
-  illustration, cartoon shading and cut-paper construction. Read the material line out of the locked
-  profile and write it here.
+- **Any other profile** states *its own* material line as the same kind of physical fact, and
+  forbids exactly the families on its drifts line — nothing else. A stylized 3D anime profile names
+  photoreal live action or flat 2D, not paper or clay: forbidding a family the profile could never
+  slide into only puts that family's words in front of the model.
 
 This block exists because the tree's material vocabulary is otherwise only a style label
 (`papercraft diorama`), and an unforbidden rendering family wins by default. **A block naming the
@@ -134,15 +155,29 @@ wrong material is worse than no block.** It fights the locked profile, and a mod
 contradictory instructions resolves the conflict by dropping the block — which is how a clip prompt
 arrives with no material clause at all.
 
-**SUPPLEMENTAL TEXT RULE — third.** State that every section below these blocks carries only
+**MOTION LANGUAGE — third.** The profile record's **Motion / animation language**, copied
+verbatim, under this heading:
+
+```text
+MOTION LANGUAGE
+Move these characters exactly this way for the whole clip: <the record's motion line, verbatim>.
+```
+
+The profile owns how the characters move; this block only carries it. Never write a motion style
+here that the record does not state, and never decide what a style means ("anime motion",
+"claymation movement") — if the record is silent, it is a PROFILE gap. State motion positively; a
+motion family to avoid appears only if the record's drifts line names it.
+
+**SUPPLEMENTAL TEXT RULE — fourth.** State that every section below these blocks carries only
 voice, speaker labels, timing, action, camera, dialogue, audio, and what the sheet cannot show. No
-section may restate a face, a body proportion, clothing construction, or surface material. If a
-visual detail is visible in the sheet, the sheet states it: the text must never restate it and
-must never contradict it.
+section may restate a face, a body proportion, clothing construction, or surface material, or
+redefine how the characters move. If a visual detail is visible in the sheet, the sheet states it:
+the text must never restate it and must never contradict it.
 
 **SPEAKER ROSTER.** A block listing every character with their exact uppercase label from PROFILE,
-and for each one their voice characteristics only. This is what binds a voice to a face. Give the
-label and the voice — never the character's appearance, which the sheet already carries.
+and for each one the record's **Voices** entry, copied — voice characteristics only. This is what
+binds a voice to a face. Give the label and the voice — never the character's appearance, which the
+sheet already carries, and never a voice quality the record does not state.
 
 ```text
 SPEAKER ROSTER
@@ -160,13 +195,13 @@ Then the numbered sections:
 4. **WORLD / ENVIRONMENT LOCK** — instantiate the actual location, time, weather, lighting, materials, and ambience as they appear in the sheet, and their continuity across shots. Then state that the environment is part of what the audience is here to see: the place is shown, not merely inhabited. Name the concrete beautiful elements the locked LOCATION and ENVIRONMENT provide — depth layers, silhouette, water holding the light, haze between planes, texture the light rakes across — and require them to be preserved and given room. Beauty comes only from the locked conditions: no added scenery, effects, weather, or time of day, and no restyling of the characters or the material to make the frame prettier.
 5. **PANEL-TO-SHOT MAP** — explicitly map each actual panel to its sequential shot, including start framing, character positions, pose/state, gaze, action, speaker, and purpose.
 6. **TIMING MAP** — give an approximate 8-second timing budget, including dialogue duration, breathing, pauses, reactions, and cuts.
-7. **PERFORMANCE / ACTING** — specify natural movement, listener processing, facial reactions, hand behavior, walking/standing/sitting state, and continuity. No answer-directed behavior.
+7. **PERFORMANCE / ACTING** — the SCRIPT's actions, beat by beat: listener processing, reactions, hand behavior, walking/standing/sitting state, and continuity — performed in the MOTION LANGUAGE block's way of moving. This section says *what* each character does; it never says *how they move* in style terms (no "natural", "restrained", "anime", or "stop-motion" motion of its own). No answer-directed behavior.
 8. **CAMERA RULES** — specify shot sizes, camera position, restrained motion, hard cuts between materially different panels, and prohibit unplanned angles or panel zoom tricks. Each shot reproduces its strip's framing and subject scale; the camera must not move closer than the strip shows. The establishing shot carries the place: compose it for depth and light and let the characters be small in it where the sheet does. Beauty never costs legibility — no character, face, or material may become unreadable for a prettier frame, and nothing answer-related may be lit, framed, or centred to make a nicer shot.
-9. **DIALOGUE / VOICE LOCK** — bind every line to a speaker before writing it. For each line, in order: the **exact uppercase label** from the speaker roster, then the exact approved dialogue in quotes, then that character's voice characteristics, pacing, and emphasis. Never write an unattributed line, never use a pronoun in place of a label, and never add narration or off-screen voice. State plainly that each line is spoken by that character only. Preserve label spelling exactly as it appears in the script.
+9. **DIALOGUE / VOICE LOCK** — bind every line to a speaker before writing it. Only the SCRIPT's lines for this clip, verbatim, in the script's order and with the script's speaker; the riddle recitation from the current RIDDLE lock. For each line, in order: the **exact uppercase label** from the speaker roster, then the exact approved dialogue in quotes, then that character's voice characteristics, pacing, and emphasis. Never write an unattributed line, never use a pronoun in place of a label, and never add narration or off-screen voice. State plainly that each line is spoken by that character only. Preserve label spelling exactly as it appears in the script.
 10. **AUDIO / AMBIENCE** — specify the actual environment sounds, voice clarity, silence/reaction beats, minimal music unless approved, and Clip 1 ending audio state.
 11. **SUBJECT INTEGRITY** — in the riddle pipeline, explicitly preserve the unanswered riddle and prohibit visual, behavioral, camera, sound, or environmental clues to the answer. The recited riddle's wording is read from the **current RIDDLE lock** here and reproduced verbatim — never from a copy held in the script. A riddle swapped after the script was locked is already valid: recite the current riddle, and touch nothing else. In the topic pipeline there is no answer: instead lock the stated topic and angle and prohibit drifting to a different subject.
-12. **VISUAL NEGATIVES / FAILURE PREVENTION** — prohibit redesign, identity drift, re-rendered or generic faces, changed build or proportions, changed clothing construction, changed material, every render family the MATERIAL REALITY block forbids, extra characters, text, captions, labels, borders, visible storyboard/panel structure, comic treatment, random cuts, camera-facing behavior, object manipulation not in the script, and answer clues.
-13. **FINAL PERFORMANCE TARGET** — restate the exact intended beginning-to-ending physical and emotional state of Clip 1 and, in a 2- or 3-clip episode, the precise final-second state Clip 2 must inherit.
+12. **VISUAL NEGATIVES / FAILURE PREVENTION** — prohibit redesign, identity drift, re-rendered or generic faces, changed build or proportions, changed clothing construction, changed material, the drifts-line families the MATERIAL REALITY block already names (and no others — never list another profile's materials or motion styles), extra characters, text, captions, labels, borders, visible storyboard/panel structure, comic treatment, random cuts, camera-facing behavior, object manipulation not in the script, and answer clues.
+13. **FINAL PERFORMANCE TARGET** — restate the exact intended beginning-to-ending physical and emotional state of Clip 1 and, in a 2- or 3-clip episode only, the precise final-second state Clip 2 must inherit. In a 1-clip episode the final second is the episode's ending, not a handoff.
 
 ### Panel interpretation rule
 
@@ -188,10 +223,13 @@ fails when any of these is true:
 3. **Build / proportions** — a character's body build, head size, or scale changed.
 4. **Clothing / props** — construction, colour, or props were reinterpreted instead of continued.
 5. **Framing** — the strip's subject scale and composition were not preserved and the camera came in closer than the sheet's shot.
+6. **Motion** — the characters move in a way the profile's motion language does not describe (fluid where it locked stepped poses, posed where it locked live action).
 
 On failure, advise regenerating with **only the REFERENCE AUTHORITY and MATERIAL REALITY blocks
-changed** — made more explicit and more specific to the property that drifted — and with every
-other section identical. Do not rewrite the whole prompt, and do not add more character
+changed** (or, for a motion failure, only the MOTION LANGUAGE block, still copied from the record)
+— made more explicit and more specific to the property that drifted — and with every other section
+identical. If the motion line itself is wrong for this profile, fix it in the profile record, not in
+the clip prompt. Do not rewrite the whole prompt, and do not add more character
 description: the description is the cause, not the fix. If the same property drifts after the
 authority blocks are already explicit, the sheet does not carry that property strongly enough:
 regenerate the sheet per `references/render.md` instead of fighting it in the clip prompt.
@@ -213,7 +251,7 @@ shorten Clip 2 into a note about Clip 1.
 
 ### Required sections
 
-1. **EXTEND MASTER INSTRUCTION** — state that this is a direct continuation of the preceding Clip 1 video, not a restart, and restate the MATERIAL REALITY block verbatim — the same material the profile locked, exactly as Clip 1 stated it: the clip continues that material on screen and must not re-render the look, material, or faces from its own text.
+1. **EXTEND MASTER INSTRUCTION** — state that this is a direct continuation of the video being extended, not a restart. The preamble above it — the Extend REFERENCE AUTHORITY, then MATERIAL REALITY, MOTION LANGUAGE, the supplemental text rule and the speaker roster, word for word as in every other prompt — is what keeps the material, the motion and the faces from being re-rendered from this prompt's own text.
 
 **Audio must never be left implicit here.** Extend produces silent clips when the source's final second carries no audio, when the audio block is dropped, or when the extend step runs a model without audio. So name the ambience, name the next speaker and their exact line, and restate voice characteristics — and keep Clip 2's audio simple (one speaker, no singing, no dense layering). If Clip 2 arrives silent, regenerate with the audio section changed only; see `veo-3-1-lite.md` "Extend audio".
 2. **INHERITED VISUAL STATE** — restate the exact final-second character positions, pose, gaze, expression, clothing, props, environment, lighting, scale, art/material language, and camera state, and say that this inherited state is the visual authority for the extension: the faces and the material carry over unchanged, and are not rebuilt from the text of this prompt.
@@ -221,7 +259,7 @@ shorten Clip 2 into a note about Clip 1.
 4. **CONTINUATION START STATE** — state exactly where and how the first frame of the extension begins.
 5. **CONTINUATION ACTION** — describe only the next approved action or interaction, including physical causality and natural movement.
 6. **CAMERA PLAN** — specify whether the camera holds, gently reframes, or performs one concrete planned move. Do not invent additional shots unless necessary and approved by the episode state.
-7. **DIALOGUE / VOICE PLAN** — identify the next speaker **by their exact uppercase roster label**, give the exact approved line, and restate that character's voice characteristics, delivery, pauses, and expected completion time. Preserve voice roles from Clip 1 and reuse the same label spelling. Label each spoken line; no unattributed lines, no pronouns standing in for a label.
+7. **DIALOGUE / VOICE PLAN** — only the SCRIPT's lines for this clip, verbatim. Identify the next speaker **by their exact uppercase roster label**, give the exact approved line, and restate that character's voice characteristics, delivery, pauses, and expected completion time. Preserve voice roles from Clip 1 and reuse the same label spelling. Label each spoken line; no unattributed lines, no pronouns standing in for a label.
 8. **TIMING MAP** — budget the extension across opening continuation, dialogue, pauses/reactions, movement, and final beat.
 9. **SUBJECT INTEGRITY** — in the riddle pipeline, continue to hide the answer completely; no new clue may emerge through props, gaze, framing, lighting, dialogue, sound, or behavior. In the topic pipeline, hold the same stated topic and angle with no drift.
 10. **CONTINUITY NEGATIVES** — prohibit restarting the scene, redesigning characters, re-rendering or generic-izing faces, changing build or proportions, changing clothing, changing the locked material into another render family, teleporting, resetting props, changing time/weather, changing art style, changing ambience without cause, or introducing new visual concepts.
@@ -233,8 +271,8 @@ Clip 3 is a **text-only Extend** from the completed Clip 2 video. It is included
 episode's locked clip count is 3. It follows the same rules and structure as Clip 2, inheriting
 from Clip 2's final second instead of Clip 1's.
 
-The shared preamble (REFERENCE AUTHORITY, MATERIAL REALITY, supplemental text rule, speaker
-roster) is repeated in full. The inherited state from Clip 2's final second is written out in
+The shared preamble (the Extend REFERENCE AUTHORITY, MATERIAL REALITY, MOTION LANGUAGE,
+supplemental text rule, speaker roster) is repeated in full. The inherited state from Clip 2's final second is written out in
 full. Nothing may be assumed or referred to by name from Clip 1 or Clip 2.
 
 ### Required sections
@@ -242,8 +280,8 @@ full. Nothing may be assumed or referred to by name from Clip 1 or Clip 2.
 Same 11 sections as Clip 2 — apply them to Clip 3 in exactly the same way, with "Clip 2" as the
 source and "Clip 3" as the current prompt:
 
-1. **EXTEND MASTER INSTRUCTION** — state this is a direct continuation of Clip 2, not a restart;
-   restate MATERIAL REALITY verbatim from the locked profile.
+1. **EXTEND MASTER INSTRUCTION** — state this is a direct continuation of the video being
+   extended, not a restart, under the same verbatim preamble as every prompt.
 2. **INHERITED VISUAL STATE** — the exact final-second character positions, pose, gaze, expression,
    clothing, props, environment, lighting, scale, art/material language, and camera state from
    Clip 2. State that this inherited state is the visual authority; faces and material carry over
@@ -254,8 +292,9 @@ source and "Clip 3" as the current prompt:
 5. **CONTINUATION ACTION** — the next approved action or interaction, including physical causality.
 6. **CAMERA PLAN** — whether the camera holds, gently reframes, or performs one concrete planned
    move.
-7. **DIALOGUE / VOICE PLAN** — next speaker by exact uppercase roster label, exact approved line,
-   voice characteristics, delivery, and expected completion time.
+7. **DIALOGUE / VOICE PLAN** — only the SCRIPT's lines for Clip 3, verbatim: next speaker by
+   exact uppercase roster label, exact approved line, voice characteristics, delivery, and expected
+   completion time.
 8. **TIMING MAP** — budget the 8 seconds across continuation, dialogue, pauses/reactions, movement,
    and final beat.
 9. **SUBJECT INTEGRITY** — riddle pipeline: continue to hide the answer; topic pipeline: hold the
@@ -325,7 +364,7 @@ it only when every section is present (see "Minimum prompt depth"); never pad to
 The most common cause of a short Clip 2 or Clip 3 is treating it as a continuation note
 ("continue from Clip 1, same characters, same environment…") instead of a self-contained prompt.
 Every Extend prompt must repeat the full shared preamble (REFERENCE AUTHORITY + MATERIAL REALITY
-+ supplemental text rule + speaker roster) and write out its inherited state in full. There is
++ MOTION LANGUAGE + supplemental text rule + speaker roster) and write out its inherited state in full. There is
 no shared context between a clip and its extends inside Google Flow — each generation is
 independent, so each prompt must carry everything.
 

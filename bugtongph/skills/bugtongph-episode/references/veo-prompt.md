@@ -54,8 +54,12 @@ Do not render smooth 3D CGI, plastic, clay, or airbrushed surfaces.
 Do not generate a generic face — the faces are already designed in the sheet.
 
         ^ this is the PAPER block, verbatim, for a papercraft profile. Any other
-          profile states its own material in the same shape and forbids the
-          families that would replace it. See clips.md "MATERIAL REALITY — second".
+          profile states its own material line in the same shape and forbids only
+          its own drifts-line families. See clips.md "MATERIAL REALITY — second".
+
+MOTION LANGUAGE:
+Move these characters exactly this way for the whole clip: <the profile record's
+motion line, verbatim>.
 
 ACTIVE PROFILE — VOICE AND LABELS ONLY:
 Use the active profile for voice/speech characteristics and the uppercase speaker

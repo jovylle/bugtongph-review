@@ -8,8 +8,14 @@ CHARACTER(S) + ART STYLE + VOICE/SPEECH = ONE LOCKED PROFILE
 
 One choice, never three. A profile owns character identities, canonical appearance,
 reference assets, clothing and accessories, art style, material and rendering language,
-scale conventions, and voice/speech profiles. Never mix a character from one profile with
-another profile's style or voice.
+**motion and animation language**, scale conventions, and voice/speech profiles. Never mix a
+character from one profile with another profile's style, motion, or voice.
+
+**The profile owns every character trait.** How the characters look, what they are made of, how
+they move, and how they sound are decided here, written into the profile record at lock, and only
+copied afterwards. SCRIPT decides what they do, FRAME where the camera is, and CLIPS translates the
+locks into Veo wording — none of them adds a trait or decides what a style means. See "The profile
+record".
 
 Legacy name: this stage was called `pair`. `.pair`, `.pair list`, `.pair use <id>` are
 legacy aliases for `.profile`, `.profile list`, `.profile use <id>`. `pair-01` in older
@@ -17,8 +23,8 @@ episodes means `profile-01`.
 
 ## Menu
 
-Offer **exactly three** profiles, numbered 1–3, each one line stating characters, style, and
-voice character.
+Offer **exactly three** profiles, numbered 1–3, each one line stating characters, style, how
+they move, and voice character. The full record is written for the one that is chosen.
 
 **Which one is suggested depends on whether a character image exists in this conversation.** An
 identity that cannot be bound must never be offered as if it could: the catalog turnarounds ship
@@ -110,8 +116,8 @@ Every profile locks one identity mode, `text` or `attached` — full contract in
 `reference-binding.md`.
 
 - **`text`** — the written profile is the identity authority: characters, art style, material
-  language, scale, clothing, voice. No asset is needed, nothing has to be attached, and the image
-  stage proceeds. Write it precisely enough to be reused. Identity is *held by description*, so
+  language, motion, scale, clothing, voice — the full profile record. No asset is needed, nothing
+  has to be attached, and the image stage proceeds. Write it precisely enough to be reused. Identity is *held by description*, so
   the sheet is what fixes the look for the episode — and at CLIPS the validated sheet, not the
   description, is what the video is held to.
 - **`attached` (opt-in)** — a turnaround image is in the conversation, and that image becomes the
@@ -142,36 +148,63 @@ it as an approximation of an existing profile.
 | `.profile` | Show the active profile, or offer 3 choices when none is locked |
 | `.profile list` | List every available profile — id, characters, style, status — and mark which is locked |
 | `.profile use <id>` | Lock that profile for the episode |
-| `.profile add <description>` | Define a new reusable profile (see schema) |
+| `.profile add <description>` | Define a new reusable profile (see "The profile record") |
 | `.profile <hint>` | Steer the offered set |
 
-## New profile schema
+## The profile record
+
+Every locked profile has one written record — catalog, reusable, and **AI-invented alike**. It is
+written in full **at PROFILE lock**, before SCRIPT: on the gated path it is shown with the approval
+question; under `.auto` it is printed in the trail as a block (the PROFILE line is the one trail
+entry that is not a single line). A style label alone ("3D CGI anime") is not a locked profile: if
+a later stage would have to invent a character, a look, a voice, or a way of moving, the record is
+incomplete and PROFILE is not done.
 
 ```text
-profile-XX
+<profile id, or the invented bundle's descriptive name>
 Characters:
-  Character A
-  Character B
+  <LABEL> — <role, apparent age, gender>
+    look: <face, hair, build, skin>
+    clothing / props: <...>
+  <LABEL> — ...
 Art style:
-  ...
-Material / rendering language:
-  ...
+  <one or two sentences>
+Material / rendering:
+  <what the characters physically are, stated as fact, and the surface qualities that must survive>
+Motion / animation language:
+  <how these characters move, stated positively: timing (real-time, on twos, stepped held poses),
+  pose style, weight, how much the body moves while talking, facial animation, what holds still>
+Drifts toward (forbidden):
+  <one line: only the 1–3 render or motion families THIS profile could realistically slide into>
 Scale conventions:
-  ...
+  <...>
 Visual identity mode:
   text (written description is the authority) | attached (a turnaround is in the conversation)
-Speaker labels:
-  Character A: LABEL
-  Character B: LABEL
-Voice profiles:
-  Character A:
-    archetype / apparent age / pitch / texture / accent / energy / rhythm /
-    articulation / emotional range / pauses and breathing / Filipino delivery
-  Character B:
-    ...
+Voices:
+  <LABEL>: archetype / apparent age / gender / pitch / texture / accent and language / energy /
+    rhythm / articulation / emotional range / pauses and breathing / delivery
 Status:
   shipped | reusable | episode-local | experimental
 ```
+
+**Downstream stages copy; they never add.**
+
+| Stage | Takes from the record | May add |
+| --- | --- | --- |
+| SCRIPT | labels, voices (for what each character would say) | actions and lines — never a trait |
+| FRAME | labels, look (to keep it consistent per panel) | camera, pose, gaze — never a trait |
+| IMAGE PROMPT | STYLE LOCK ← art style + material + drifts line; IDENTITY LOCK ← characters | nothing about the characters |
+| CLIPS | MATERIAL REALITY ← material + drifts line; MOTION LANGUAGE ← motion, verbatim; SPEAKER ROSTER ← voices, verbatim | timing, action, camera, dialogue from SCRIPT |
+
+A trait the record lacks is fixed **at PROFILE**, never filled in downstream. If CLIPS finds it
+needs to say how a character moves and the record does not say, that is a PROFILE gap to report,
+not a sentence to improvise.
+
+**The drifts line names only this profile's realistic neighbours.** A stylized 3D anime profile
+drifts toward photoreal live action, flat 2D illustration, or a stiff plastic-toy look — not toward
+paper or clay. A papercraft profile drifts toward smooth CGI, plastic, and clay. Never copy another
+profile's forbidden list, and never list a family just because the plugin's examples mention it:
+every forbidden noun is still a noun the generator reads.
 
 Use generic voice archetypes. Never request imitation of a named real person, and never
 invent a voice reference to a real performer.
@@ -188,7 +221,8 @@ The lock is written **before** SCRIPT runs, so no episode asset is ever made aga
 that has not been selected yet. A later stage may not swap identities, style, reference assets, or
 voices. Regenerating the image (or any artifact) does not re-select the profile: the same lock is
 reused. Substituting a different profile voids SCRIPT, the image prompt, the image, and the
-clips.
+clips. The record travels as text: every stage reads it from episode state, never from a summary
+of it.
 
 ## Speaker labels
 
@@ -205,6 +239,48 @@ Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama. Shi
 `assets/character-turnaround.png` (bound per `reference-binding.md`). Speaker labels: `OLD MAN`,
 `KID`. Must never be mutated.
 
+```text
+profile-01
+Characters:
+  OLD MAN — elderly Filipino fisherman, male
+    look: white/grey hair, large white/grey moustache and beard, weathered face
+    clothing / props: large woven straw hat, rugged paper clothing, red fishing net, woven basket
+  KID — younger Filipino fisherman, boy, male
+    look: messy dark hair, youthful face
+    clothing / props: blue neck scarf, rugged paper clothing, bamboo fishing pole, woven
+      shoulder bag
+Art style:
+  Handcrafted Filipino papercraft diorama, photographed.
+Material / rendering:
+  Real physical paper-and-cardboard sculptures photographed in a real miniature set: visible
+  cut-paper edges, layered paper surfaces, folds and creases, paper fibres, matte finish,
+  handmade asymmetry.
+Motion / animation language:
+  Handmade figures that move with care: small, deliberate movements; heads and limbs pivot as
+  rigid cut-paper pieces; paper clothing bends at folds and never stretches; poses settle and hold
+  between lines; mouths move only on the speaker; the listener stays still apart from small head
+  turns and blinks.
+Drifts toward (forbidden):
+  smooth 3D/CGI surfaces, plastic, clay, airbrushed finish
+Scale conventions:
+  Miniature figures in a miniature set; the set reads as a small built world.
+Visual identity mode:
+  attached (assets/character-turnaround.png in the conversation) | text
+Voices:
+  OLD MAN: warm grandfather / elderly / male / low pitch / gentle gravel / Filipino, the episode
+    language / unhurried / slow even rhythm / clear / warm, patient, teasing / breaths at line
+    ends / natural conversational delivery
+  KID: bright child / about ten / male / higher pitch / clear, light / Filipino, the episode
+    language / quick, light / clear articulation / curious, eager / short breaths / slight upward
+    inflection on questions
+Status:
+  shipped
+```
+
+NOTE — ours, not sourced: profile-01's motion language was written in 0.10.21 from its material
+(rigid cut paper, miniature set). No shipped asset defines how it moves; confirm it against a real
+clip and change it here, not in a clip prompt.
+
 ### profile-02-mich — permanent
 
 ```text
@@ -219,7 +295,12 @@ Art style:
   natural unevenness — never airbrushed, never retouched to a smooth plastic finish.
 Material / rendering language:
   Real-world photographic realism: soft, even, diffuse light; shallow depth of field; muted
-  natural palette; no stylization, no illustration, no papercraft, no cartoon shading.
+  natural palette; natural skin texture.
+Motion / animation language:
+  Real-time live-action human movement: relaxed, unposed, small natural gestures while talking,
+  natural blinks and breathing, weight shifts while standing, no held poses.
+Drifts toward (forbidden):
+  airbrushed or plastic-smooth skin, a CGI digital-human look, illustration or cartoon shading
 Scale conventions:
   Human scale, head-and-shoulders framing for the identity match; a single adult woman only.
 Visual identity mode:
@@ -233,6 +314,7 @@ Voice profiles:
   Mich:
     archetype: warm young-adult Filipina
     apparent age: late teens to early twenties
+    gender: female
     pitch: medium, bright but not high
     texture: clear, lightly breathy, natural
     accent: Filipino (Manila Tagalog), light code-switching to English

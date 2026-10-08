@@ -33,11 +33,12 @@ then names what must survive: cut-paper edges, layered paper surfaces, folds and
 fibres, matte finish, handmade asymmetry — and forbids the render families that replace them: smooth
 3D / CGI, plastic, clay, airbrushed surfaces, and generated generic faces.
 
-**A profile that locked something else gets its own clause in the same shape.** A stylized-3D profile
-states that material and forbids photographed paper, clay and airbrushed surfaces; a photoreal
-profile states its own and forbids illustration, cartoon shading and cut-paper construction. Read the
-material line out of the locked profile — writing the paper clause onto a non-paper profile is a
-contradiction, and a model holding two contradictory instructions drops the block entirely.
+**A profile that locked something else gets its own clause in the same shape**, read from its
+profile record: its material line, and only the families on its own drifts line (`profile.md` "The
+profile record"). Writing the paper clause — or paper and clay as forbidden words — onto a non-paper
+profile is a contradiction, and a model holding two contradictory instructions drops the block
+entirely. How the characters move is the record's motion line, carried by the clip prompt's MOTION
+LANGUAGE block (`clips.md`); this file does not define motion.
 
 Naming the style (`papercraft diorama`, `handcrafted`, `miniature world`) is **not** a substitute.
 A style noun tells the model to re-render the look from words, which is the opposite of preserving

@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.10.21 — the profile owns every character trait, including how they move
+
+From a real `.auto` run with an invented 3D CGI anime profile. The PROFILE trail line said only
+"3D CGI anime", so the image prompt invented the characters, and the clips invented the voices and
+the motion ("No exaggerated anime motion", "No stop-motion movement", "No exaggerated
+squash-and-stretch"). The prompts also forbade papercraft, clay and stop-motion, because our own
+examples said "a stylized-3D profile forbids photographed paper and clay". The script locked one
+clip and CLIPS wrote two, adding a line no one had written. Clip 2 dropped the SUPPLEMENTAL TEXT
+RULE and referred to "Clip 1", and the image prompt and Clip 1 disagreed on who speaks first.
+
+### Added — the profile record
+
+`profile.md` "The profile record": every locked profile, **AI-invented ones included**, is written
+in full at PROFILE lock — characters (label, look, clothing / props), art style, material,
+**motion / animation language**, a **drifts toward (forbidden)** line naming only this profile's
+realistic neighbours, scale, identity mode, and voices (with gender). A style label alone is not a
+locked profile. A table states what each downstream stage copies and what it may add; a missing
+trait is a PROFILE gap, never improvised later. profile-01 now has a full record (looks from
+`veo-google-flow.md` §5, voices from the clips roster, motion written new and flagged to confirm);
+profile-02-mich gains motion and drifts lines and a voice gender.
+
+### Changed — downstream stages copy instead of deciding
+
+- **Trail:** PROFILE prints the whole record and SCRIPT its full dialogue block (label, line,
+  clip); every other stage stays one line. (`SKILL.md` §1, `script.md`, `runtime-state.md`)
+- **Image prompt:** STYLE LOCK and IDENTITY LOCK are copied from the record; poses follow its
+  motion language; the MOMENT MAP keeps the script's speakers and never quotes the riddle's
+  wording. Render gate 5 also checks pose language. (`image-prompt.md`, `render.md`)
+- **Clips:** a new **MOTION LANGUAGE** block, third in the preamble, copies the record's motion line
+  verbatim; MATERIAL REALITY forbids only the drifts-line families; the roster copies the record's
+  voices; PERFORMANCE says what characters do, never a motion style of its own; clip acceptance
+  gains a motion check. CLIPS writes **exactly** the locked clip count and only the script's lines.
+  The shared preamble is written once and pasted unchanged; an Extend has its own fixed REFERENCE
+  AUTHORITY wording, so it never says "established in Clip 1". (`clips.md`, `veo-prompt.md`,
+  `SKILL.md` §6)
+- **No cross-profile examples:** the "stylized-3D forbids paper and clay" text is gone from
+  `image-prompt.md`, `clips.md`, `veo-shots.md` and `veo-google-flow.md`.
+- **Quick skill:** characters are written once in the record's shape and copied into the image and
+  clips; clips carry MOTION LANGUAGE and use only the script's lines.
+- **HANDOFF:** non-negotiable #12, and open items for the record and profile-01's motion line.
+
+---
+
 ## 0.10.20 — a plugin page that says what the plugin does
 
 The plugin page showed internal wording ("checkpoint-safe", "content pipelines", "ingredient-sheet

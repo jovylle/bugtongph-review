@@ -14,8 +14,9 @@ image, and a rejected image can be traced to the exact clause that caused it.
 ## Required inputs
 
 - locked LOCATION and ENVIRONMENT;
-- locked PROFILE, with its identity mode (`text` or `attached`, plus the attached image when there is one) and voice
-  notes for expression;
+- the locked PROFILE record (`profile.md` "The profile record") — characters, art style,
+  material, motion language, drifts line — with its identity mode (`text` or `attached`, plus the
+  attached image when there is one);
 - locked SCRIPT beats, so each panel shows the right moment;
 - FRAME panel list, panel count, and shot progression, per the sheet layout contract in `frame.md`;
 - the Veo 3.1 Lite rules in `veo-3-1-lite.md`.
@@ -32,19 +33,24 @@ Assemble in this order, every section present, nothing invented:
    most damaging word to put near a reference sheet. The place is still rendered beautifully —
    see `frame.md` "Beauty is in the environment, not in the style": beauty comes from the locked
    light, depth, atmosphere, and texture, never from presentation styling.
-2. **STYLE LOCK** — the locked profile's material and rendering language stated as a physical fact,
-   with the families that would replace it named and forbidden. A papercraft profile reads: real
+2. **STYLE LOCK** — copied from the profile record (`profile.md` "The profile record"): its
+   **Art style** and **Material / rendering** lines stated as physical fact, then its **Drifts
+   toward** line as the only forbidden families. A papercraft profile reads: real
    paper-and-cardboard sculptures photographed in a real miniature set, with visible cut-paper edges,
    layered paper surfaces, folds and creases, paper fibres, matte finish, and handmade asymmetry —
-   and smooth 3D/CGI, plastic, clay, and airbrushed surfaces forbidden. **Any other profile states
-   its own material the same way** and forbids the families that would replace it (a stylized-3D
-   profile forbids photographed paper and clay; a photoreal profile forbids illustration, cartoon
-   shading, and cut-paper construction). Never write the paper block onto a profile that did not lock
-   paper. The sheet has to carry the material the clip prompt is later told to preserve, and it is
-   the image the video is matched against: a style noun here costs fidelity twice.
-3. **IDENTITY LOCK** — characters with their uppercase speaker labels, canonical appearance,
-   clothing, and the identity mode in force: an attached reference image when the user supplied
-   one, or the exact written description that stands in for it in `text` mode.
+   smooth 3D/CGI, plastic, clay, and airbrushed surfaces forbidden. Any other profile reads its own
+   lines the same way. Never forbid a family the record does not name — paper or clay words in a
+   non-paper profile's prompt come from the examples in this file, not from the profile. The sheet
+   has to carry the material the clip prompt is later told to preserve, and it is the image the
+   video is matched against: a style noun here costs fidelity twice.
+
+   Pose the characters in the record's **Motion / animation language**: a stop-motion profile
+   holds stepped, deliberate poses; a live-action profile is caught mid-natural-movement. The
+   sheet is where the motion style is first seen, and CLIPS is held to it.
+3. **IDENTITY LOCK** — the record's **Characters** block, copied: uppercase labels, look,
+   clothing and props, and the identity mode in force — the attached reference image, or in `text`
+   mode the record's own description. Never introduce a character, a garment, or a feature the
+   record does not list; if one is needed, the record is incomplete and the fix is at PROFILE.
 4. **LOCATION LOCK** — the locked place, its physical features, and the specific beautiful thing
    the place was chosen for (depth layering, silhouette, water, texture). State it as something to
    be seen, not just a setting to stand in.
@@ -66,7 +72,10 @@ Assemble in this order, every section present, nothing invented:
    materially different camera setups **with different angles**; a crop, a zoom, or a change of shot
    size at the same angle is not a new panel. Include the shot progression (`WIDE → MEDIUM → TIGHT`
    plus the angle for each).
-8. **MOMENT MAP** — which SCRIPT beat each panel depicts.
+8. **MOMENT MAP** — which SCRIPT beat each panel depicts, with the speaker exactly as the locked
+   script has it. Name a recitation as a beat (`TEEN GIRL recites the riddle`) and never quote the
+   riddle's wording: a bugtong is a description of its answer, and the generator draws whatever the
+   prompt describes.
 9. **NEGATIVES** — no dialogue, captions, labels, panel numbers, text, arrows, camera
    annotations, storyboard notes, speech bubbles, metadata, decorative UI, watermark, borders or
    frames around a strip, comic layout, collage, poster treatment, grid, split-screen furniture,

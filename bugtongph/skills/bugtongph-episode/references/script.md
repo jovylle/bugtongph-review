@@ -179,5 +179,8 @@ point at the answer, it is invalid and must be replaced before it is offered.
 
 ## After selection
 
-Lock the script in episode state, state it in one line, and ask the approval question. `.frame`
+Lock the script in episode state **in full** — every dialogue line with its speaker label and
+the clip it belongs to, every beat, the ending state, the clip count — show it, and ask the
+approval question. Under `.auto` the full dialogue block is printed in the trail. Later stages copy
+these lines and speakers exactly; CLIPS adds no line and no clip. `.frame`
 is next, then the overview.

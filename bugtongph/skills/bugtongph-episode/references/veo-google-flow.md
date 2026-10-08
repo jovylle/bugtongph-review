@@ -101,10 +101,10 @@ Then it forbids the render families that replace them:
 - plastic, clay, or airbrushed finishes
 - generic generated faces
 
-**A profile that locked something else gets its own clause in the same shape** — a stylized-3D
-profile names what its material must keep and forbids photographed paper, clay and airbrushed
-surfaces; a photoreal profile forbids illustration, cartoon shading and cut-paper construction.
-Never write the paper clause onto a non-paper profile: it contradicts the profile, and a model
+**A profile that locked something else gets its own clause in the same shape**, read from its
+profile record — its material line, and only the families on its own drifts line (`profile.md` "The
+profile record"). Never write the paper clause, or paper and clay as forbidden words, onto a
+non-paper profile: it contradicts the profile, and a model
 holding two contradictory instructions drops the block entirely. See `clips.md`
 "MATERIAL REALITY — second".
 

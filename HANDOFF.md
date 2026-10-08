@@ -84,6 +84,12 @@ previously cached copy.
     — never copied into a script. A swap re-checks the timing arithmetic and the answer-integrity
     question and reports both; it never queues as a fix. The episode *language* is still structural
     and does cascade.
+12. **PROFILE owns every character trait.** The profile record — characters (label, look,
+    clothing), art style, material, **motion / animation language**, a drifts-toward line, voices —
+    is written in full at lock, for invented profiles too, and printed under `.auto`. SCRIPT decides
+    what they do, FRAME where the camera is, CLIPS translates; none of them adds a trait or decides
+    what a style means. CLIPS copies MATERIAL REALITY, MOTION LANGUAGE and the roster from the
+    record, writes exactly the locked clip count, and uses only the script's lines.
 
 ## Current pipeline
 
@@ -207,6 +213,14 @@ resolves with an `installUrl`, icons are absolute, and the intended `defaultProm
 survive. A green local validator is not host proof — run the probe against the archive.
 
 ## Open items
+
+- **The 0.10.21 profile record is prose.** Re-run `.auto` with an invented profile (the 3D CGI
+  anime case) and check: the PROFILE trail entry is the full record, not a style label; the image
+  prompt's IDENTITY LOCK matches it; the clips' MOTION LANGUAGE and roster are the record's text
+  verbatim; no paper, clay or stop-motion words appear for a non-paper profile; a 1-clip script gets
+  exactly one clip prompt; every spoken line is a script line.
+- **profile-01's motion language was written in 0.10.21, not taken from an asset.** Confirm it
+  against a real clip and edit it in `profile.md`, never in a clip prompt.
 
 - **0.10.15–0.10.18 were never install-verified.** The host probe is missing on this machine, so
   only `validate-plugin.py` ran. Restore the probe (or install by hand and check both skills load

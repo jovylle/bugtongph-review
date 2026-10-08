@@ -51,7 +51,11 @@ Reference and asset paths below resolve relative to this skill's own directory,
    When no image is in the conversation, do not present a catalog character as the suggested
    default — offer an invented character instead, since a text-only description of a catalog
    character promises a match it cannot deliver. Fix one uppercase label per character
-   (`OLD MAN`, `KID`) and use it for every spoken line.
+   (`OLD MAN`, `KID`) and use it for every spoken line. **Every character trait is decided once**,
+   when the scripts are offered: write the characters' look, material, motion language, a
+   drifts-toward line, and voices in the shape of
+   `../bugtongph-episode/references/profile.md` "The profile record", then copy from it in the
+   image and the clips. Neither step adds a trait or decides what a style means.
 3. **Answer secrecy.** The stored answer is operator-visible in the run output only. It
    must never appear in, or be indicated by, the image or the clip prompts — no text, no
    caption, no gesture toward, gaze at, or framing of an answer-related object. This is a
@@ -161,12 +165,14 @@ when the script's own word count needs them (`../bugtongph-episode/references/ta
 
 Produce exactly that many **copy-ready** prompts. **Each one stands alone** — the reader pastes a
 single prompt into Google Flow with no other text, so each carries the whole shared preamble
-(REFERENCE AUTHORITY, MATERIAL REALITY, the speaker roster) and none depends on another having
+(REFERENCE AUTHORITY, MATERIAL REALITY, MOTION LANGUAGE, the supplemental text rule, the speaker
+roster — written once and pasted unchanged into every prompt) and none depends on another having
 been read:
 
 - Clip 1 — the required blocks and all numbered sections in
-  `../bugtongph-episode/references/clips.md`, opening with **REFERENCE AUTHORITY** and
-  **MATERIAL REALITY**, with the timing, shot, cut, and feasibility rules from
+  `../bugtongph-episode/references/clips.md`, opening with **REFERENCE AUTHORITY**,
+  **MATERIAL REALITY** and **MOTION LANGUAGE**, with the approved script's lines only (no new
+  line, no extra clip), and the timing, shot, cut, and feasibility rules from
   `../bugtongph-episode/references/veo-google-flow.md`.
 - Clip 2 (when two are asked for) — a **complete** text-only Extend prompt, per the Clip 2 sections
   in `clips.md`: the material-reality block restated verbatim, the inherited visual and audio state

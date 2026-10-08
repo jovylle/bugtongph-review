@@ -21,7 +21,10 @@ PROFILE
   id
   selection source   random | user | suggested
   identity mode      text | attached
+  record             the full profile record (profile.md "The profile record"), as text
 SCRIPT
+  dialogue           every line: label, exact text, clip number
+  clip count         1 | 2 | 3
 FRAME
 IMAGE
   stage
@@ -58,7 +61,7 @@ partly produced:
 RIDDLE / TOPIC  the exact wording is selected and locked
 LOCATION        one place is locked
 ENVIRONMENT     one condition set is locked
-PROFILE         a profile is locked, with its selection source
+PROFILE         a profile is locked, with its selection source and its full written record
 SCRIPT          one script is locked (dialogue, beats, duration)
 FRAME           one panel plan is locked (count, progression)
 OVERVIEW        the overview has been printed

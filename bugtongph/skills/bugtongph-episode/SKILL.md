@@ -93,8 +93,11 @@ next `.auto` resumes from the first incomplete checkpoint (§2 "Plain `.auto`").
 display shows every stage ✓ and offers `.auto fresh`.
 
 While it runs it prints the preselected trail as a compact block — one line per stage — so the
-run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
-correct any one choice without restarting. It never takes option 2 or 3 on its own, never
+run stays reviewable. Two stages print their **full lock** instead of a line, because every later
+stage copies from them and a one-line summary is what later stages fill in differently: PROFILE
+prints the whole profile record (`references/profile.md` "The profile record"), and SCRIPT prints
+its dialogue block, every line with its label and its clip. The trail also means a single stage
+command afterwards (`.script less dialogue`) can correct any one choice without restarting. It never takes option 2 or 3 on its own, never
 invents an option when none is valid, and stops to report a blocker (both riddle sources
 unavailable, no eligible riddle left, no eligible profile to draw, script cannot fit its budget,
 an image failing validation twice) rather than improvising. PROFILE is the one stage where the
@@ -368,10 +371,14 @@ Beauty never lights an answer-related object. See `references/environment.md` "L
 beauty lever".
 
 ### PROFILE
-Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
-text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS. The overview shows this
-profile by its characters — labels and a short look/style line — so the user can read who is in
-the episode.
+Offer 3 locked Character + Art Style + Motion + Voice bundles, including AI-invented ones
+described in text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS. The lock is the
+full **profile record** — characters with labels, look and clothing; art style; material; motion /
+animation language; a drifts-toward line; voices — written at lock for an invented profile as much
+as for a catalog one (`references/profile.md` "The profile record"). **Every character trait is
+decided here and only copied afterwards**: no later stage adds a character, a look, a voice, or a
+way of moving, or decides what a style means. The overview shows this profile by its characters —
+labels and a short look/style line — so the user can read who is in the episode.
 
 Selection is **explicit and precedes every episode asset**: eligible profiles are loaded, invalid
 or rejected ones dropped, and one is chosen — a random draw under `.auto`, the user's pick at the
@@ -433,12 +440,14 @@ Never generate an image here. Under `.auto draft` there is no sheet yet: the pro
 from the locked FRAME plan and marked DRAFT until a sheet validates (`clips.md` "Draft clips").
 
 At this stage the validated sheet is the character authority, not the profile text. Every prompt
-opens with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — the material taken from
-the locked profile (photographed paper sculpture for a papercraft profile, that profile's own
-material otherwise), with the families that would replace it forbidden — and no section may restate
-a face, build, clothing, or material that the sheet already shows. Each prompt is complete on its
-own and can be pasted with no other text: an Extend restates everything it inherits rather than
-referring to the clip before it. A returned clip that drifts from the sheet is a failure, not a take: compare it
+opens with a **REFERENCE AUTHORITY** block, then **MATERIAL REALITY** and **MOTION LANGUAGE** —
+both copied from the profile record (its material line and only its own drifts-line families; its
+motion line verbatim) — and no section may restate a face, build, clothing, or material that the
+sheet already shows. CLIPS decides nothing about the characters: looks, material, motion and
+voices are copied from PROFILE, lines and actions from SCRIPT, and the clip count is exactly the
+one SCRIPT locked — never an extra Extend, never a new line. The shared preamble is written once and
+pasted unchanged into every prompt. Each prompt is complete on its own and can be pasted with no
+other text: an Extend restates everything it inherits rather than referring to the clip before it. A returned clip that drifts from the sheet is a failure, not a take: compare it
 against the sheet before continuing, and repair it by changing only the authority blocks. See
 `references/clips.md` "Clip acceptance".
 

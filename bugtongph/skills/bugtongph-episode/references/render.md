@@ -123,9 +123,10 @@ Reject and regenerate only the failed artifact for:
    changed to make an image pass;
 3. character position, pose, gaze, hands, props, physical-state, or scale mismatch;
 4. location, environment, lighting, or continuity mismatch;
-5. material language mismatch — the render does not read as the material the locked profile names
-   (for a papercraft profile, smooth 3D/CGI, plastic, clay, or airbrushed instead of photographed
-   paper with cut edges, layered surfaces, folds, fibres, and a matte finish);
+5. material or pose-language mismatch — the render does not read as the material the locked profile
+   names (for a papercraft profile, smooth 3D/CGI, plastic, clay, or airbrushed instead of
+   photographed paper with cut edges, layered surfaces, folds, fibres, and a matte finish), or the
+   poses contradict its motion language (fluid mid-action where it locked held stepped poses);
 6. **the face is not readable** — each speaking character's face must be large enough in at least
    one strip to read the material construction the profile locked (see `frame.md` rule 9). The sheet
    is the video model's only source for that face, so a face too small to read is a face the clip
