@@ -62,7 +62,7 @@ FRAME           one panel plan is locked (count, progression)
 OVERVIEW        the overview has been printed
 IMAGE PROMPT    the exact prompt is assembled and approved
 IMAGE           an image passed every validation gate
-CLIPS           both clip prompts exist
+CLIPS           all clip prompts for the episode's clip count exist (1, 2, or 3)
 ```
 
 **"The first incomplete checkpoint"** is the earliest line above that is not complete. Nothing after
@@ -75,10 +75,12 @@ observed failure it guards against is a run that skipped stages and printed no t
 
 ## A finished episode
 
-When every stage through IMAGE is complete, a plain `.auto` has nothing to resume. It says the
-episode is complete and offers the next actions — `.clips` (or `.auto clips`) for the two clip
-prompts, or `.auto fresh` for a new episode. It never starts a new episode over a finished one, and
-it never regenerates a validated image.
+When every stage through CLIPS is complete, a plain `.auto` has nothing to resume. It says the
+episode is complete and offers `.auto fresh` for a new episode. It never starts a new episode over
+a finished one and never regenerates a validated image.
+
+If IMAGE is complete but CLIPS is not, a plain `.auto` runs CLIPS — this is Phase 2 of the
+two-phase unattended run. See `SKILL.md` §1 `.auto`.
 
 ## Stage ownership
 
@@ -164,19 +166,23 @@ permits another generation request.
 
 ## Completion rule
 
-Once IMAGE validates successfully:
+Once IMAGE validates successfully, `.auto` **stops and prints the full progress display**
+(all stages with ✓ / ○ marks). This is the deliberate Phase 1 stop — the user reviews the
+validated sheet before CLIPS runs.
 
 ```text
 IMAGE ✓
-CLIPS ●
+CLIPS ○
+→ .auto to continue to clips
 ```
 
-The next work is `.clips` in the same `.auto` invocation whenever the turn remains executable. Do not stop at “render validated” merely because the image stage was difficult.
+The **next `.auto`** sees IMAGE ✓ and CLIPS ○ and runs CLIPS (Phase 2). After CLIPS completes,
+it prints the full progress display with CLIPS ✓ and offers `.auto fresh`.
 
 ## Clips handoff
 
-`.clips` has no image-generation boundary. After IMAGE validation, `.auto` should construct the final two text prompts directly from the episode state.
+`.clips` has no image-generation boundary. When `.auto` continues to CLIPS, it constructs all
+clip prompts (1, 2, or 3, depending on the episode's clip count) directly from the episode state.
 
-Clip 1 must use the validated IMAGE as the Ingredient/reference description.
-
-Clip 2 must use the exact final state of Clip 1 as text-only Extend context.
+Clip 1 uses the validated IMAGE as the Ingredient/reference.
+Clip 2 and Clip 3 (when present) use the exact final-second state of the preceding clip.

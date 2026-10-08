@@ -294,6 +294,27 @@ If either answer is yes, replace the offending beat *before* offering the prompt
 let the user catch it. The same check runs at every audience-facing stage: `frame.md`,
 `image-prompt.md` and `render.md`.
 
+## Word count gate — check before emitting
+
+A short clip prompt is an incomplete one. Before printing any prompt, state its approximate word
+count. If the count is under the minimum, the prompt is missing sections — identify which ones
+and complete them before emitting.
+
+| Prompt | Minimum |
+|---|---|
+| Clip 1 | 700 words |
+| Clip 2 / Clip 3 | 600 words |
+
+The most common cause of a short Clip 2 or Clip 3 is treating it as a continuation note
+("continue from Clip 1, same characters, same environment…") instead of a self-contained prompt.
+Every Extend prompt must repeat the full shared preamble (REFERENCE AUTHORITY + MATERIAL REALITY
++ supplemental text rule + speaker roster) and write out its inherited state in full. There is
+no shared context between a clip and its extends inside Google Flow — each generation is
+independent, so each prompt must carry everything.
+
+A prompt that is under its minimum after the preamble and inherited state are included is
+missing numbered sections. State which sections are thin or absent and complete them.
+
 ## Final output format
 
 ```text

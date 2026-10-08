@@ -22,9 +22,15 @@ ENVIRONMENT ✓ <weather, time, ambience>
 PROFILE     ✓ <profile id> — <characters: labels + a short look/style line>
 SCRIPT      ✓ <2–3 lines of story: what happens, beat by beat> (<spoken seconds> / <clip count>)
 FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
+IMAGE       ✓ validated  (or ○ not yet / ! blocked)
+CLIPS       ○ not yet    (or ✓ <N> prompts ready)
 
 PENDING FIXES (0)
 ```
+
+The IMAGE and CLIPS rows always appear. Before IMAGE exists they show `○`; after IMAGE validates they show `✓ validated`; after CLIPS they show `✓ N prompts ready`.
+
+**`.auto` stops show this full display**, extended below the OVERVIEW header, so the user can always see exactly where the episode stands.
 
 Never re-explain a stage past these lines, and never preview the clips.
 

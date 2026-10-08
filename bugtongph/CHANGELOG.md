@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.10.17 — reliable .auto, .auto draft, word count gate, answer named in image prompt
+
+Four improvements from a real session debug and user requests.
+
+### Changed — `.auto` two-phase stops with progress display
+
+`.auto` now stops **twice**: after IMAGE validates (Phase 1), and after CLIPS completes
+(Phase 2). Each stop prints a full progress display showing every stage with ✓ / ○ marks.
+A plain `.auto` after Phase 1 automatically runs CLIPS (Phase 2) — no `.clips` command
+needed. After Phase 2 the episode is complete. (`SKILL.md` §1, `runtime-state.md`
+"Completion rule", "A finished episode", `overview.md`)
+
+### Added — `.auto draft`
+
+`.auto draft` runs the full pipeline without calling image generation. It produces the IMAGE
+PROMPT (text only) and all CLIP PROMPTS in one run. Clip prompts carry an `[ATTACH SHEET]`
+placeholder in the REFERENCE AUTHORITY block. Use it to preview every prompt before spending
+a generation, or to build a batch workflow: paste the image prompt into ChatGPT, generate and
+validate the sheet, then paste the clip prompts into Google Flow. (`SKILL.md` §1, §11)
+
+### Fixed — answer must be named explicitly in image prompt NEGATIVES
+
+The answer-leak pre-emit check ran internally but never put the answer word into the actual
+prompt text sent to DALL-E. DALL-E has no knowledge of the episode's riddle — a generic
+"no answer hints" instruction is meaningless to it. The NEGATIVES block now requires the
+locked answer to be named explicitly:
+`Do not show [ANSWER], any object whose category is [ANSWER], any shape or silhouette that
+resembles [ANSWER], or any container that could hold or conceal [ANSWER].`
+(`image-prompt.md` §9, §10)
+
+### Added — word count gate in clips.md
+
+Before emitting any clip prompt, its approximate word count must be stated. Under-minimum
+prompts (Clip 1 < 700 words, Clip 2/3 < 600 words) are incomplete — missing sections must
+be identified and completed. The most common cause is Clip 2 written as a continuation
+note rather than a self-contained prompt; each generation in Google Flow is independent and
+carries no context from its siblings. (`clips.md` "Word count gate")
+
+---
+
 ## 0.10.16 — catalog turnarounds self-supply at IMAGE
 
 Catalog profiles (`profile-01`, `profile-02-mich`) now try to put their own shipped turnaround

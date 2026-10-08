@@ -62,18 +62,37 @@ Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`,
 `proceed`, `sige`, `change it`, `make it scarier`) resolves against the one open question — see
 `references/reroll-and-options.md`.
 
-`.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It runs the
-whole chain in **one continuous run**, preselecting at every stage and taking **option 1
-(suggested)** each time, without asking gate questions — except at **PROFILE**, where it takes no
-position at all: it draws one eligible profile at random (see §5):
+`.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It preselects
+at every stage, taking **option 1 (suggested)** each time, without asking gate questions —
+except at **PROFILE**, where it draws one eligible profile at random (see §5). It runs in
+**two phases**, each ending with a progress display:
 
 ```text
-RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
-             -> IMAGE PROMPT -> IMAGE          <- one run, then it stops
+Phase 1  RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
+                      -> OVERVIEW -> IMAGE PROMPT -> IMAGE   ← stops, prints progress
+Phase 2  (next .auto) -> CLIPS                               ← stops, episode complete
 ```
 
-It stops **once the image has been generated and validated**. CLIPS is the last step and runs
-only when asked (`.clips`, or `.auto clips`).
+After IMAGE validates, `.auto` **stops and prints a full progress display** showing every
+stage as ✓ done or ○ pending:
+
+```text
+── progress ──────────────────────────────────────
+RIDDLE      ✓  <wording>                (answer hidden)
+LOCATION    ✓  <place>
+ENVIRONMENT ✓  <condition set>
+PROFILE     ✓  <id> (<selection>) — <mode>
+SCRIPT      ✓  <beat summary> (<clip count> clips)
+FRAME       ✓  <panel count> panels
+IMAGE       ✓  validated
+CLIPS       ○  not yet
+──────────────────────────────────────────────────
+→ .auto  to continue to clips
+→ .auto fresh  for a new episode
+```
+
+The next `.auto` sees IMAGE ✓ and CLIPS ○ and runs CLIPS. After CLIPS completes, it prints the
+same display with CLIPS ✓ and offers `.auto fresh`.
 
 While it runs it prints the preselected trail as a compact block — one line per stage — so the
 run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
@@ -83,6 +102,21 @@ unavailable, no eligible riddle left, no eligible profile to draw, script cannot
 an image failing validation twice) rather than improvising. PROFILE is the one stage where the
 suggested option is not taken: it is a random draw, and an empty eligible set stops the run
 instead of falling back to `profile-01`.
+
+**`.auto draft`** runs the same chain but **never calls image generation**. At IMAGE PROMPT it
+assembles and prints the full image prompt as text only. It then immediately continues to CLIPS
+and produces all clip prompts (the REFERENCE AUTHORITY block uses a placeholder since no
+validated sheet exists yet). The result is the complete set of copy-ready prompts — paste the
+image prompt into ChatGPT, generate the sheet, then paste the clip prompts into Google Flow:
+
+```text
+RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
+             -> OVERVIEW -> IMAGE PROMPT (text only) -> CLIPS (draft prompts) <- stops
+```
+
+In `.auto draft` mode the clip prompts note that the sheet has not been generated yet and
+carry a `[ATTACH SHEET]` placeholder in the REFERENCE AUTHORITY block. Everything else in
+each prompt is fully instantiated from the locked episode plan.
 
 A plain stage command is always the gated conversational path and is unaffected.
 
@@ -120,11 +154,11 @@ version number in this file or its references.
 - If there is no recoverable active episode, start a new run in the `production` channel at
   the first gate — RIDDLE, unless the topic pipeline was selected.
 - If an unfinished episode exists, resume its first incomplete checkpoint using the channel
-  recorded on that run.
+  recorded on that run. **IMAGE done, CLIPS not done → run CLIPS (Phase 2).**
 - Do not silently replace an explicit riddle, topic, location, environment, profile, script,
   channel, or release.
-- If every stage through IMAGE is already complete, say so and offer `.clips` or `.auto fresh`.
-  A plain `.auto` never starts a new episode over a finished one, and never regenerates a validated
+- If every stage through CLIPS is already complete, say so and offer `.auto fresh`.
+  A plain `.auto` never starts a new episode over a finished one and never regenerates a validated
   image. "First incomplete checkpoint" is defined in `runtime-state.md` "When a stage counts as
   done" — a stage that was started or partly shown is not complete.
 
@@ -465,10 +499,15 @@ Preferred:
 
 `.vlog` and `.vblog` are aliases for `.topic`.
 
-Nested forms: `.auto production|beta|dev|fresh|resume`; `.auto riddle|topic` (`.vlog` /
+Nested forms: `.auto production|beta|dev|fresh|resume|draft`; `.auto riddle|topic` (`.vlog` /
 `.vblog` also accepted); `.auto fresh riddle|topic`; `.channel list`; `.channel use <channel>`;
 `.profile list`; `.profile use <id>`; `.profile add <description>`; `.release info`;
 `.workflow info`.
+
+`.auto draft` — full pipeline, no image generation. Produces the IMAGE PROMPT (text only)
+and all CLIP PROMPTS in one run. Clip prompts carry a `[ATTACH SHEET]` placeholder in the
+REFERENCE AUTHORITY block — replace it with the validated sheet when submitting Clip 1 to
+Google Flow.
 
 **Reading a locked item needs no command.** Plain questions — `what's the riddle again?`,
 `what's the script?`, `which profile?` — reprint it, read-only. `.review <stage>` still works as
