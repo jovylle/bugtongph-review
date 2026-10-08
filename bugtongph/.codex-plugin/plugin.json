@@ -1,6 +1,6 @@
 {
   "name": "bugtongph",
-  "version": "0.10.11",
+  "version": "0.10.12",
   "description": "Conversational, gated production pipeline for Filipino video episodes: a Notion-backed bugtong riddle or a model-invented topic, then location, environment, locked character/style/voice profiles, script, a stacked-strip shot-reference sheet image, and copy-ready Google Flow / Veo 3.1 Lite clip prompts.",
   "author": {
     "name": "Jovylle Bermudez",

@@ -22,7 +22,7 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.11**.
+- `dev` = all work. Currently checked out, currently **0.10.12**.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev

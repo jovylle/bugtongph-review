@@ -117,6 +117,10 @@ version number in this file or its references.
   recorded on that run.
 - Do not silently replace an explicit riddle, topic, location, environment, profile, script,
   channel, or release.
+- If every stage through IMAGE is already complete, say so and offer `.clips` or `.auto fresh`.
+  A plain `.auto` never starts a new episode over a finished one, and never regenerates a validated
+  image. "First incomplete checkpoint" is defined in `runtime-state.md` "When a stage counts as
+  done" — a stage that was started or partly shown is not complete.
 
 ### Content pipeline selection
 The first stage is chosen by one keyword appended to `.auto`:
@@ -317,7 +321,9 @@ beauty lever".
 
 ### PROFILE
 Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
-text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
+text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS. The overview shows this
+profile by its characters — labels and a short look/style line — so the user can read who is in
+the episode.
 
 Selection is **explicit and precedes every episode asset**: eligible profiles are loaded, invalid
 or rejected ones dropped, and one is chosen — a random draw under `.auto`, the user's pick at the

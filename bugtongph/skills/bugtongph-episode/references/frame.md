@@ -28,8 +28,16 @@ One landscape canvas, divided into **2–5 stacked horizontal panoramic strips**
 independent camera setup. Strips are vertically compact and horizontally wide; thin separators
 keep them visually distinct.
 
+NOTE — ours, not sourced: the stacked-strip sheet is **this project's** design. Google's published
+ingredients guidance covers *separate* reference images — a scene, a character, an object, a style —
+used "to maintain a consistent aesthetic across multiple shots", and it says nothing about panels,
+strips, or shot sizes; the Flow help page does not discuss composition at all. So no source says Veo
+prefers a wide or ultrawide composition. The wide establishing strip is here for our own two
+requirements: the place must actually be shown, and the scene must be readable from the sheet. Say
+that plainly if the design is ever questioned — do not invent a Google citation for it.
+
 ```text
-ULTRAWIDE ESTABLISHING — SHOT 1
+WIDE ESTABLISHING — SHOT 1
 ────────────────────────────────────────────
 WIDE / MEDIUM — SHOT 2
 ────────────────────────────────────────────

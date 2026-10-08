@@ -85,6 +85,12 @@ A returned image that reads as one composed scene, as artwork, or as a poster is
 stage's artifact. It fails validation (`render.md` gate 7) and is regenerated from the same
 prompt; the fix is never to relax the layout.
 
+NOTE — ours, not sourced: Google's ingredients workflow uses separate, clean reference images and
+its help page says nothing about composition, so nothing here is a documented model preference.
+Community reports do warn that a busy multi-element reference gets read as a single intention, and
+that references are not labelled for the model — which is the risk a multi-strip sheet runs, and the
+reason the strip count stays low and the canvas stays plain.
+
 ## Presentation
 
 Show the assembled prompt as one copy-ready block, then a single line stating the panel

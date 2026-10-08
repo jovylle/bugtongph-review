@@ -47,6 +47,39 @@ selection step cannot complete, the run stops with
 generated. Re-selection happens only for a **new episode**, or because the user changed the profile
 explicitly — never as part of regenerating an artifact.
 
+## When a stage counts as done
+
+A stage is complete only when its artifact is **locked** — not when it has been started, shown, or
+partly produced:
+
+```text
+RIDDLE / TOPIC  the exact wording is selected and locked
+LOCATION        one place is locked
+ENVIRONMENT     one condition set is locked
+PROFILE         a profile is locked, with its selection source
+SCRIPT          one script is locked (dialogue, beats, duration)
+FRAME           one panel plan is locked (count, progression)
+OVERVIEW        the overview has been printed
+IMAGE PROMPT    the exact prompt is assembled and approved
+IMAGE           an image passed every validation gate
+CLIPS           both clip prompts exist
+```
+
+**"The first incomplete checkpoint"** is the earliest line above that is not complete. Nothing after
+it is trusted, even if part of it was shown: a partly assembled prompt, a script option the user has
+not approved, and an image that has not been validated are all **not** complete, so a resume returns
+there instead of stepping past it.
+
+NOTE — ours, not sourced: nothing can enforce this rule; it is the standard a run is judged by. The
+observed failure it guards against is a run that skipped stages and printed no trail.
+
+## A finished episode
+
+When every stage through IMAGE is complete, a plain `.auto` has nothing to resume. It says the
+episode is complete and offers the next actions — `.clips` (or `.auto clips`) for the two clip
+prompts, or `.auto fresh` for a new episode. It never starts a new episode over a finished one, and
+it never regenerates a validated image.
+
 ## Stage ownership
 
 ```text

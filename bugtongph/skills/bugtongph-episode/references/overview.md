@@ -11,26 +11,36 @@ also the **hub** every correction returns to.
 
 ## Shape
 
-One line per locked item, one status mark, nothing else. Never re-explain a stage, never
-preview the clips.
+The overview is the **user's review surface**: they read it and decide whether the episode is good
+before anything is generated. It must be readable on its own — never "open the stage file to see
+what this says".
 
 ```text
-RIDDLE      ✓ <riddle wording — first line>            (answer hidden)
+RIDDLE      ✓ <full stored wording>                    (answer hidden)
 LOCATION    ✓ <place>
 ENVIRONMENT ✓ <weather, time, ambience>
-PROFILE     ✓ <profile id — characters, style, voices>   (selected: random|user|suggested)
-SCRIPT      ✓ <beat summary + spoken duration>
+PROFILE     ✓ <profile id> — <characters: labels + a short look/style line>
+SCRIPT      ✓ <2–3 lines of story: what happens, beat by beat> (<spoken seconds> / <clip count>)
 FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
 
 PENDING FIXES (0)
 ```
 
-In a topic-pipeline episode the first line is the invented topic instead, and there is nothing
-to hide:
+Never re-explain a stage past these lines, and never preview the clips.
+
+**The riddle line exists only when there is a riddle.** In a topic-pipeline episode there is no
+riddle and no answer, so the first line is the topic instead and nothing is hidden:
 
 ```text
 TOPIC       ✓ <topic — angle, stated openly>
 ```
+
+A riddle line never appears in a topic episode, and the stored answer is never printed here — at
+OVERVIEW it stays hidden until the user asks for it explicitly (see "Review").
+
+NOTE — ours, not sourced: the terse-status form was this project's own choice. It cost the user the
+one thing the overview is for — reading the episode and judging it — so the riddle/topic, the story
+and the characters are now shown in full while the state marks stay terse.
 
 `✓` locked, `~` changed this turn, `○` void, `!` blocking.
 

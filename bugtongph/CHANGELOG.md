@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.10.12 — the overview is readable, and "done" means locked
+
+OVERVIEW was specified as terse status lines only, so the one screen meant for judging an episode
+before it costs a generation could not be read: the riddle was cut to its first line, the story to a
+"beat summary", the characters to a single line. Separately, "resume the first incomplete
+checkpoint" had no definition of *incomplete*.
+
+### Changed
+
+- **OVERVIEW is the user's review surface** (`overview.md`): the full riddle wording — or the topic,
+  when the episode is a topic episode — then a 2–3 line story, then the characters with their labels
+  and a short look/style line, then the terse state marks. A riddle line appears only in the riddle
+  pipeline; the answer still stays hidden until it is asked for.
+- **"Done" is defined per stage** (`runtime-state.md` "When a stage counts as done"): a stage is
+  complete only when its artifact is locked. A partly assembled prompt, a script option the user has
+  not approved, and an unvalidated image are not complete, so a resume returns to them.
+- **A finished episode is a defined state** (`runtime-state.md`, `SKILL.md` §2): a plain `.auto` over
+  a complete episode reports it and offers `.clips` or `.auto fresh` — it never starts a new episode
+  over a finished one and never regenerates a validated image.
+- **"ULTRAWIDE" is gone** (`frame.md`): the contract always said WIDE — the word survived in one
+  diagram, and no source supports it.
+- **NOTES for what is ours, not sourced** — a new convention, first used in `frame.md` (the
+  stacked-strip sheet is our design; Google's ingredients guidance covers *separate* reference
+  images and says nothing about panels, strips or shot sizes) and `image-prompt.md` (a busy
+  multi-element reference is a known risk, and references are not labelled for the model).
+
 ## 0.10.11 — `.auto` parses its input, and a language is not a translation
 
 A real `.auto bisaya bugton character anime non human` run improvised: it took a Tagalog Notion
