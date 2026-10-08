@@ -65,18 +65,32 @@ Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`,
 `.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It preselects
 at every stage, taking **option 1 (suggested)** each time, without asking gate questions —
 except at **PROFILE**, where it draws one eligible profile at random (see §5). It runs in
-**two phases**:
+**three phases**, and image generation always has a turn of its own:
 
 ```text
 Phase 1  RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
-                      -> OVERVIEW -> IMAGE PROMPT -> IMAGE   ← stops, prints progress
-Phase 2  (next .auto) -> CLIPS                               ← stops, episode complete
+                      -> OVERVIEW -> IMAGE PROMPT           ← stops, prints the image prompt
+Phase 2  (next .auto) -> IMAGE                              ← stops, prints the sheet's result
+Phase 3  (next .auto) -> CLIPS                              ← stops, episode complete
 ```
+
+**Why IMAGE is its own phase.** The gated path — one stage per turn — produces correct sheets;
+a single `.auto` turn that ran every stage and then generated did not: grids instead of stacked
+strips, and answer clues in the sheet. In one long turn the layout rules are read last and
+thinnest, nobody sees the image prompt before it is spent, and the generation request sits right
+after the riddle record and every answer check. Phase 1 ends on the printed prompt, which the user
+can read and correct (`.image-prompt <change>`); the next `.auto` is its approval.
+
+**Phase 2 is the image and nothing else.** It sends the Phase 1 prompt **verbatim** as the
+generation request, as the first thing in the turn — no restated episode, no riddle, no answer, no
+re-derived prompt — then validates the result against every `render.md` gate. Validation reports
+gates by number and never names the answer. Retries follow `references/runtime-state.md` "A
+blocked image".
 
 Every `.auto` stop prints the **progress display** — the OVERVIEW block with its IMAGE and CLIPS
 rows and one next-step line, defined once in `references/overview.md` "Progress display". The
-next `.auto` resumes from the first incomplete checkpoint (§2 "Plain `.auto`"): after a validated
-image that is CLIPS. After CLIPS, the display shows every stage ✓ and offers `.auto fresh`.
+next `.auto` resumes from the first incomplete checkpoint (§2 "Plain `.auto`"). After CLIPS, the
+display shows every stage ✓ and offers `.auto fresh`.
 
 While it runs it prints the preselected trail as a compact block — one line per stage — so the
 run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
@@ -139,9 +153,10 @@ version number in this file or its references.
 - If there is no recoverable active episode, start a new run in the `production` channel at
   the first gate — RIDDLE, unless the topic pipeline was selected.
 - If an unfinished episode exists, resume its first incomplete checkpoint using the channel
-  recorded on that run. **IMAGE done, CLIPS not done → run CLIPS (Phase 2).** IMAGE blocked
-  (`!`) → retry IMAGE per `runtime-state.md` "A blocked image". DRAFT clips with no image →
-  generate and validate the image; the clips are not rebuilt.
+  recorded on that run. **IMAGE PROMPT printed, IMAGE not done → run IMAGE (Phase 2). IMAGE
+  done, CLIPS not done → run CLIPS (Phase 3).** IMAGE blocked (`!`) → retry IMAGE per
+  `runtime-state.md` "A blocked image". DRAFT clips with no image → generate and validate the
+  image as a Phase 2 turn; the clips are not rebuilt.
 - Do not silently replace an explicit riddle, topic, location, environment, profile, script,
   channel, or release.
 - If every stage through CLIPS is already complete, say so and offer `.auto fresh`.
@@ -219,8 +234,9 @@ simplified auto-only implementation and no auto-only approval bypass — it take
 continuous pass.
 
 ```text
-.auto        RIDDLE|TOPIC -> ... -> OVERVIEW -> IMAGE PROMPT -> IMAGE      <- stop (phase 1)
-.auto again  CLIPS                                                          <- stop (phase 2)
+.auto        RIDDLE|TOPIC -> ... -> OVERVIEW -> IMAGE PROMPT                <- stop (phase 1)
+.auto again  IMAGE                                                          <- stop (phase 2)
+.auto again  CLIPS                                                          <- stop (phase 3)
 .auto draft  RIDDLE|TOPIC -> ... -> OVERVIEW -> IMAGE PROMPT -> CLIPS (DRAFT) <- stop
 ```
 

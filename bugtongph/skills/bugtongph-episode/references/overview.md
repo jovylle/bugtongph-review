@@ -22,7 +22,7 @@ ENVIRONMENT ✓ <weather, time, ambience>
 PROFILE     ✓ <profile id> — <characters: labels + a short look/style line>
 SCRIPT      ✓ <2–3 lines of story: what happens, beat by beat> (<spoken seconds> / <clip count>)
 FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
-IMAGE       ✓ validated  (or ○ not yet / ○ not generated (draft) / ! blocked — <failed gate>)
+IMAGE       ✓ validated  (or ○ not yet / ○ prompt ready / ○ not generated (draft) / ! blocked — gate <n>)
 CLIPS       ○ not yet    (or ✓ <N> prompts ready / ✓ <N> DRAFT prompts)
 
 PENDING FIXES (0)
@@ -38,8 +38,9 @@ overview, printed at the stop.
 
 | Stopped at | Next-step line |
 | --- | --- |
+| IMAGE PROMPT printed, IMAGE ○ | `→ .auto to generate the sheet from this prompt, or .image-prompt <change> first` |
 | IMAGE ✓, CLIPS ○ | `→ .auto to write the clip prompts` |
-| IMAGE ! | `→ .auto to retry the image, or fix the named item first` |
+| IMAGE ! | `→ .auto to repair the prompt for the failed gate, or fix the named item first` |
 | CLIPS DRAFT | `→ generate the sheet from the image prompt, then .image here to validate it` |
 | CLIPS ✓ | `→ episode complete — .auto fresh for a new one` |
 | a blocker before IMAGE | the blocker in one line, and the command that clears it |

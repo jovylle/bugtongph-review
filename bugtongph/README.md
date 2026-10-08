@@ -17,9 +17,12 @@ immediately, with no setup at all:
 
 `.auto` is the **unattended** path: it preselects every stage — riddle or topic, location,
 environment, profile, script, frame — on the suggested option, prints the trail as it goes, and
-runs straight through to generating the image, without asking at each gate. It stops once the
-image is validated and shows what is done and what is not. Send `.auto` again and it writes the
-clip prompts. `.auto draft` does everything except generate the image: it prints the image prompt
+runs straight through to the image prompt, without asking at each gate. It stops three times,
+each time showing what is done and what is not: after the **image prompt** (read it, or correct it
+with `.image-prompt <change>`), after the **image** (send `.auto` again and it generates the sheet
+in a turn of its own, then checks it), and after the **clip prompts** (one more `.auto`). The
+image gets its own turn because generating it in the same turn as every other stage produced
+grids and answer clues; one stage at a time did not. `.auto draft` does everything except generate the image: it prints the image prompt
 and the clip prompts in one go, and you bring the generated sheet back for `.image` to check it.
 
 The stage commands (`.riddle`, `.location`, `.script`, …) are the other mode: each one asks a

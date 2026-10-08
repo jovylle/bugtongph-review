@@ -62,7 +62,8 @@ PROFILE         a profile is locked, with its selection source
 SCRIPT          one script is locked (dialogue, beats, duration)
 FRAME           one panel plan is locked (count, progression)
 OVERVIEW        the overview has been printed
-IMAGE PROMPT    the exact prompt is assembled and approved
+IMAGE PROMPT    the exact prompt is assembled and approved (under `.auto`: printed at the Phase 1
+                stop; the next `.auto` approves it)
 IMAGE           an image passed every validation gate
 CLIPS           all clip prompts for the episode's clip count exist (1, 2, or 3) and are not DRAFT
 ```
@@ -84,8 +85,8 @@ When every stage through CLIPS is complete, a plain `.auto` has nothing to resum
 episode is complete and offers `.auto fresh` for a new episode. It never starts a new episode over
 a finished one and never regenerates a validated image.
 
-If IMAGE is complete but CLIPS is not, a plain `.auto` runs CLIPS — this is Phase 2 of the
-two-phase unattended run. See `SKILL.md` §1 `.auto`.
+If the IMAGE PROMPT is printed but IMAGE is not done, a plain `.auto` runs IMAGE — Phase 2. If
+IMAGE is complete but CLIPS is not, it runs CLIPS — Phase 3. See `SKILL.md` §1 `.auto`.
 
 ## Stage ownership
 
@@ -171,26 +172,33 @@ permits another generation request.
 
 ## Completion rule
 
-Once IMAGE validates successfully, `.auto` **stops and prints the progress display**
-(`overview.md` "Progress display"). This is the deliberate Phase 1 stop — the user reviews the
-validated sheet before CLIPS runs.
+`.auto` stops three times, each with the progress display (`overview.md` "Progress display"):
 
-The **next `.auto`** sees IMAGE ✓ and CLIPS ○ and runs CLIPS (Phase 2). After CLIPS completes,
-it prints the progress display with CLIPS ✓ and offers `.auto fresh`.
+1. **After the IMAGE PROMPT** (Phase 1) — the prompt is printed in full and the user can read or
+   correct it before a generation is spent.
+2. **After IMAGE** (Phase 2) — a turn that contains only the generation request (the Phase 1
+   prompt, verbatim, sent first) and the validation of what came back.
+3. **After CLIPS** (Phase 3) — the episode is complete; the display offers `.auto fresh`.
+
+Never generate in the same turn as the creative stages, and never re-derive the prompt inside the
+Phase 2 turn. The prompt that was printed is the prompt that is sent.
 
 ## A blocked image
 
-An image that fails validation twice stops `.auto` with `IMAGE !` and the failed gate named.
-The next `.auto` does not skip ahead and does not simply repeat the request:
+A Phase 2 image that fails validation stops `.auto` at once with `IMAGE !` and the failed gate
+named by number. It does **not** regenerate in the same turn: that turn has just reasoned about
+the failure, so a second request from it is exactly the mixed-context generation Phase 2 exists to
+avoid. The next `.auto` does not skip ahead and does not simply repeat the request:
 
 1. If an image arrived since the stop, validate it first (the anti-loop rule above).
 2. Otherwise re-run the image prompt's own checks (`image-prompt.md` §10, and "Sheet, not
    artwork") against the gate that failed, repair **only** the clause that gate points to — an
-   answer clue means the offending panel beat or inventory item — and say what changed in one line.
-3. Then request one new generation, and validate it.
+   answer clue means the offending panel beat or inventory item — print the repaired prompt, say
+   what changed in one line, and **stop**. This is a Phase 1 stop again.
+3. The `.auto` after that is a normal Phase 2: the repaired prompt, verbatim, then validation.
 
-Two more failures stop again with `IMAGE !`. At that point the fix belongs to the user —
-`.image-prompt`, `.frame`, or `.script` — and `.auto` says so instead of retrying a third time.
+A second failed generation stops again with `IMAGE !`. At that point the fix belongs to the user —
+`.image-prompt`, `.frame`, or `.script` — and `.auto` says so instead of repairing a third time.
 
 ## Draft clips
 

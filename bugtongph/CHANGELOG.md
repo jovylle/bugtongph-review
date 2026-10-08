@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.10.19 — `.auto` gives the image a turn of its own
+
+Observed in use: running the stages one at a time produces a correct sheet; a single `.auto` turn
+that ran every stage and then generated came back as a grid instead of stacked strips, with the
+answer's clue in it, and failed validation twice.
+
+### Changed — `.auto` runs in three phases
+
+- **Phase 1** runs RIDDLE|TOPIC through the IMAGE PROMPT and stops on the printed prompt. The user
+  can read it, or correct it with `.image-prompt <change>`; the next `.auto` approves it.
+- **Phase 2** is IMAGE alone: the printed prompt is sent **verbatim** as the first thing in the
+  turn — no restated episode, riddle, or answer, and no re-derived prompt — then validated, with
+  gates reported by number and the answer never named.
+- **Phase 3** writes the clip prompts, as before.
+
+In one long turn the layout rules are read last and thinnest, nobody sees the prompt before it is
+spent, and the generation request sits right after the riddle record and every answer check. The
+split gives `.auto` the conditions of the path that works.
+
+### Changed — a failed image stops at once
+
+A Phase 2 image that fails validation no longer regenerates in the same turn — that turn has just
+reasoned about the failure. It stops with `IMAGE !` and the gate number. The next `.auto` repairs
+only the clause that gate points to, prints the repaired prompt and stops; the one after
+regenerates. A second failed generation hands the fix to the user (`.image-prompt`, `.frame`,
+`.script`).
+
+(`SKILL.md` §1–§3, `reroll-and-options.md` §11, `runtime-state.md` "When a stage counts as done",
+"A finished episode", "Completion rule", "A blocked image", `overview.md` "Progress display",
+README, HANDOFF)
+
+---
+
 ## 0.10.18 — answer never named, honest turnaround binding, `.auto` and `.auto draft` finished
 
 Corrects three things 0.10.16–0.10.17 got wrong, and sweeps the wording those releases left stale.

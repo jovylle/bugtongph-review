@@ -230,21 +230,27 @@ above the stage line. It is the overview, not a second status line.
 questions.
 
 1. It walks the stages in order — RIDDLE (or TOPIC, if the topic pipeline was selected) →
-   LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE — taking
+   LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT — taking
    **option 1 (suggested)** at every gate, **except PROFILE**, where it takes no position and
    instead draws one eligible profile at random (`profile.md` "Selection"). This is **one
    continuous run**, not one stage per
    turn: it does not stop between stages. It prints the preselected trail as a compact block,
    one line per stage, as it goes.
-2. It runs in **two phases**. Phase 1 **stops once the image has been generated and validated**
-   and prints the progress display. Phase 2 is the **next `.auto`**: it finds IMAGE ✓ and CLIPS ○
-   and writes every clip prompt for the locked clip count (1, 2, or 3). `.clips` does the same on
-   the gated path. A plain `.auto` always resumes from the first incomplete checkpoint
-   (`runtime-state.md`): a blocked image is retried per "A blocked image", and a finished episode
-   is reported as finished, never redone.
-   - **`.auto draft`** runs Phase 1 without image generation — the image prompt is printed as
-     text — and goes straight on to CLIPS, marked DRAFT. The sheet still has to come back for
-     `.image` validation before the clips are final (`runtime-state.md` "Draft clips").
+2. It runs in **three phases**, each a separate `.auto`, each ending with the progress display:
+   - **Phase 1** stops once the IMAGE PROMPT is assembled, and prints it in full. The next `.auto`
+     is its approval; `.image-prompt <change>` corrects it first.
+   - **Phase 2** is IMAGE alone: the printed prompt is sent verbatim as the first thing in the
+     turn, then validated. Never generate in the same turn as the creative stages — that is the
+     path that produced grids and answer clues (`SKILL.md` §1 "Why IMAGE is its own phase").
+   - **Phase 3** finds IMAGE ✓ and CLIPS ○ and writes every clip prompt for the locked clip count
+     (1, 2, or 3). `.clips` does the same on the gated path.
+
+   A plain `.auto` always resumes from the first incomplete checkpoint (`runtime-state.md`): a
+   blocked image is retried per "A blocked image", and a finished episode is reported as finished,
+   never redone.
+   - **`.auto draft`** runs Phase 1, never generates, and goes straight on to CLIPS, marked
+     DRAFT. The sheet still has to come back for `.image` validation before the clips are final
+     (`runtime-state.md` "Draft clips").
 3. It never takes option 2 or 3 on its own, and never invents an option when none is valid.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
    the gated path. Unattended does not mean unchecked. (`.auto draft` defers only the IMAGE gates,

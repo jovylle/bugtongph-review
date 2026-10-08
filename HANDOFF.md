@@ -120,8 +120,11 @@ the current lock at CLIPS). Everything from LOCATION onward is a structural chai
 riddle identity is not.
 
 `.auto` is the unattended mode: takes option 1 at every gate (a random draw at PROFILE) and runs in
-two phases — it stops once the image is generated and validated and prints the progress display;
-the next `.auto` writes the clips. A blocked image is retried by the next `.auto`. `.auto draft`
+three phases, each a separate `.auto` ending with the progress display — through the IMAGE PROMPT
+(printed); IMAGE alone (the printed prompt sent verbatim, first in the turn, then validated);
+CLIPS. Image generation never shares a turn with the creative stages: the one-turn `.auto`
+produced grids and answer clues while the stage-by-stage path did not. A failed image stops at
+once; the next `.auto` repairs the prompt and stops, and the one after regenerates. `.auto draft`
 skips image generation, prints the image prompt and DRAFT clip prompts, and waits for the sheet to
 come back for `.image` validation. Authority: `reroll-and-options.md` §11, `runtime-state.md`.
 
@@ -216,9 +219,11 @@ survive. A green local validator is not host proof — run the probe against the
 - **The 0.10.18 closed inventory is unproven.** The image prompt no longer names the answer; it ends
   with "The only things in this scene are: …". Re-run the riddle whose answer leaked into the sheet
   and check the sheet with render gate 10.
-- **The 0.10.17/0.10.18 two-phase `.auto` and `.auto draft` are prose.** On a real run check: the
-  first `.auto` stops after a validated image with the progress display; the second writes the
-  clips; a blocked image is retried with the prompt repaired, not resent unchanged; `.auto draft`
+- **The 0.10.19 three-phase `.auto` and the 0.10.18 `.auto draft` are prose.** On a real run
+  check: the first `.auto` stops on the printed image prompt; the second generates with nothing
+  before the request and comes back as stacked strips with no answer clue (compare with the same
+  riddle run stage by stage); the third writes the clips; a failed image stops at once, the next
+  `.auto` prints a repaired prompt, and only the one after regenerates; `.auto draft`
   prints no image, prints the clips with no placeholder inside them, and a sheet brought back to
   `.image` clears DRAFT without rebuilding the clips.
 - **The 0.10.14 portrait canvas is unproven.** The image is now 9:16 with stacked full-width strips,
