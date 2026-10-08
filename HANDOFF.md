@@ -23,6 +23,9 @@ memory of prior work.
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
 - `dev` = all work. Currently checked out, currently **0.10.12**.
+- **Release state:** `main` is at **v0.10.10** (`211e0ff`, pushed). `dev`'s **0.10.11 and 0.10.12 are
+  committed locally and not yet pushed or released** — push `dev`, merge into `main` from a
+  throwaway worktree, tag, then verify from the remote's own refs.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
