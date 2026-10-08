@@ -49,6 +49,12 @@ TIGHT CLOSE-UP — SHOT 3
    without relying on its neighbours.
 7. **Reading order is top → bottom**, and Clip 1 walks the shots in that order.
 8. **No panel may be a crop, zoom, or re-frame of another panel.**
+9. **At least one strip must show each speaking character's face closely enough to read its paper
+   construction** — face shape, eye and brow placement, the cut-paper edges around the jaw and
+   hair. The sheet is the only thing the video model sees: it is the authority for the character's
+   face, and a face it cannot read is a face the clip prompt will be tempted to invent. A
+   progression that ends on a tight close-up satisfies this; a sheet of three identical wide
+   shots does not.
 
 ## Shot progression
 
@@ -62,6 +68,30 @@ WIDE ESTABLISHING  ->  WIDE / MEDIUM  ->  TIGHT CLOSE-UP
 Subject scale should be readable across the strips — the subject starts small in the frame and
 becomes dominant, or whatever the script's actual beat demands. A sheet whose strips look like
 the same shot at three sizes is a failed sheet.
+
+## Beauty is in the environment, not in the style
+
+The audience is meant to see a beautiful place. That requirement lives **here**, in the
+environment's own rendering, and never in a restyle of the characters or the material.
+
+So:
+
+- **The place must be beautiful as the locked LOCATION and ENVIRONMENT define it.** The sheet
+  composes for the specific beautiful thing those two stages named — depth layers, silhouette,
+  water holding the light, texture the light rakes across, haze separating the planes.
+- **At least one strip must give the place room.** The wide establishing strip is where the
+  environment is actually shown; it is not a throwaway frame to get to the dialogue. Compose it,
+  give it depth, and let the characters be small in it if the place deserves the space.
+- **Beauty may never buy clarity.** The sheet is still a production instrument: the shot must
+  stay readable, the character's face and material must stay legible wherever they are the
+  subject, and a pretty frame that hides the identity or the paper construction is a defect, not
+  a win.
+- **It is still not key art.** "Cinematic", poster, and comic framing stay banned — the words
+  pull the render toward presentation design. A beautiful place rendered plainly, with real light
+  and real depth, is the target; a beautiful place rendered as a poster is the failure.
+
+Where the two rules meet: prefer light, depth, atmosphere, colour, and texture — things the
+locked ENVIRONMENT already specified — over added vignettes, effects, or new scenery.
 
 ## Panel count
 
@@ -92,6 +122,9 @@ Every panel must state, explicitly:
 - **emotional state**;
 - **important props** and their position;
 - environment and lighting continuity;
+- **what the place looks like in this panel** — the specific beautiful detail this shot is
+  composed around (light on the water, depth between planes, texture in the foreground). At least
+  one panel must give the place real room, per "Beauty is in the environment, not in the style";
 - which SCRIPT beat the panel depicts;
 - continuity with adjacent panels;
 - a standalone visual-only generation specification.

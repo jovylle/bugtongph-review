@@ -18,7 +18,7 @@ preview the clips.
 RIDDLE      ✓ <riddle wording — first line>            (answer hidden)
 LOCATION    ✓ <place>
 ENVIRONMENT ✓ <weather, time, ambience>
-PROFILE     ✓ <profile id — characters, style, voices>
+PROFILE     ✓ <profile id — characters, style, voices>   (selected: random|user|suggested)
 SCRIPT      ✓ <beat summary + spoken duration>
 FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
 
@@ -38,14 +38,19 @@ TOPIC       ✓ <topic — angle, stated openly>
 
 1. **Panel count and its timing implication.** For example: `3 panels — about 2.7s per shot
    inside an 8-second clip`. Lite requires 8s for ingredients, so this is the real budget.
-2. **The profile's identity mode**: `text` (the written profile holds the character; the default,
-   no setup) or `attached` (the user supplied a turnaround image, giving an exact match), because
-   that changes what the image stage can promise.
+2. **The locked profile and its identity mode**: the profile id, how it was selected (`random`
+   under `.auto`, or `user` / `suggested` at the gate), and the mode — `text` (the written profile
+   holds the character; no setup) or `attached` (the user supplied a turnaround image, giving an
+   exact match), because that changes what the image stage can promise. A run whose selection step
+   failed stops here instead, reporting `AUTO_PROFILE_SELECTION_FAILED: unable to select an
+   eligible random profile` — never a fallback to `profile-01`.
 3. **The timing budget**: the riddle's own spoken seconds, the clip count, and the words left
    for everything else. One 8s clip holds about 11 words, so this is the number that decides
    whether the script is even possible. In the topic pipeline there is no riddle to count, so
    state the full budget the script must **spend** (~11 words for one clip) instead.
-4. **Any pending fix queue**, in upstream-first order.
+4. **Any pending fix queue**, in upstream-first order. A riddle change is never in this queue: it
+   has no dependents and voids nothing — it shows as `~ RIDDLE` alone, with every other stage still
+   `✓` (see `reroll-and-options.md` §6).
 5. **A plain warning when the void set includes IMAGE**: `void set includes IMAGE — one new
    generation after you proceed`.
 

@@ -35,11 +35,19 @@ Development may experiment; development-only behavior must never leak into produ
 
 ## Identity binding gate
 
-Identity mode is locked at PROFILE (see `reference-binding.md`).
+Identity mode is locked at PROFILE (see `reference-binding.md`). The profile *itself* is already in
+episode state by the time this stage runs — it was selected before SCRIPT — so the image stage
+never selects or re-selects a profile, and a regeneration reuses the same lock.
 
-**`text` mode — the default.** The written profile is the identity authority. There is nothing
-to resolve and nothing to attach; proceed to generation and hold the character from the profile
-text, identically in every panel. Do not block.
+**`text` mode.** The written profile is the identity authority while the sheet is being designed.
+There is nothing to resolve and nothing to attach; proceed to generation and hold the character
+from the profile text, identically in every panel. Do not block.
+
+Text mode is not the suggested default for a catalog character when no image is in the
+conversation: the shipped turnaround cannot be bound, so the description would promise a match it
+cannot deliver. If the user explicitly chose a catalog profile with no image attached, proceed in
+`text` mode and say in one line that the character is held by description rather than matched to
+its turnaround. See `reference-binding.md` "Which profile is offered, by asset availability".
 
 **`attached` mode.** The user attached a turnaround image in this conversation. That image must
 actually be used as the reference image input, and it outranks descriptive text for anything
@@ -52,7 +60,12 @@ never grounds for blocking.
 
 This replaces the older rule that treated a missing canonical asset as an automatic IMAGE
 block. The failure that rule was guarding against — a silently redesigned character — is now
-caught by validation instead: a render that contradicts the locked identity source fails gate 2.
+caught by validation instead: a render that contradicts the locked identity source fails gate 2,
+a smooth CGI/plastic material fails gate 5, and a face too small to be readable fails gate 6.
+
+At CLIPS this sheet becomes the authority the video is held to, so a weak or unreadable sheet is
+not a cosmetic problem — it is the drift that shows up in the clip. See `clips.md` "Clip
+acceptance".
 
 ## State machine
 
@@ -101,21 +114,30 @@ failed.
 Reject and regenerate only the failed artifact for:
 
 1. camera/view/shot-size mismatch;
-2. profile identity or reference mismatch;
+2. profile identity or reference mismatch — the image is compared against the **locked profile in
+   episode state**, never against `profile-01` by assumption and never against whichever profile
+   happens to fit the render. A mismatch regenerates under the same lock; the profile is never
+   changed to make an image pass;
 3. character position, pose, gaze, hands, props, physical-state, or scale mismatch;
 4. location, environment, lighting, or continuity mismatch;
-5. art/material language mismatch;
-6. sheet-layout failure — not one landscape canvas, or side-by-side/grid panels instead of
+5. material language mismatch — the render reads as smooth 3D/CGI, plastic, clay, or airbrushed
+   instead of photographed paper with cut edges, layered surfaces, folds, fibres, and a matte
+   finish;
+6. **the face is not readable** — each speaking character's face must be large enough in at least
+   one strip to read its paper construction (see `frame.md` rule 9). The sheet is the video
+   model's only source for that face, so a face too small to read is a face the clip prompt will
+   be tempted to invent;
+7. sheet-layout failure — not one landscape canvas, or side-by-side/grid panels instead of
    stacked horizontal strips (see `frame.md`);
-7. presentation drift — the render reads as a poster, comic page, storyboard, or "cinematic"
+8. presentation drift — the render reads as a poster, comic page, storyboard, or "cinematic"
    key art rather than a production reference sheet;
-8. text or text-like marks, labels, panel numbers, arrows, annotations, watermark, or a frame
+9. text or text-like marks, labels, panel numbers, arrows, annotations, watermark, or a frame
    drawn around a strip. *Thin separators between strips are expected and correct — they are
    not a defect;* frames, mattes and shadows around a strip are;
-9. answer clue or answer-directed behavior;
-10. accidental extra shot, collage, or a panel count that disagrees with FRAME;
-11. missing, duplicated, or merged panels against the FRAME count;
-12. panels that are merely crops, zooms or re-frames of the same shot instead of materially
+10. answer clue or answer-directed behavior;
+11. accidental extra shot, collage, or a panel count that disagrees with FRAME;
+12. missing, duplicated, or merged panels against the FRAME count;
+13. panels that are merely crops, zooms or re-frames of the same shot instead of materially
     different camera setups.
 
 ## Riddle secrecy

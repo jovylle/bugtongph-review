@@ -70,13 +70,25 @@ Connect Notion to use your own curated records instead.
 
 | Mode | How it works |
 | --- | --- |
-| `text` — default | the written profile holds the character. No setup; identity drifts slightly between episodes. |
-| `attached` — opt-in | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+| `text` | the written profile holds the character while the sheet is designed. No setup; the sheet, not the description, is what the video is later held to. |
+| `attached` | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+
+Which profile is **suggested** depends on whether an image is actually in the chat. With a
+character image attached, the matching catalog profile leads and an exact match is achievable.
+With no image, an **AI-invented profile** leads instead, and the catalog profiles stay listed for
+someone who will supply the image — because a catalog character's turnaround cannot be attached
+for you, so offering it as a text-only default would promise a match it can never deliver.
 
 The plugin ships `character-turnaround.png` (profile-01) and `mich-turnaround.png`
 (profile-02-mich), but it **cannot attach them for you** — a file path inside a plugin package
-is not an image the session can supply. So the pipeline offers them, and continues in `text`
-mode if you do not attach one. It never blocks waiting for an image.
+is not an image the session can supply. Attach one and it becomes the authority; do not, and the
+episode either invents its own characters or holds the catalog one by description. It never blocks
+waiting for an image.
+
+**No profile is the default.** `.auto` does not take the suggested option at PROFILE: it loads the
+eligible profiles, drops the invalid and rejected ones, **draws one at random**, and locks it
+before the script is written. `profile-01` has no priority and is never a fallback — if no profile
+can be drawn, the run stops and reports it instead of proceeding.
 
 To use Notion (the preferred source):
 
@@ -139,6 +151,40 @@ toward key-art. Strips must differ materially in camera position, shot size and 
 a strip that is merely a crop or zoom of another does not count. Thin separators are sheet
 furniture and must never appear in the video. Layout contract: `references/frame.md`.
 
+### The place is shown, not just used
+
+The environment is part of what the episode shows, so it is chosen and lit for how it looks:
+LOCATION options name what the place looks like at its best, ENVIRONMENT options name what the
+light does to it (direction, colour temperature, haze, reflections, where the shadow falls), and
+at least one strip of the sheet gives the place real room, composed for depth and light.
+
+Beauty lives in the environment, never in a restyle. The clip may not add scenery, effects,
+weather, or a new time of day; it may not prettify the frame by changing the character or the
+material; and "cinematic", poster, and comic framing stay banned. Legibility outranks beauty, and
+the clue rule outranks both: nothing answer-related may be the brightest, most central, or most
+lit thing in frame.
+
+### The sheet is what the video is held to
+
+The video model receives exactly one image — this sheet — and nothing else. From CLIPS onward the
+sheet, not the written profile, is the authority for everything visible: face, build, clothing
+construction, surface material, scale, composition. Both clip prompts open with a **REFERENCE
+AUTHORITY** block (the sheet is the visual authority; do not rebuild faces, proportions, clothing,
+or materials from any text) and a **MATERIAL REALITY** block (real paper-and-cardboard sculptures
+photographed in a real miniature set; smooth 3D/CGI, plastic, clay, and airbrushed surfaces
+forbidden). No later section may restate a property the sheet already shows — that text is read as
+an instruction to rebuild the character. The written profile survives in the prompt as voice,
+speaker labels, and what the sheet cannot show.
+
+Two consequences worth knowing:
+
+- **The sheet has to carry the face it is the authority for.** At least one strip must show each
+  speaking character's face closely enough to read its paper construction, and its material must
+  already read as photographed paper — a smooth CGI sheet teaches the video a smooth CGI look.
+- **A returned clip is compared against the sheet** before continuing, on material, faces, build,
+  clothing, and framing. If it drifted, only the authority blocks change: adding more character
+  description is the cause of the drift, not the fix. See `references/clips.md` "Clip acceptance".
+
 Both require the same riddle source. The minimal path is not a way around sourcing, it is a way
 around the staging machinery.
 
@@ -147,21 +193,19 @@ around the staging machinery.
 `pack.py` builds two flavors from this one tree:
 
 ```text
-dist/bugtongph-<version>.zip        prod — commands as written (.auto, .riddle, ...)
-dist/bugtongph-dev-<version>.zip    dev  — plugin name bugtongph-dev, every command
-                                           prefixed (.dev-auto, .dev-riddle, ...)
+dist/bugtongph-<version>.zip        prod
+dist/bugtongph-dev-<version>.zip    dev — plugin name bugtongph-dev, `[DEV build]` banner
 ```
 
-The dev flavor exists so development never touches what is installed for production. Both can
-be installed at the same time: the host namespaces skills per plugin
-(`bugtongph:bugtongph-episode` vs `bugtongph-dev:bugtongph-episode`), and because every dev
-command carries the `.dev-` prefix, only one flavor ever answers a given call.
+Both flavors carry the **same commands** (`.auto`, `.riddle`, ...). The dev flavor exists so
+development never touches what is installed for production, and it is told apart by *which plugin
+the session is using*: the host namespaces skills per plugin
+(`bugtongph:bugtongph-episode` vs `bugtongph-dev:bugtongph-episode`), and a conversation runs
+against one selected plugin.
 
-The prefix is applied by `pack.py` to **every surface that can carry a live command**, not just
-prose: skill Markdown, the skill's frontmatter `description` (which is what routes an
-invocation), `skills/*/agents/openai.yaml` → `default_prompt`, and the manifest
-`defaultPrompt` starter prompts. If any of those shipped unprefixed, the dev build's own
-starter buttons would fire the production plugin's commands.
+**Enable one flavor per conversation.** Install both if you like, but with both active in the same
+conversation a bare command has two claimants — which is the ambiguity the old `.dev-` command
+prefix existed to remove. Pick the flavor you want for the session and leave the other off.
 
 Rules:
 
@@ -192,7 +236,7 @@ python3 pack.py --dev
 git commit -am "what changed"
 git switch main
 git merge --no-ff dev
-git tag -a v0.10.5 -m "bugtongPH Studio 0.10.5"
+git tag -a v0.10.6 -m "bugtongPH Studio 0.10.6"
 git switch dev
 
 # then build and verify the release artifacts
@@ -221,6 +265,21 @@ Content pipelines: `.auto riddle` (default) and `.auto topic`; `.topic` enters t
 pipeline directly, `.auto fresh topic` resets and starts one. `.vlog` and `.vblog` are aliases
 for `.topic`. Riddle and topic are the two first stages — a single episode uses exactly one of
 them.
+
+### Riddles are interchangeable
+
+The riddle is **independent content**. Swap it against a finished episode and nothing else
+changes: LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS stay locked and valid,
+and nothing is regenerated. That works because the script never holds the riddle's words — the
+recitation is a beat whose text comes from the current riddle whenever the clip prompts are built.
+
+A swap does tell you two things, without regenerating anything: the new riddle's spoken time
+(re-run the words ÷ rate arithmetic, and the clip count if it no longer fits) and whether the
+new answer is already visible in what is locked, which would be a leak.
+
+Everything else still cascades: changing the location, environment, profile, script, or frame
+voids what was built on it, and changing the riddle's *language* does too, because that changes
+what the episode is spoken in.
 
 Riddle language: `.riddle tagalog` (default), `.riddle english`, `.riddle bisaya`. The language
 sets the riddle's wording and the episode's spoken language.

@@ -1,16 +1,16 @@
 # bugtongPH — Veo: Prompt Construction & Checklist
 
-Read `active-profile-runtime.md` first. It parameterizes legacy hard-coded character references.
+Read `active-pair-runtime.md` first. It parameterizes legacy hard-coded character references.
 
 ## Prompt construction
 
 Every Flow/Veo prompt should explicitly contain, when applicable:
 
-1. Visual reference interpretation
-2. Active-profile identity priority and identity mode (`text` or `attached`)
-3. Panel-to-shot mapping
-4. Shot starting state
-5. Character identity
+1. Reference authority — the sheet outranks all text, and it is stated first
+2. Material reality — photographed paper sculptures, with the CGI/plastic families forbidden
+3. Active-profile voice and speaker labels (never the profile's appearance text)
+4. Panel-to-shot mapping
+5. Shot starting state
 6. Character positions
 7. Physical actions
 8. Natural gaze direction
@@ -37,16 +37,44 @@ Use explicit operational language.
 Prefer:
 
 ```text
-ACTIVE PROFILE IDENTITY LOCK:
-Use the active profile as the authoritative source for character identity,
-art style, and voice/speech characteristics.
+REFERENCE AUTHORITY — READ FIRST:
+The supplied shot-reference sheet is the primary visual authority for this clip.
+Animate the characters visible in it. Do not redesign, restyle, or re-render them.
+Do not rebuild faces, proportions, clothing, or materials from any text below.
+Face and body detail comes only from the sheet.
 
-EPISODE IMAGE:
-Use the supplied IMAGE for current pose, expression, gaze, hand placement,
-position, environment, lighting, and camera composition.
+MATERIAL REALITY:
+These are real physical paper-and-cardboard sculptures photographed in a real
+miniature set. Preserve cut-paper edges, layered paper surfaces, folds, paper
+fibres, matte finish, and handmade asymmetry exactly as they appear in the sheet.
+Do not render smooth 3D CGI, plastic, clay, or airbrushed surfaces.
+Do not generate a generic face — the faces are already designed in the sheet.
+
+ACTIVE PROFILE — VOICE AND LABELS ONLY:
+Use the active profile for voice/speech characteristics and the uppercase speaker
+labels. It is not an authority on appearance; the sheet is.
+
+EPISODE SHOT REFERENCE:
+Use the supplied sheet for pose, expression, gaze, hand placement, position,
+environment, lighting, and camera composition — and for the face, build, clothing
+construction, and surface material, which the text must not restate.
 ```
 
+The order is the point, not the wording alone. The fidelity clause goes **first**, because the
+generator weights the opening words; a prompt that opens on the scene and mentions fidelity later
+has already let the text outrank the image.
+
 Avoid vague language such as "make it cinematic" or "interact naturally".
+
+## Never restate what the sheet shows
+
+The prompt may not describe a face, a body proportion, a piece of clothing, or a surface material
+in words. Text that re-describes a visible character is an instruction to rebuild that character,
+and it competes with the one image the model was given. If a visual detail exists in the sheet,
+the sheet is the only place it is stated.
+
+Semantic identifiers such as "elderly Filipino fisherman" are labels, not appearance
+descriptions: they may route a line to a person, and may never stand in for that person's face.
 
 ## Voice language
 
@@ -60,4 +88,7 @@ pronouns, no narration, no unattributed lines. State who is silent as well as wh
 
 ## Clip 2
 
-Treat Clip 2 as text-only Extend continuation from the final visual/audio state established at the end of Clip 1, especially the final-second continuity.
+Treat Clip 2 as text-only Extend continuation from the final visual/audio state established at the
+end of Clip 1, especially the final-second continuity. Restate the material-reality block
+verbatim: the extension inherits photographed paper sculptures already on screen, and must not
+re-render the look, the material, or the faces from its own text.

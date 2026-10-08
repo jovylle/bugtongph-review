@@ -46,6 +46,10 @@ appears in a given episode, and neither is ever offered as an option inside the 
 suggestion exists so an unattended `.auto` run has one defined choice; it is not a claim that
 option 1 is creatively the best.
 
+**PROFILE is the exception.** Its suggestion only guides the gated path: an unattended run does
+not take it — it draws one eligible profile at random, so no profile is preferred and none is a
+fallback. See `profile.md` "Selection".
+
 ```text
 1. <option> (suggested)
 2. <option>
@@ -103,11 +107,18 @@ cannot run dry.
 
 ## 6. Invalidation cascade
 
-An upstream lock change voids everything built on it. Upstream locks are always preserved.
+The pipeline has two kinds of state, and only one of them cascades.
+
+**Structural locks** are built on each other: LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME →
+IMAGE PROMPT → IMAGE → CLIPS. Changing one voids what was built on it.
+
+**The subject is a content variable, not a structural lock.** RIDDLE (and TOPIC in its own
+pipeline) is independent content: it is swapped in and out of a built episode without invalidating
+anything. The video is about the riddle, but the script, panels, image, and clip structure do not
+contain it — see `script.md` "The riddle is a variable, never a scripted line".
 
 ```text
-new riddle      -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
-new topic       -> LOCATION ENVIRONMENT PROFILE SCRIPT IMAGE-PROMPT IMAGE CLIPS void
+new riddle      -> nothing void. Every stage stays ✓, including CLIPS.
 new location    -> ENVIRONMENT SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new environment -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new profile     -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
@@ -116,8 +127,37 @@ new frame       -> IMAGE-PROMPT IMAGE CLIPS void
 new image       -> CLIPS void
 ```
 
-The first stage is the content pipeline's own — `new riddle` in the riddle pipeline, `new
-topic` in the topic pipeline. Switching pipeline replaces it and voids the same set.
+### Changing the riddle
+
+Replacing the riddle keeps LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE PROMPT, IMAGE,
+and CLIPS exactly as they are:
+
+- do **not** mark any downstream stage `○ void`, `~ changed`, or pending;
+- do **not** regenerate, re-render, or re-plan anything;
+- do **not** queue the change as a fix that voids dependent work — it has no dependents;
+- the clip prompts are **not** stale: the recitation is a beat, and its text is read from the
+  current RIDDLE lock whenever CLIPS assembles the prompt.
+
+The new riddle shows as `~ RIDDLE` on the overview and nothing else changes. Report the swap and
+the two checks below in one line, then stop.
+
+Two things a swap does re-check, and neither regenerates anything:
+
+1. **Timing arithmetic** (`tagalog-pacing.md`). The new riddle is fixed text of a different length,
+   so re-run the words ÷ rate count and report it. If the locked clip count no longer holds it,
+   say so and **re-declare the clip count** — that is arithmetic, not regeneration, and it does not
+   void the script, the frame, or the image.
+2. **Answer integrity** (`riddle.md` §"Changing the riddle"). The new answer must not already be
+   depicted, gestured at, or lit by what is locked. If the built episode would leak it, report the
+   conflict plainly and let the user choose; never silently regenerate, and never silently ignore.
+
+The **episode language** is a structural lock, not part of the riddle variable: changing it changes
+the language the episode is spoken in, so it voids SCRIPT and everything after it as before (see
+`bundled-riddles.md`).
+
+The first stage is the content pipeline's own — `new riddle` in the riddle pipeline, `new topic` in
+the topic pipeline. Switching pipeline replaces the subject as well as the pipeline's rules, and
+still voids the downstream set as before.
 
 Never carry a clip prompt across a new image: the prompt still describes the previous
 picture, and nothing in the output reveals the mismatch.
@@ -187,7 +227,9 @@ questions.
 
 1. It walks the stages in order — RIDDLE (or TOPIC, if the topic pipeline was selected) →
    LOCATION → ENVIRONMENT → PROFILE → SCRIPT → FRAME → OVERVIEW → IMAGE PROMPT → IMAGE — taking
-   **option 1 (suggested)** at every gate. This is **one continuous run**, not one stage per
+   **option 1 (suggested)** at every gate, **except PROFILE**, where it takes no position and
+   instead draws one eligible profile at random (`profile.md` "Selection"). This is **one
+   continuous run**, not one stage per
    turn: it does not stop between stages. It prints the preselected trail as a compact block,
    one line per stage, as it goes.
 2. It **stops once the image has been generated and validated.** CLIPS is the last step and runs
@@ -196,11 +238,14 @@ questions.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
    the gated path. Unattended does not mean unchecked.
 5. It **stops and reports** rather than improvising when: both riddle sources are unavailable
-   (Notion unconnected *and* the bundled set unreadable or exhausted), the script cannot fit its
-   clip budget, or an image fails validation twice. A profile whose turnaround simply was not
-   attached is **not** a blocker — unattended runs continue in `text` identity mode.
+   (Notion unconnected *and* the bundled set unreadable or exhausted), **no eligible profile can
+   be drawn** (`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` —
+   never a fallback to `profile-01`), the script cannot fit its clip budget, or an image fails
+   validation twice. A profile whose turnaround simply was not attached is **not** a blocker —
+   unattended runs continue in `text` identity mode.
 6. A plain stage command (`.script`, `.location`, …) is always the gated conversational path and
    is unaffected by this. Repeating a stage command still rerolls it.
 
 Because of this, the suggested option must always be a *defensible* option: it is what gets made
-when no human is watching.
+when no human is watching. PROFILE is the exception — the unattended run draws instead of
+inheriting the suggestion.

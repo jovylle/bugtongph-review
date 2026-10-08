@@ -8,26 +8,22 @@
 Source of truth: ./bugtongph/  (edit here, never in an installed copy)
 
 Outputs into ./dist/:
-  bugtongph-<version>.zip        prod, commands as written (.auto, .riddle, ...)
-  bugtongph-dev-<version>.zip    dev,  every command prefixed (.dev-auto, .dev-riddle, ...)
+  bugtongph-<version>.zip        prod
+  bugtongph-dev-<version>.zip    dev
 
-The dev flavor differs only in: plugin name, display name, description banner, README
-banner, and the command prefix. This is what lets both be installed at once without an
-ambiguous trigger: the host namespaces skills as <plugin>:<skill>, and only one flavor
-answers to any given command.
+Both flavors carry the **same commands** (`.auto`, `.riddle`, ...). The dev flavor differs only in
+plugin name, display name, description banner, and README banner, so the two are told apart by
+*which plugin the session is using*, not by rewriting the command surface.
 
-The prefix is applied to EVERY surface that can carry a live command, not just prose:
-  * skill Markdown (SKILL.md, references/*.md, README.md, CHANGELOG.md);
-  * the skill's frontmatter `description` (that is what routes an invocation);
-  * `skills/*/agents/openai.yaml` -> `default_prompt`;
-  * the manifest `defaultPrompt` entries, which are clickable starter prompts in the host UI.
-Missing any one of these ships a dev build whose own starter buttons fire the *production*
-plugin's commands.
+That works because the host namespaces skills per plugin (`bugtongph:bugtongph-episode` vs
+`bugtongph-dev:bugtongph-episode`) and a conversation runs against one selected plugin — so
+**only one flavor may be enabled in a conversation.** With both installed and both active, one
+command has two claimants: the ambiguity the old `.dev-` prefix existed to remove. Install both if
+you like, and pick the flavor per session.
 """
 
 import argparse
 import json
-import re
 import shutil
 import subprocess
 import sys
@@ -40,15 +36,6 @@ DIST = REPO / "dist"
 DEV_NAME = "bugtongph-dev"
 DEV_SUFFIX = " (Dev)"
 DEV_BANNER = "[DEV build] "
-
-# Longest first so that .image-prompt is not eaten by .image, etc.
-COMMANDS = [
-    "image-prompt", "environment", "location", "overview", "profile", "produce",
-    "channel", "release", "review", "workflow", "reroll", "riddle", "script",
-    "render", "clips", "frame", "image", "again", "other", "drafts", "pipeline",
-    "auto", "redo", "pair", "plot", "fix", "img", "veo", "topic", "vblog", "vlog",
-]
-COMMAND_RE = re.compile(r"(?<![\w.\-])\.(" + "|".join(COMMANDS) + r")\b")
 
 
 def load_json(path: Path) -> dict:
@@ -104,43 +91,22 @@ def build_dev(version: str) -> Path:
                 if iface:
                     iface["displayName"] = iface.get("displayName", "bugtongPH Studio") + DEV_SUFFIX
                     iface["longDescription"] = DEV_BANNER + iface["longDescription"]
-                    # The starter prompts are clickable in the host UI. Left unprefixed they
-                    # would fire the *production* plugin's commands when both are installed.
-                    prompts = iface.get("defaultPrompt")
-                    if isinstance(prompts, list):
-                        prefixed = [COMMAND_RE.sub(r".dev-\1", p) for p in prompts]
-                        if prefixed != prompts:
-                            iface["defaultPrompt"] = prefixed
-                            print(f"    {rel}: defaultPrompt prefixed")
             dump_json(path, data)
 
-        # 2. Commands: prefix every bugtong command so prod never answers a dev call.
-        #    Covers .md prose AND agents/*.yaml, whose `default_prompt` is also a live
-        #    command the host can send. Manifests are handled in step 1.
-        rewritten = 0
-        for pattern in ("*.md", "*.yaml"):
-            for path in sorted(root.rglob(pattern)):
-                text = path.read_text(encoding="utf-8")
-                new, count = COMMAND_RE.subn(r".dev-\1", text)
-                if count:
-                    path.write_text(new, encoding="utf-8")
-                    rewritten += count
-                    print(f"    {path.relative_to(root)}: {count} command(s) prefixed")
-
-        # 3. README gets a banner so the flavor is obvious on disk.
+        # 2. README gets a banner so the flavor is obvious on disk.
         readme = root / "README.md"
         if readme.exists():
             readme.write_text(
                 f"# bugtongPH Studio — DEV build\n\n"
-                f"This is the **dev** flavor of the plugin: plugin name `{DEV_NAME}`, every command\n"
-                f"prefixed with `.dev-` (for example `.dev-auto`, `.dev-script`). Install it beside\n"
-                f"the production plugin; the prefixed commands keep the two from colliding. Built\n"
-                f"from the same tree as production by `pack.py`.\n\n"
+                f"This is the **dev** flavor of the plugin: plugin name `{DEV_NAME}`. Commands are\n"
+                f"the same as production. Enable this one instead of the production plugin for the\n"
+                f"session you are testing in — never both at once. Built from the same tree as\n"
+                f"production by `pack.py`.\n\n"
                 + readme.read_text(encoding="utf-8").split("\n", 1)[1].lstrip("\n"),
                 encoding="utf-8",
             )
 
-        print(f"    {rewritten} command token(s) prefixed in the dev flavor")
+        print("    dev flavor: same commands as prod, distinct plugin name")
         zip_tree(root, out)
     return out
 

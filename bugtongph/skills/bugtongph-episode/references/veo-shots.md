@@ -7,14 +7,33 @@ Identity comes from the profile's locked **identity mode** (see `reference-bindi
 - `attached` — the turnaround image the user attached in the conversation is the primary source
   of truth for character identity and appearance. Use the image reference itself when available;
   do not replace it with a newly invented textual description.
-- `text` — the default. The written profile is the source of truth, applied identically in every
-  panel.
+- `text` — the written profile is the source of truth **while a panel is being designed**. It is
+  applied identically in every panel.
 
 `profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
 `assets/mich-turnaround.png`. Those files are offered to the user to attach; a path inside the
 plugin package is not an image the session can supply, so their absence is never a failure.
 
-The validated episode IMAGE controls only the current pose, expression, gaze, hand placement, position, environment, lighting, composition, and shot state.
+**At CLIPS the validated sheet outranks both.** It is the only image the video model receives, so
+for anything visible in it — face, build, clothing construction, surface material, scale,
+composition — the sheet is the instruction and the written profile is silence. This is not a
+preference: text that re-describes a visible character is read as an instruction to rebuild that
+character, which is how a photographed paper sculpture comes back as a smooth CGI version of
+itself.
+
+The validated episode IMAGE controls the current pose, expression, gaze, hand placement, position, environment, lighting, composition, and shot state — and, at CLIPS, the character's visible face, build, clothing construction, and surface material.
+
+## Material reality — a hard clause, not a style word
+
+The characters are **real physical paper-and-cardboard sculptures photographed in a real miniature
+set**. Every clip prompt states that, then names what must survive: cut-paper edges, layered paper
+surfaces, folds and creases, paper fibres, matte finish, handmade asymmetry. It also forbids the
+render families that replace them: smooth 3D / CGI, plastic, clay, airbrushed surfaces, and
+generated generic faces.
+
+Naming the style (`papercraft diorama`, `handcrafted`, `miniature world`) is **not** a substitute.
+A style noun tells the model to re-render the look from words, which is the opposite of preserving
+what the sheet shows. See `veo-prompt.md` and `clips.md` for the exact clause.
 
 ## Core panel principle
 
@@ -29,20 +48,22 @@ itself, its separators, its borders, or its stacked layout onscreen.
 ## Character continuity
 
 Preserve:
-- canonical character identity from the bound active-profile reference;
+- character identity as the sheet shows it — face, build, proportions;
+- the paper material and its visible construction;
 - environment;
 - composition;
 - lighting;
-- visual style;
-- proportions;
-- clothing;
+- clothing as constructed in the sheet;
 - props;
 - relative positions;
 - visual scale;
 - camera perspective;
 - shot-specific framing.
 
-Do not let generic prose such as "elderly Filipino fisherman" or "young Filipino fisherman" override a visible canonical reference. Such text is supplemental only.
+**Hard rule.** Never let prose describe a character's appearance, build, clothing, or material.
+Prose such as "elderly Filipino fisherman" or "young Filipino fisherman" is a routing label only:
+it may name who is speaking, and may never stand in for the face in the sheet. When text and sheet
+disagree about anything visible, the sheet wins and the text is corrected.
 
 ## Character movement
 

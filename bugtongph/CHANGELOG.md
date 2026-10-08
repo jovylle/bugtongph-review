@@ -1,5 +1,179 @@
 # Changelog
 
+## 0.10.10 — one command set, flavor chosen per session
+
+The dev flavor prefixed every command (`.dev-riddle`, `.dev-script`) so that two installed flavors
+could never answer the same call. A session now runs against one selected plugin, and the host
+already namespaces skills per plugin — so `.riddle` reaches whichever flavor that conversation is
+using, and the prefix was solving a problem that no longer exists.
+
+### Changed
+
+- **`pack.py` no longer rewrites commands.** The dev flavor differs only in plugin name, the
+  display-name suffix, the long-description banner, and the README banner; its command surface is
+  identical to production, including its clickable starter prompts.
+- The `COMMANDS` list and the prefixer are gone from `pack.py`; the docstring now states why the
+  flavor is still built and what keeps it unambiguous.
+- **Documented precondition.** Keep **one flavor enabled per conversation** (README "Dev flavor",
+  `HANDOFF.md`, `pack.py`). Install both side by side if useful, but with both active a bare command
+  has two claimants — the ambiguity the prefix used to remove.
+
+Older installs keep working: `.dev-*` commands no longer exist in any build, so a dev build that was
+installed before this must be reinstalled to pick up the unprefixed command set.
+
+## 0.10.9 — the profile is drawn, not defaulted
+
+`.auto` could run an entire episode on `profile-01` because a default was written into the profile
+rules: the unattended run took option 1 at the profile gate, and several files described
+`profile-01` as "the production default". Episodes therefore coupled themselves to one character —
+and because the sheet is later the video's visual authority, a wrongly-defaulted profile could
+invalidate a whole run downstream.
+
+### Changed
+
+- **No profile is the default.** `profile-01` has no priority and is never a fallback. The
+  "production default" wording is gone from `SKILL.md` §5, `profile.md` (menu, commands table,
+  schema status value, catalog heading, growing the catalog) and `active-pair-runtime.md`, which no
+  longer opens with a default profile at all.
+- **PROFILE is an explicit selection step, and it runs before any episode asset exists.** The
+  eligible set is loaded — the AI-invented route, intact catalog profiles, reusable and
+  episode-local ones — rejected/invalid entries are dropped, one profile is **drawn at random**,
+  and it is persisted to episode state as the PROFILE lock *before* SCRIPT. Full contract in
+  `profile.md` "Selection".
+- **A failed draw stops the run.** `.auto` reports
+  `AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` instead of
+  proceeding, in `SKILL.md` §1/§5/§6, `reroll-and-options.md` §0/§11, `runtime-state.md` and
+  `overview.md`.
+- **The lock is visible and durable.** Episode state carries the profile id, its
+  `selection source` (`random` | `user` | `suggested`) and the identity mode; the overview's state
+  line and its pre-image checklist report them, so the log answers *which profile, and why*.
+- **Regeneration never re-selects.** `render.md`'s identity gate and validation gate 2 compare the
+  render against the locked profile in episode state, regenerate under the same lock, and state
+  that the profile is never changed to make an image pass. `profile.md`'s propagation invariant and
+  `runtime-state.md` say the same.
+- **The suggestion still guides the gate, not the unattended run** (`reroll-and-options.md` §0):
+  with no image in the conversation an AI-invented profile leads the menu, and `.auto` draws
+  regardless.
+
+## 0.10.8 — the riddle is a content variable
+
+Changing the riddle voided the whole episode. The cascade treated the subject as the root of a
+dependency chain, so trying a different bugtong against a finished setup — script, panels, image,
+clips — threw all of it away. The subject is content, not structure: riddles are meant to be
+interchangeable with an existing production setup.
+
+### Changed
+
+- **RIDDLE is independent content.** Changing it marks no downstream stage void, pending, or
+  invalid, regenerates nothing, and never enters the PENDING FIXES queue — it has no dependents.
+  LOCATION, ENVIRONMENT, PROFILE, SCRIPT, FRAME, IMAGE, and CLIPS stay `✓`, and a swap shows as
+  `~ RIDDLE` alone. (`reroll-and-options.md` §6, `riddle.md` "Changing the riddle", `SKILL.md` §1
+  and §6 RIDDLE.)
+- **Why it is safe: the script never held the riddle's words.** The recitation is a *beat*, and its
+  text is read from the current RIDDLE lock when CLIPS assembles the prompt. A script that quoted
+  the riddle verbatim would go stale on the first swap, so `script.md` now forbids writing the
+  riddle's wording into a script option, and `clips.md` §11 SUBJECT INTEGRITY names the lock as the
+  only source of the recited text.
+- **A swap still re-checks two things, and reports both** without regenerating anything: the timing
+  arithmetic (the new riddle is fixed text of a different length — re-run words ÷ rate, and
+  re-declare the clip count if the locked one no longer holds it) and answer integrity (the new
+  answer must not already be depicted, gestured at, or lit by what is locked; a conflict is reported
+  for the user to decide, never fixed silently).
+- **The episode language stays a structural lock.** Swapping the riddle voids nothing; changing the
+  *language* changes what the episode is spoken in, so it still voids SCRIPT and everything after
+  it. (`bundled-riddles.md`.)
+- **TOPIC and pipeline switching are unchanged** — a topic is the story rather than a swap-in
+  subject, so `new topic` and a pipeline switch still void downstream. Worth revisiting if the same
+  flexibility is wanted there.
+
+## 0.10.7 — the place is shown, not just used
+
+The environment existed only as a correctness field: weather, time of day, and a list of physical
+features, with no requirement that any of it be worth looking at. The sheet was explicitly
+forbidden from being pretty in a *presentation* sense, and nothing anywhere re-asserted the
+opposite — that the audience is watching a place, and the place has to be beautiful.
+
+### Changed
+
+- **LOCATION options must name what the place looks like at its best** — the specific filmable
+  thing (layered depth, silhouette, water holding the light, a texture the light can model), not
+  adjectives. A place with nothing filmable about it is not offered. (`location.md` "The place is
+  scenery, not a backdrop".)
+- **ENVIRONMENT is the main beauty lever** (`environment.md` "Light is the main beauty lever"):
+  direction, colour temperature, atmosphere/haze, contrast and falloff, reflections and
+  translucency — chosen for what they do to the place. Conditions described only as "warm" or
+  "moody" are not specific enough to render.
+- **Beauty lives in the environment, never in the style** (`frame.md`): the place is beautiful as
+  the locked LOCATION and ENVIRONMENT define it; at least one strip gives the environment real
+  room; beauty may never buy clarity, and "cinematic", poster, and comic framing stay banned. A
+  beautiful place rendered plainly is the target; a beautiful place rendered as a poster is the
+  failure.
+- **The image prompt carries it**: the LOCATION and ENVIRONMENT LOCK clauses now state what the
+  light does to the place and what the place was chosen for, and the PURPOSE clause says the sheet
+  is still rendered beautifully — from locked light, depth, atmosphere, and texture, not from
+  presentation styling.
+- **The clip prompt carries it**: WORLD / ENVIRONMENT LOCK states that the place is shown, not
+  merely inhabited, and CAMERA RULES make the establishing shot the one that gives the place room
+  and depth. The clip must not add scenery, effects, weather, or a new time of day, and must not
+  restyle the character or material to prettify a frame.
+- **The clue rule still outranks beauty**: nothing answer-related may be the brightest, most
+  central, or most lit thing in frame, and a condition set that only works by lighting an
+  answer-related object is discarded however good it looks.
+
+## 0.10.6 — the sheet is the character authority, and paper is not CGI
+
+A clip came back visibly worse than the sheet it was generated from: papercraft replaced by smooth
+CGI surfaces, faces regenerated as generic, proportions and clothing reinterpreted. The prompt was
+doing what this tree told it to do.
+
+### The prompt contract ordered the opposite of the rules
+
+`clips.md` §1 told the prompt to render "in the active profile's art style (papercraft diorama …)",
+§3 told it to "instantiate the actual active profile's identity, appearance, scale, clothing,
+material", and `veo-prompt.md` opened with "ACTIVE PROFILE IDENTITY LOCK: use the active profile as
+the authoritative source for character identity, art style" while scoping the supplied image to
+"pose, expression, gaze, hand placement, position, environment, lighting, and camera composition".
+Text outranked the image on every property that was drifting.
+
+The rule that would have prevented it — "Do not reconstruct their faces from generic semantic
+descriptions" (`veo-google-flow.md` §1) — existed only as an instruction to the assistant, was
+conditioned on an attached turnaround, and never appeared in the emitted prompt. Identity mode
+defaults to `text`, so the clause was switched off by a condition that never fires.
+
+### Changed
+
+- **The validated sheet is the character authority at CLIPS**, above both an attached turnaround
+  and the written profile. The profile survives in the prompt as voice, speaker labels, and what
+  the sheet cannot show. (`clips.md`, `reference-binding.md`, `identity.md`, `veo-shots.md`,
+  `active-pair-runtime.md`, `SKILL.md` §6.)
+- **New required prompt sections: REFERENCE AUTHORITY and MATERIAL REALITY**, stated first,
+  because the generator weights the opening words. The material block says the characters are real
+  paper-and-cardboard sculptures photographed in a real miniature set, names what must survive
+  (cut edges, layered surfaces, folds, fibres, matte finish, handmade asymmetry), and forbids what
+  replaces them (smooth 3D/CGI, plastic, clay, airbrushed, generated generic faces).
+- **No prompt section may restate a visible property.** Face, build, clothing construction, and
+  surface material come from the sheet; describing them in words is an instruction to rebuild the
+  character. The Clip 1 word budget is unchanged, but is no longer spent on re-description.
+- **The speaker roster carries voice only.** The "elderly fisherman" style descriptor is gone from
+  it — that phrasing is the semantic identifier the tree already warns against.
+- **Style labels are banned from the clip prompt.** "Papercraft diorama" names a genre the model
+  then re-renders from words; the sheet carries the material instead. Same clause added to the
+  image prompt's STYLE LOCK so the sheet is built to the target the video must match.
+- **Clip acceptance is now a gate.** A returned clip is compared against the sheet on material,
+  faces, build, clothing, and framing. On failure only the authority blocks change — never more
+  character description, which is the cause rather than the fix.
+- **Asset availability decides the suggested profile.** With no character image in the
+  conversation, a catalog character is no longer the suggested default: its shipped turnaround
+  cannot be attached, so a text-only description was promising an exact match it could never
+  deliver. An AI-invented profile leads instead, with the catalog profiles listed for a user who
+  will supply the image. With an image attached, the matching catalog profile leads again.
+- **The sheet must carry the face it is the authority for** (`frame.md` rule 9): at least one strip
+  shows each speaking character's face closely enough to read its paper construction.
+- **Sheet validation gate strengthened** (`render.md`): a render that reads as smooth CGI / plastic
+  / clay instead of photographed paper now fails, as does a face too small to read.
+- `veo-prompt.md` pointed at `active-profile-runtime.md`, a file that does not exist; corrected to
+  `active-pair-runtime.md`.
+
 ## 0.10.5 — the image is a shot-reference sheet, plain questions read state, and `.review` retires
 
 ### Reading locked state needs no command

@@ -29,14 +29,26 @@ Assemble in this order, every section present, nothing invented:
    character, each camera setup, and the shot progression. State explicitly that it is **not**
    optimized for cinematic presentation, poster design, or comic-book aesthetics. This clause
    goes first because the generator weights the opening words, and "cinematic" is the single
-   most damaging word to put near a reference sheet.
-2. **STYLE LOCK** — the profile's art style and material/rendering language, and the
-   handcrafted miniature scale conventions.
+   most damaging word to put near a reference sheet. The place is still rendered beautifully —
+   see `frame.md` "Beauty is in the environment, not in the style": beauty comes from the locked
+   light, depth, atmosphere, and texture, never from presentation styling.
+2. **STYLE LOCK** — the profile's material and rendering language stated as a physical fact: these
+   are real paper-and-cardboard sculptures photographed in a real miniature set, with visible
+   cut-paper edges, layered paper surfaces, folds and creases, paper fibres, matte finish, and
+   handmade asymmetry. Name the forbidden render families as well — smooth 3D/CGI, plastic, clay,
+   airbrushed. The sheet has to carry the material the clip prompt is later told to preserve, and
+   it is the image the video is matched against: a style noun here costs fidelity twice.
 3. **IDENTITY LOCK** — characters with their uppercase speaker labels, canonical appearance,
    clothing, and the identity mode in force: an attached reference image when the user supplied
    one, or the exact written description that stands in for it in `text` mode.
-4. **LOCATION LOCK** — the locked place and its physical features.
-5. **ENVIRONMENT LOCK** — time of day, weather, light quality, atmosphere, and scale.
+4. **LOCATION LOCK** — the locked place, its physical features, and the specific beautiful thing
+   the place was chosen for (depth layering, silhouette, water, texture). State it as something to
+   be seen, not just a setting to stand in.
+5. **ENVIRONMENT LOCK** — time of day, weather, light quality and direction, colour temperature,
+   atmosphere/haze, reflections, and scale. State what the light does to the place: what it rakes
+   across, where the shadow falls, where depth separates. This clause carries the episode's
+   beauty — keep it concrete, and keep it to the locked conditions rather than inventing weather
+   or a new time of day here.
 6. **SHEET LAYOUT** — one landscape canvas split into N stacked horizontal panoramic strips,
    vertically compact and horizontally wide, thin neutral separators between them, no decorative
    borders, frames, mattes or shadows around a strip, no grid, no side-by-side panels, landscape

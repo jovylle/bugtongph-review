@@ -5,11 +5,15 @@ Write the performable episode — **what is said and what is done** — from the
 
 ## Why SCRIPT is last
 
-SCRIPT consumes all four earlier locks: the subject fixes what the episode is about (the
-riddle also fixes what must stay hidden), LOCATION fixes where they stand, ENVIRONMENT fixes
+SCRIPT consumes the **structural** locks: LOCATION fixes where they stand, ENVIRONMENT fixes
 light and sound, PROFILE fixes who speaks with which voice. Writing it earlier would let a
 later location change leave a script describing the old place — a mismatch nothing in the
 output would reveal.
+
+The subject is deliberately not one of them. The riddle is a **content variable**, so the script
+never copies its wording. The recitation is a beat whose text is supplied by the current RIDDLE
+lock when CLIPS builds the prompt, which is what lets one built episode accept a different riddle
+without invalidating anything — see "The riddle is a variable, never a scripted line" below.
 
 ## Menu
 
@@ -36,6 +40,23 @@ Repeating `.script` rerolls with three fresh scripts and excludes `REJECTED`.
 - the action sequence (walking, stopping, standing, sitting, looking, listening, reacting);
 - natural gaze and reactions, with listener processing time;
 - the ending state, exactly what the next beat or clip inherits.
+
+## The riddle is a variable, never a scripted line
+
+Never write the riddle's own wording into a script option — not in the dialogue block, not in the
+prose. The recitation is a **beat** (`KID recites the riddle`, `OLD MAN puts the riddle to him`)
+whose exact text is supplied by the current RIDDLE lock when CLIPS assembles the prompt.
+
+That is what makes riddles interchangeable with a built episode: the script, the frame, the image,
+and the clip structure all survive a riddle swap, because none of them ever held the riddle's text.
+
+A swap re-checks two things, and neither regenerates anything:
+
+1. **Timing arithmetic** — the new riddle is fixed text of a different length, so re-run the
+   words ÷ rate count from `tagalog-pacing.md` and report it. If the locked clip count no longer
+   holds it, re-declare the clip count: that is arithmetic, not a reason to void the script.
+2. **Answer integrity** — the new answer must not already be depicted, gestured at, or lit by what
+   is locked. Report the conflict and let the user decide rather than regenerating behind their back.
 
 ## Speaker labels — who says which line
 

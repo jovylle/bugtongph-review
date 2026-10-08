@@ -33,6 +33,27 @@ filmable in a handcrafted miniature world.
 A hint steers the set: `.environment mas madilim` produces three darker conditions.
 Repeating `.environment` rerolls, excluding `REJECTED`.
 
+## Light is the main beauty lever
+
+Conditions are not just a correctness field to fill in — they are how the episode looks. The same
+place is ordinary at flat noon and worth filming at low golden light, so choose conditions for
+what they do to the place:
+
+- **direction** — where the light comes from, and what it rakes across (a low side light makes
+  paper texture and terrain readable; backlight gives rim light and haze);
+- **colour temperature** — warm and cool in deliberate contrast, not one flat white;
+- **atmosphere** — haze, mist, spray, dust, smoke from a fire: the thing that gives depth
+  separation between foreground, midground, and background;
+- **contrast and falloff** — where the shadow is, and how quickly light drops off;
+- **reflections and translucency** — still water, wet stone, a lantern's glow through paper.
+
+Name those in the option, in concrete terms. A condition set described only as "warm" or "moody"
+is not specific enough to render.
+
+The old clue rule still outranks all of it: beauty never gets to light the answer. Nothing
+answer-related may be the brightest, most central, or most lit thing in the frame, and a condition
+set that only works by lighting an answer-related object is discarded, however good it looks.
+
 ## After selection
 
 Lock the environment in episode state, state it in one line, then stop with the approval

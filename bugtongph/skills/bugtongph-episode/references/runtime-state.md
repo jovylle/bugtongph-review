@@ -18,6 +18,9 @@ TOPIC             (topic pipeline only)
 LOCATION
 ENVIRONMENT
 PROFILE
+  id
+  selection source   random | user | suggested
+  identity mode      text | attached
 SCRIPT
 FRAME
 IMAGE
@@ -34,6 +37,15 @@ CORRECTION         stage, round
 
 `CONTENT SOURCE` records which pipeline the run belongs to. Exactly one of `RIDDLE` and `TOPIC`
 is present in a run; the other is absent, not empty.
+
+`PROFILE` is written **before** any stage that produces an episode asset (SCRIPT onwards): the
+selection step loads the eligible set, drops rejected/invalid entries, draws one profile at random
+under `.auto` (or takes the user's pick at the gate), and persists it with its `selection source`
+so the log answers *which profile, and why that one*. `profile-01` is never assumed. If the
+selection step cannot complete, the run stops with
+`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` and no asset is
+generated. Re-selection happens only for a **new episode**, or because the user changed the profile
+explicitly — never as part of regenerating an artifact.
 
 ## Stage ownership
 

@@ -30,15 +30,18 @@ This file defines the project-level rules and source precedence for bugtongPH.
    - timing
    - feasibility
 
-4. **Validated IMAGE**
+4. **Validated IMAGE** — the shot-reference sheet
    - current Clip 1 pose/state
    - camera composition
    - environment
    - lighting
    - current visual progression
+   - at CLIPS, **the authority for everything visible**: face, build, clothing construction,
+     surface material, scale. Text does not restate what the sheet shows.
 
-5. **`active-profile-runtime.md`**
+5. **`active-pair-runtime.md`**
    - parameterizes legacy hard-coded references so they use the active profile
+   - carries the identity modes (`text` / `attached`) and the asset-availability rule
 
 6. **Veo / Google Flow references**
    - provider-oriented prompt construction

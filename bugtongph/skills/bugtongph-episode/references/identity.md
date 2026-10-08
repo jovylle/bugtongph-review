@@ -31,7 +31,11 @@ The validated IMAGE defines the current episode pose, expression, gaze, hand pla
 
 In `attached` mode the user's attached image is the primary identity authority, and text descriptions are supporting constraints that must not redesign a character visible in it.
 
-In `text` mode — the default — the written profile is the authority, applied consistently across every panel and clip. Neither mode may ever use a previous episode render as the identity source.
+In `text` mode the written profile is the authority **while a panel is being designed** — at FRAME, IMAGE PROMPT, and IMAGE. It is applied consistently across every panel and cannot be swapped mid-episode.
+
+**At CLIPS the validated sheet takes over for everything visible.** Once the sheet exists it is the only image the video model receives, so face, build, clothing construction, surface material, scale, and composition come from it; the written profile carries only voice, speaker labels, and what the sheet cannot show. See `clips.md` "The sheet is the character authority" and `reference-binding.md` "Authority order".
+
+Neither mode may ever use a previous episode render as the identity source.
 
 ## Continuity
 

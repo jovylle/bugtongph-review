@@ -37,15 +37,18 @@ Preserve:
 
 Character identity is a protected visual layer.
 
-When a canonical character reference image is supplied, it is authoritative
-for the actual facial identity of OLD MAN and KID WITH BLUE NECK SCARF.
+The reference image supplied for this generation is authoritative for the actual
+facial identity of the characters. At CLIPS that is the validated shot-reference
+sheet, which is the only image the video model receives. It does not have to be a
+turnaround for this rule to apply — the rule is about the image that was supplied,
+whatever it is.
 
 Do not reconstruct their faces from generic semantic descriptions.
 
 Do not reinterpret, redesign, beautify, simplify, regularize, or replace
 their faces during video generation.
 
-Preserve the visible facial construction from the reference, including:
+Preserve the visible facial construction from the supplied image, including:
 
 - face shape
 - head proportions
@@ -64,16 +67,43 @@ Preserve the visible facial construction from the reference, including:
 The characters must remain recognizably the same characters when the camera
 changes from one panel to another.
 
-The episode IMAGE controls the current shot's pose, expression, gaze, hands,
-position, lighting, and composition. It does not authorize a new facial design.
+The supplied image controls the current shot's pose, expression, gaze, hands,
+position, lighting, and composition — and the face, build, clothing
+construction, and surface material. It does not authorize a new facial design.
 
-If a clear IMAGE face and the canonical character reference disagree about
-identity, preserve the canonical identity and treat the IMAGE as needing
-correction rather than allowing facial drift into the final video.
+If a clear face in the supplied image and a written description disagree about
+anything visible, preserve the image and treat the text as needing correction,
+rather than allowing the drift into the final video.
 
 Written descriptions such as "elderly fisherman" or "young fisherman" are
-semantic identifiers only. They must not be used as a substitute for the
-supplied facial reference.
+semantic identifiers only. They label who is who; they must never substitute for
+the supplied facial reference, and must never be restated as an appearance
+specification.
+
+### Material Reality
+
+The characters are real physical paper-and-cardboard sculptures photographed in a
+real miniature set. The video continues that; it does not re-render it.
+
+Every clip prompt states the surfaces are photographed paper, and names what must
+survive:
+
+- visible cut-paper edges
+- layered paper surfaces
+- folds and creases
+- paper fibres
+- matte finish without glossy highlights
+- handmade asymmetry and imperfection
+
+Then it forbids the render families that replace them:
+
+- smooth 3D / CGI surfaces
+- plastic, clay, or airbrushed finishes
+- generic generated faces
+
+Naming the style — "papercraft diorama", "handcrafted", "miniature world" — is not
+a substitute for this clause. A style noun instructs the model to re-render the
+look from words, which is exactly what the clause exists to prevent.
 
 The shot-reference sheet establishes the planned camera sequence.
 
@@ -1034,6 +1064,16 @@ If a panel is a wide shot, preserve its wide composition.
 
 Maintain the environment established by the shot-reference sheet.
 
+The environment is also part of what the audience is here to see. The locked LOCATION and
+ENVIRONMENT name something worth filming — depth layers, silhouette, water holding the light,
+haze between planes, texture the light rakes across — and the clip preserves that and gives it
+room, including in the establishing shot where the characters may be small in frame.
+
+Beauty comes from those locked conditions only. Do not add scenery, effects, weather, or a new
+time of day; do not restyle the characters or the material to make a frame prettier; and never
+light, frame, or centre anything answer-related for a nicer shot. Legibility outranks beauty
+whenever the two conflict.
+
 Use believable location-specific ambience.
 
 Examples:
@@ -1088,14 +1128,21 @@ Do not change:
 - art style
 - rendering style
 - character design
-- clothing
+- faces — no re-rendered, beautified, aged, or generic face
+- build and proportions
+- clothing and its construction
 - environment
 - lighting language
 - color treatment
 - papercraft construction
+- surface material
 - miniature scale
 
 Do not introduce a different visual style halfway through the clip.
+
+Do not let the look slip into a smooth 3D/CGI, plastic, clay, or airbrushed finish. These
+characters are photographed paper: cut edges, layered surfaces, folds, fibres, matte finish, and
+handmade asymmetry.
 
 The visual reference panels may contain different camera framings, but they must still look like the same physical papercraft world.
 
@@ -1356,14 +1403,21 @@ Prompts should be explicit and operational.
 Prefer:
 
 ```text
-CHARACTER IDENTITY LOCK:
-Use the supplied canonical character reference as the authoritative
-identity reference for OLD MAN and KID WITH BLUE NECK SCARF.
-Do not reconstruct or redesign their faces from text.
+REFERENCE AUTHORITY — READ FIRST:
+The supplied shot-reference sheet is the primary visual authority for this clip.
+Animate the characters visible in it. Do not redesign, restyle, or re-render them.
+Do not rebuild faces, proportions, clothing, or materials from any text below.
+
+MATERIAL REALITY:
+Real paper-and-cardboard sculptures photographed in a real miniature set.
+Preserve cut-paper edges, layered surfaces, folds, fibres, matte finish, handmade
+asymmetry. Do not render smooth 3D/CGI, plastic, clay, or airbrushed surfaces.
+Do not generate a generic face.
 
 EPISODE SHOT REFERENCE:
-Use the supplied IMAGE panel for the current pose, expression, gaze,
-hand placement, position, environment, lighting, and camera composition.
+Use the supplied sheet for pose, expression, gaze, hand placement, position,
+environment, lighting, and camera composition — and for the face, build, clothing
+construction, and surface material, which the text must not restate.
 
 PANEL 1 / SHOT 1:
 The shot begins with OLD MAN on the left and KID WITH BLUE NECK SCARF on the right, matching the supplied panel exactly.
@@ -1372,8 +1426,12 @@ The shot begins with OLD MAN on the left and KID WITH BLUE NECK SCARF on the rig
 
 The prompt should clearly distinguish:
 
-- canonical reference = character identity
-- IMAGE panel = current shot state
+- the supplied image = everything visible: identity, face, build, clothing construction, material,
+  and the current shot state
+- written text = voice, speaker labels, timing, action, and what the image cannot show
+
+The fidelity blocks go **first**. A prompt that opens on the scene and mentions fidelity later has
+already let the text outrank the image.
 
 Avoid vague instructions such as:
 
@@ -1454,10 +1512,13 @@ Before giving the user a Veo prompt, verify:
 
 ### Characters
 
-- Are OLD MAN and KID WITH BLUE NECK SCARF clearly distinguished?
-- Are their identities consistent with the canonical character reference?
-- Are their faces consistent with the canonical facial geometry?
+- Is each character label present, and does every line bind to it?
+- Are their identities consistent with the supplied image — face, build, proportions?
+- Are their faces consistent with the supplied image rather than with a written description?
 - Are their clothing and accessories consistent?
+- Does the material still read as photographed paper, not smooth 3D/CGI?
+- Is any prompt section re-describing a face, build, clothing, or material the image already
+  shows? If yes, cut the description — it is an instruction to rebuild the character.
 - Is there any unnecessary character transformation?
 - Are they behaving naturally?
 
@@ -1535,14 +1596,18 @@ Before giving the user a Veo prompt, verify:
 
 Before finalizing a prompt, verify:
 
-- The canonical character reference is available when character identity
-  must be established.
-- The prompt explicitly states which reference controls character identity.
-- The IMAGE is used for episode state rather than redesigning the face.
-- No semantic character description is being used to replace the visual face.
+- The supplied image is available, and it is the only image the model will receive.
+- The prompt names that image as the authority for everything visible, and states it first.
+- The MATERIAL REALITY block is present: photographed paper sculptures, with smooth 3D/CGI,
+  plastic, clay, and airbrushed surfaces forbidden, and no generated generic face.
+- No section of the prompt restates a face, a build, a clothing construction, or a surface
+  material the image already shows. If one does, delete that text — it is an instruction to
+  rebuild the character.
+- No style noun ("papercraft diorama", "handcrafted", "miniature world") is standing in for the
+  material clause.
 - Facial identity remains stable across every planned camera angle.
-- If the IMAGE itself materially changes the canonical face, regenerate
-  the IMAGE before generating the final video.
+- If the supplied sheet is itself weak — the face is not readable, or the material already reads
+  as smooth CGI — regenerate the sheet before generating the final video.
 
 ### Final Feasibility
 

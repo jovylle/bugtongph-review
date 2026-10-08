@@ -35,6 +35,12 @@ an answer. **TOPIC** invents a fresh subject for the run — no database, no rid
 RIDDLE is the default; TOPIC runs only on `.topic` or `.auto topic` / `.auto fresh topic`. A
 plain `.auto` starts the riddle pipeline. See `references/topic.md`.
 
+**RIDDLE is independent content, not a structural lock.** It is the only stage that can be swapped
+against a finished episode: changing the riddle leaves LOCATION, ENVIRONMENT, PROFILE, SCRIPT,
+FRAME, IMAGE, and CLIPS untouched and valid, because none of them hold the riddle's wording — the
+recitation is a beat whose text is read from the current lock at CLIPS. See §6 RIDDLE and
+`references/reroll-and-options.md` §6.
+
 `.vlog` and `.vblog` are accepted **aliases for `.topic`** everywhere it appears — `.vlog`,
 `.vblog`, `.auto vlog`, `.auto fresh vblog`.
 
@@ -52,7 +58,8 @@ Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`,
 
 `.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It runs the
 whole chain in **one continuous run**, preselecting at every stage and taking **option 1
-(suggested)** each time, without asking gate questions:
+(suggested)** each time, without asking gate questions — except at **PROFILE**, where it takes no
+position at all: it draws one eligible profile at random (see §5):
 
 ```text
 RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
@@ -66,8 +73,10 @@ While it runs it prints the preselected trail as a compact block — one line pe
 run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
 correct any one choice without restarting. It never takes option 2 or 3 on its own, never
 invents an option when none is valid, and stops to report a blocker (both riddle sources
-unavailable, no eligible riddle left, script cannot fit its budget, an image failing validation
-twice) rather than improvising.
+unavailable, no eligible riddle left, no eligible profile to draw, script cannot fit its budget,
+an image failing validation twice) rather than improvising. PROFILE is the one stage where the
+suggested option is not taken: it is a random draw, and an empty eligible set stops the run
+instead of falling back to `profile-01`.
 
 A plain stage command is always the gated conversational path and is unaffected.
 
@@ -207,15 +216,32 @@ Because TOPIC is invented, a reroll cannot run dry; the only blocker is an unusa
 
 ## 5. Profile and identity binding
 
-Unless explicitly changed, `profile-01` is the production default: Old Man + Kid with Blue
-Neck Scarf, handcrafted Filipino papercraft diorama, with its established voice profiles.
+**There is no default profile.** `profile-01` has no priority: it is one candidate in the eligible
+set, and it is never an implicit fallback.
+
+PROFILE is an explicit selection step, and it runs **before any episode asset is generated**:
+eligible profiles are loaded, rejected/invalid ones are dropped, and one is chosen — at random
+under `.auto`, by the user at the gate — and written to episode state as the PROFILE lock *before*
+SCRIPT runs. Every downstream stage uses that one profile. If no profile can be selected, `.auto`
+stops: `AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile`. It never
+proceeds with `profile-01`. See `references/profile.md` "Selection".
+
+`profile-01` is the Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama,
+with its established voice profiles.
 
 Every profile locks one **identity mode**:
 
 | Mode | Identity authority | Binding |
 | --- | --- | --- |
-| `text` — **default** | the written profile | nothing to attach; generation proceeds |
-| `attached` — opt-in | an image the user attaches in the conversation | that image is used as the reference image input |
+| `text` | the written profile, while the sheet is being designed | nothing to attach; generation proceeds |
+| `attached` | an image the user attaches in the conversation | that image is used as the reference image input |
+| `clips` (automatic) | the validated shot-reference sheet, for everything visible | the sheet is the Ingredient input; the profile supplies only voice and labels |
+
+Which profile is `(suggested)` depends on whether a character image is actually in the
+conversation: with one attached, the matching catalog profile leads; with none, an AI-invented
+profile leads and the catalog profiles stay listed for a user who will supply the image. A catalog
+character is never suggested as a text-only description. See `references/reference-binding.md`
+"Which profile is offered, by asset availability".
 
 Shipped turnarounds — `assets/character-turnaround.png` (`profile-01`),
 `assets/mich-turnaround.png` (`profile-02-mich`) — are the canonical definitions those written
@@ -238,6 +264,12 @@ Legacy name: this stage was called `pair`; `.pair`/`pair-01` mean `.profile`/`pr
 when Notion is unavailable. Preserve exact stored wording; keep the answer operator-only. The
 picker serves the selected language (Tagalog default, English, Bisaya).
 
+Changing the riddle **invalidates nothing** — it is independent content. No downstream stage is
+marked void, pending, or invalid, and nothing is regenerated. The recitation's wording is read from
+the current RIDDLE lock when CLIPS assembles the prompt, never from a copy held in the script. The
+swap re-checks the timing arithmetic and answers the integrity question, and reports both. See
+`references/riddle.md` "Changing the riddle" and `references/reroll-and-options.md` §6.
+
 ### TOPIC
 Model-invented, 5 topics offered as `subject — angle`, option 1 `(suggested)` is the model's
 own pick. No Notion query, no riddle, no answer. Locks the topic and its angle only. The
@@ -246,13 +278,34 @@ and `.auto topic`. See `references/topic.md`.
 
 ### LOCATION
 Offer 3 places. The place only — no weather, no light, no ambience. Never hint at the answer.
+Each option names what the place looks like at its best, in filmable terms — the environment is
+part of what the episode shows. See `references/location.md` "The place is scenery, not a
+backdrop".
 
 ### ENVIRONMENT
-Offer 3 condition sets: time of day, weather, light quality, atmosphere, ambience. No place.
+Offer 3 condition sets: time of day, weather, light quality and direction, colour temperature,
+atmosphere, ambience. No place. Conditions are the episode's main beauty lever, so they are chosen
+for what they do to the place — what the light rakes across, where depth separates, what reflects.
+Beauty never lights an answer-related object. See `references/environment.md` "Light is the main
+beauty lever".
 
 ### PROFILE
 Offer 3 locked Character + Art Style + Voice bundles, including AI-invented ones described in
 text. One choice, unchanged through SCRIPT, FRAME, IMAGE, and CLIPS.
+
+Selection is **explicit and precedes every episode asset**: eligible profiles are loaded, invalid
+or rejected ones dropped, and one is chosen — a random draw under `.auto`, the user's pick at the
+gate — then persisted and locked before SCRIPT runs. No profile has positional priority:
+`profile-01` is never preferred and never a fallback, and an empty eligible set stops the run with
+`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile`. Regenerating the
+image later never re-selects the profile. See `references/profile.md` "Selection".
+
+Which bundle is `(suggested)` depends on whether a character image is in the conversation: with an
+attached image the matching catalog profile leads in `attached` mode; with no image an AI-invented
+bundle leads, and the catalog profiles are listed as further choices for a user who will supply
+the image. A catalog character is never suggested as a text-only description, because its shipped
+turnaround cannot be bound and the match would be unwinnable. The suggestion guides the gate only —
+it does not decide an unattended run. See `reference-binding.md`.
 
 `profile-01` is always the Old Man + Kid with the blue neck scarf — its fixed label, with
 speaker labels `OLD MAN` and `KID`. An AI-invented bundle is offered under its own descriptive
@@ -270,6 +323,10 @@ landscape canvas (default 2–3), each strip a fully specified camera setup with
 different camera position, shot size, and subject emphasis, in a readable shot progression
 (wide → medium → tight). Text-only; never request image generation. The layout contract lives in
 `references/frame.md` and is a hard rule, not a creative preference.
+
+The place must also be shown: at least one strip gives the environment real room and is composed
+for the locked light and depth. Beauty comes from the environment — never from restyling the
+character or the material, and never from "cinematic" or poster framing.
 
 ### OVERVIEW
 Show every locked item on one screen with the panel count and its timing implication. This is
@@ -290,6 +347,17 @@ request image generation. Command `.image`; `.render` is the legacy alias.
 Plan the shots (the retired DRAFTS step), then produce copy-ready prompts. Clip 1 uses the
 validated sheet as the Ingredient reference at 8 seconds; Clip 2 is text-only Extend from
 Clip 1's final visual/audio state. Never generate an image here.
+
+At this stage the validated sheet is the character authority, not the profile text. Both prompts
+open with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — photographed paper
+sculptures, with smooth CGI / plastic / clay forbidden — and no section may restate a face, build,
+clothing, or material that the sheet already shows. A returned clip that drifts from the sheet is
+a failure, not a take: compare it against the sheet before continuing, and repair it by changing
+only the authority blocks. See `references/clips.md` "Clip acceptance".
+
+The clip also showcases the environment: the establishing shot gives the locked place room, and the
+beauty comes from the locked light, depth, and atmosphere — never from added scenery, a new time of
+day, or a prettier restyle of the character or material.
 
 ## 7. Image-generation response boundary
 
