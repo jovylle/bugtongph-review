@@ -1,6 +1,6 @@
 ---
 name: bugtongph-quick
-description: Use when the user invokes .img or .veo, or wants a bugtong image and Veo clips without the staged pipeline. Four gated steps — riddle, three scripts, one image, clips.
+description: Use when the user invokes .img or .veo, or wants a bugtong image and Veo clips without the staged pipeline. Four gated steps — riddle, three scripts, one image, clips. Only .img and .veo start this flow; a plain bugtong or topic episode request belongs to bugtongph-episode, and .clips there is not .veo here.
 ---
 
 # bugtongPH Quick — minimum flow
@@ -17,6 +17,13 @@ the conversation is lost, `.img` restarts at RIDDLE — nothing is resumable, an
 the point: there is no half-written state to get stuck in.
 
 For the staged pipeline use the sibling `bugtongph-episode` skill.
+
+**Which skill answers.** This skill answers `.img` and `.veo` — nothing else. A plain request for a
+bugtong or topic episode ("make me a bugtong video", a bare `.auto`, a resumed episode) belongs to
+`bugtongph-episode`, even though both skills ship in this one plugin and are always loaded. The two
+clip commands are not interchangeable: `.veo` is this skill's clip step, `.clips` is the staged
+pipeline's, and neither may be answered with the other's output. If a request names no command and
+no obvious quick intent, it is the episode pipeline's.
 
 ## 0. File resolution
 
@@ -46,7 +53,12 @@ Reference and asset paths below resolve relative to this skill's own directory,
    (`OLD MAN`, `KID`) and use it for every spoken line.
 3. **Answer secrecy.** The stored answer is operator-visible in the run output only. It
    must never appear in, or be indicated by, the image or the clip prompts — no text, no
-   caption, no gesture toward, gaze at, or framing of an answer-related object.
+   caption, no gesture toward, gaze at, or framing of an answer-related object. This is a
+   **check, not only a prohibition**: before the image prompt or a clip prompt is offered,
+   name the answer and ask whether anything shown, framed, lit, or stared at falls in its
+   own category — a container, a folded paper, a shape, a silhouette — even when it is
+   never identified. If so, replace the beat, then offer. See
+   `../bugtongph-episode/references/clips.md` "Answer integrity — check before emitting".
 4. **Stop at every gate.** Advance only on an explicit approval from the user. Silence,
    an unanswered question, or a dropped turn is never approval. Never run two steps in one
    turn, and never auto-approve a plot, an image, or a clip count.
@@ -113,13 +125,15 @@ the reference input; in `text` mode the written profile is the authority. Never 
 shipped asset that was not attached.
 
 **This image is the only visual reference the video model will ever get**, so build it the way
-the staged pipeline builds its sheet: state the material as a physical fact — real
-paper-and-cardboard sculptures photographed in a real miniature set, with cut-paper edges,
-layered surfaces, folds, fibres, matte finish, and handmade asymmetry — and name the forbidden
-render families (smooth 3D/CGI, plastic, clay, airbrushed). At least one framing must show each
-speaking character's face closely enough to read its paper construction. A style noun such as
-"papercraft" or "handcrafted" is not a substitute. See the STYLE LOCK clause in
-`../bugtongph-episode/references/image-prompt.md`.
+the staged pipeline builds its sheet: state **the material the locked profile names** as a physical
+fact, and name the families that would replace it as forbidden. A papercraft profile reads: real
+paper-and-cardboard sculptures photographed in a real miniature set, with cut-paper edges, layered
+surfaces, folds, fibres, matte finish, and handmade asymmetry — and smooth 3D/CGI, plastic, clay,
+and airbrushed surfaces forbidden. Any other profile states its own material the same way and
+forbids the families that would replace it; never write the paper clause onto a non-paper profile.
+At least one framing must show each speaking character's face closely enough to read that material's
+construction. A style noun such as "papercraft" or "handcrafted" is not a substitute. See the STYLE
+LOCK clause in `../bugtongph-episode/references/image-prompt.md`.
 
 The image must contain no dialogue, captions, labels, panel numbers, borders, comic
 layout, collage, grid, storyboard structure, poster treatment, cinematic key-art styling, or
@@ -136,15 +150,19 @@ Then stop.
 Ask the clip count unless it was already given: **1 or 2?** Default to 1; use 2 only when
 the scene genuinely needs a handoff between beats.
 
-Produce exactly that many **copy-ready** prompts:
+Produce exactly that many **copy-ready** prompts. **Each one stands alone** — the reader pastes a
+single prompt into Google Flow with no other text, so each carries the whole shared preamble
+(REFERENCE AUTHORITY, MATERIAL REALITY, the speaker roster) and neither depends on the other having
+been read:
 
 - Clip 1 — the required blocks and all numbered sections in
   `../bugtongph-episode/references/clips.md`, opening with **REFERENCE AUTHORITY** and
   **MATERIAL REALITY**, with the timing, shot, cut, and feasibility rules from
   `../bugtongph-episode/references/veo-google-flow.md`.
-- Clip 2 (when two are asked for) — text-only Extend from Clip 1's final visual/audio
-  state, per the Clip 2 sections in `clips.md`, restating the material-reality block verbatim.
-  Never generate another image.
+- Clip 2 (when two are asked for) — a **complete** text-only Extend prompt, per the Clip 2 sections
+  in `clips.md`: the material-reality block restated verbatim, the inherited visual and audio state
+  written out in full. Never compress it to "continue directly from the final frame" — that is a
+  reference, not an artifact. Never generate another image.
 
 The generated image is the authority for everything visible: face, build, clothing
 construction, material, scale, and composition. The prompt carries the character as voice and

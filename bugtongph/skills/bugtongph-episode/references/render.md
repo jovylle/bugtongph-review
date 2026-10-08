@@ -113,22 +113,23 @@ failed.
 
 Reject and regenerate only the failed artifact for:
 
-1. camera/view/shot-size mismatch;
+1. camera/view/shot-size mismatch, or **two panels at the same camera angle in the same viewing
+   direction** — that is one setup, not two;
 2. profile identity or reference mismatch — the image is compared against the **locked profile in
    episode state**, never against `profile-01` by assumption and never against whichever profile
    happens to fit the render. A mismatch regenerates under the same lock; the profile is never
    changed to make an image pass;
 3. character position, pose, gaze, hands, props, physical-state, or scale mismatch;
 4. location, environment, lighting, or continuity mismatch;
-5. material language mismatch — the render reads as smooth 3D/CGI, plastic, clay, or airbrushed
-   instead of photographed paper with cut edges, layered surfaces, folds, fibres, and a matte
-   finish;
+5. material language mismatch — the render does not read as the material the locked profile names
+   (for a papercraft profile, smooth 3D/CGI, plastic, clay, or airbrushed instead of photographed
+   paper with cut edges, layered surfaces, folds, fibres, and a matte finish);
 6. **the face is not readable** — each speaking character's face must be large enough in at least
-   one strip to read its paper construction (see `frame.md` rule 9). The sheet is the video
-   model's only source for that face, so a face too small to read is a face the clip prompt will
-   be tempted to invent;
-7. sheet-layout failure — not one landscape canvas, or side-by-side/grid panels instead of
-   stacked horizontal strips (see `frame.md`);
+   one strip to read the material construction the profile locked (see `frame.md` rule 9). The sheet
+   is the video model's only source for that face, so a face too small to read is a face the clip
+   prompt will be tempted to invent;
+7. sheet-layout failure — not one portrait canvas, or side-by-side/grid panels instead of
+   stacked full-width strips (see `frame.md`);
 8. presentation drift — the render reads as a poster, comic page, storyboard, or "cinematic"
    key art rather than a production reference sheet;
 9. text or text-like marks, labels, panel numbers, arrows, annotations, watermark, or a frame
@@ -138,7 +139,8 @@ Reject and regenerate only the failed artifact for:
 11. accidental extra shot, collage, or a panel count that disagrees with FRAME;
 12. missing, duplicated, or merged panels against the FRAME count;
 13. panels that are merely crops, zooms or re-frames of the same shot instead of materially
-    different camera setups.
+    different camera setups — **including a size change with no angle change**, which reads as the
+    same shot twice and wastes a panel and its share of the 8 seconds.
 
 ## Riddle secrecy
 

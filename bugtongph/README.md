@@ -29,6 +29,7 @@ Once that is comfortable:
 - `.riddle bisaya` — play in Bisaya instead of Tagalog (also `.riddle english`).
 - `.clips` — the two copy-ready Veo prompts, after the image.
 - `.img` — the quick path: one riddle, three scripts, one image, no staging.
+- `.veo` — the quick path's clip step, after `.img` (`.veo 1` / `.veo 2` for the count).
 
 ## Install (local, personal marketplace)
 
@@ -141,9 +142,16 @@ profiles, a validated shot-reference sheet, channel and release routing. See
 
 ### The image is a shot-reference sheet, not a picture
 
-FRAME designs and IMAGE generates a **visual shot-reference sheet**: one landscape canvas of 2–5
-stacked horizontal panoramic strips, each strip a separate camera setup, read top to bottom as a
-shot sequence. Its only job is to be read by Veo when it produces Clip 1.
+FRAME designs and IMAGE generates a **visual shot-reference sheet**: one **portrait (9:16)** canvas
+of 2–5 stacked full-width strips, each strip a separate camera setup read top to bottom as a shot
+sequence. Its only job is to be read by Veo when it produces Clip 1.
+
+Two things about the layout are deliberate. The canvas is tall because the panels stack: a strip's
+height is the canvas height divided by the panel count, so a tall canvas is what gives each strip
+room for a face — a wide canvas cut into three strips leaves them so letterboxed that a face has
+almost no height. And **every panel is a different camera shot, with a different angle** — a change
+of shot size at the same angle is the same shot twice, not a new panel. The image's shape does not
+set the video's: 16:9 or 9:16 is chosen in Flow when the clip is generated.
 
 It is deliberately *not* optimized for cinematic presentation, poster design, or comic-book
 aesthetics — and the word "cinematic" is kept out of the prompt, because it pulls the render
@@ -256,6 +264,25 @@ Staged:
 
 `.auto` `.riddle` `.topic` `.location` `.environment` `.profile` `.script` `.frame` `.overview`
 `.image` `.clips` `.produce` `.channel` `.release` `.workflow`
+
+The two sets ship in one plugin and are always both loaded, so these rules decide which answers:
+`.img` and `.veo` always mean the **minimal** flow, and everything else — a bare `.auto`, any
+staged command, a plain "make me a bugtong video", a resumed episode — means the **staged** one.
+`.clips` and `.veo` are not the same command: `.clips` builds both prompts from the validated
+shot-reference sheet, `.veo` produces them from a plain quick-path image.
+
+### Clip prompts are whole prompts
+
+`.clips` returns **two complete, independently pasteable prompts**. Neither one refers to the other:
+Clip 2 is a text-only Extend, but it restates everything it inherits — the shared preamble, the
+inherited visual state, the inherited audio state — so it can be pasted on its own. A prompt that
+says "continue from the final frame" and stops is a note about a prompt, not an artifact.
+
+The **material clause follows the locked profile**. A papercraft profile gets photographed
+paper-and-cardboard sculptures with cut-paper edges, and CGI/plastic/clay/airbrushed forbidden. A
+profile that locked something else — stylized 3D, photoreal — gets *its own* material stated in the
+same shape, and forbids the families that would replace it. Paper is the default, never a
+substitution.
 
 To look something up you do not need a command — ask in plain words: *what's the riddle again?*,
 *what's the script?*, *which profile did we lock?* The pipeline reprints the locked item without

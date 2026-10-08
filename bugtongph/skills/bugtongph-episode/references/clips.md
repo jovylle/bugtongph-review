@@ -4,6 +4,14 @@
 
 Return exactly **two independently copy-ready prompts** and nothing that substitutes for them.
 
+**Each prompt stands alone.** The reader pastes one prompt into Google Flow with no other text. A
+prompt that says "continue from the final frame", "as before", "same as above", or otherwise leans
+on the sibling clip is not an artifact — it is a note about one. Clip 2 is still a text-only Extend,
+but every state it inherits is *restated in full* (see "Clip 2 — Extend continuation"); the
+inheritance is never referred to. Each prompt also carries the whole shared preamble — REFERENCE
+AUTHORITY, MATERIAL REALITY, the supplemental text rule and the speaker roster — so neither one
+depends on the other having been read first.
+
 The final prompts must instantiate actual episode details from the locked subject (RIDDLE or TOPIC) + LOCATION + ENVIRONMENT + PROFILE + SCRIPT + FRAME + the validated IMAGE sheet. Do not merely list generic prompt categories.
 
 Model: **Veo 3.1 Lite**, 8 seconds. See `veo-3-1-lite.md` — ingredients require an 8s clip, and only Lite can extend one.
@@ -77,20 +85,33 @@ proportions, clothing, or materials from any text below. Face and body detail co
 sheet.
 ```
 
-**MATERIAL REALITY — second.** State what these characters physically are, then forbid the
-rendering families that replace them:
+**MATERIAL REALITY — second.** State what these characters physically are, **taken from the locked
+PROFILE's material and rendering language**, then forbid the families that would replace it. Paper
+is the default, not the rule — the block is instantiated from the profile:
 
-```text
-MATERIAL REALITY
-These are real physical paper-and-cardboard sculptures photographed in a real miniature set.
-Preserve the visible cut-paper edges, layered paper surfaces, folds and creases, paper fibres,
-matte finish, and handmade asymmetry exactly as they appear in the sheet. Do not render smooth 3D
-CGI, plastic, clay, or airbrushed surfaces. Do not generate a generic face — the faces are already
-designed in the sheet.
-```
+- **A papercraft profile** (`profile-01`, or any profile whose material is cut paper) uses this
+  block:
+
+  ```text
+  MATERIAL REALITY
+  These are real physical paper-and-cardboard sculptures photographed in a real miniature set.
+  Preserve the visible cut-paper edges, layered paper surfaces, folds and creases, paper fibres,
+  matte finish, and handmade asymmetry exactly as they appear in the sheet. Do not render smooth 3D
+  CGI, plastic, clay, or airbrushed surfaces. Do not generate a generic face — the faces are already
+  designed in the sheet.
+  ```
+
+- **Any other profile** states *its own* material as the same kind of physical fact, and forbids the
+  families that would replace it. A profile locking stylized 3D animation says so, and forbids
+  photographed paper, clay and airbrushed surfaces; a photoreal profile says so, and forbids
+  illustration, cartoon shading and cut-paper construction. Read the material line out of the locked
+  profile and write it here.
 
 This block exists because the tree's material vocabulary is otherwise only a style label
-(`papercraft diorama`), and an unforbidden rendering family wins by default.
+(`papercraft diorama`), and an unforbidden rendering family wins by default. **A block naming the
+wrong material is worse than no block.** It fights the locked profile, and a model holding two
+contradictory instructions resolves the conflict by dropping the block — which is how a clip prompt
+arrives with no material clause at all.
 
 **SUPPLEMENTAL TEXT RULE — third.** State that every section below these blocks carries only
 voice, speaker labels, timing, action, camera, dialogue, audio, and what the sheet cannot show. No
@@ -158,6 +179,11 @@ regenerate the sheet per `references/render.md` instead of fighting it in the cl
 
 Clip 2 is **text-only Extend** from the completed Clip 1 video. Do not rely on another image and do not invent Clip 2 panels.
 
+**Extend does not let the extension read Clip 1's prompt**, so nothing may be assumed: the shared
+preamble is repeated, the inherited visual and audio state is written out in full, and the prompt
+can be pasted on its own with no other text. Length is not the point — completeness is. Never
+shorten Clip 2 into a note about Clip 1.
+
 **Extend inherits from the last second of Clip 1.** Google's Veo model page states that Extend "use[s] the last second of your first shot to continue the story". So the handoff is designed in Clip 1, not in Clip 2:
 
 - Clip 1's final second must be settled — stable framing, characters not mid-gesture, a completed line or a clear silence, ambience continuous.
@@ -166,10 +192,10 @@ Clip 2 is **text-only Extend** from the completed Clip 1 video. Do not rely on a
 
 ### Required sections
 
-1. **EXTEND MASTER INSTRUCTION** — state that this is a direct continuation of the preceding Clip 1 video, not a restart, and restate the MATERIAL REALITY block verbatim: the clip continues photographed paper sculptures and must not re-render the look, the material, or the faces from its own text.
+1. **EXTEND MASTER INSTRUCTION** — state that this is a direct continuation of the preceding Clip 1 video, not a restart, and restate the MATERIAL REALITY block verbatim — the same material the profile locked, exactly as Clip 1 stated it: the clip continues that material on screen and must not re-render the look, material, or faces from its own text.
 
 **Audio must never be left implicit here.** Extend produces silent clips when the source's final second carries no audio, when the audio block is dropped, or when the extend step runs a model without audio. So name the ambience, name the next speaker and their exact line, and restate voice characteristics — and keep Clip 2's audio simple (one speaker, no singing, no dense layering). If Clip 2 arrives silent, regenerate with the audio section changed only; see `veo-3-1-lite.md` "Extend audio".
-2. **INHERITED VISUAL STATE** — restate the exact final-second character positions, pose, gaze, expression, clothing, props, environment, lighting, scale, art/material language, and camera state, and say that this inherited state is the visual authority for the extension: the faces and the paper material carry over unchanged, and are not rebuilt from the text of this prompt.
+2. **INHERITED VISUAL STATE** — restate the exact final-second character positions, pose, gaze, expression, clothing, props, environment, lighting, scale, art/material language, and camera state, and say that this inherited state is the visual authority for the extension: the faces and the material carry over unchanged, and are not rebuilt from the text of this prompt.
 3. **INHERITED AUDIO STATE** — restate the final ambience, speaker/voice state, completed line or silence, breath, reaction, and acoustic environment at the handoff.
 4. **CONTINUATION START STATE** — state exactly where and how the first frame of the extension begins.
 5. **CONTINUATION ACTION** — describe only the next approved action or interaction, including physical causality and natural movement.
@@ -177,7 +203,7 @@ Clip 2 is **text-only Extend** from the completed Clip 1 video. Do not rely on a
 7. **DIALOGUE / VOICE PLAN** — identify the next speaker **by their exact uppercase roster label**, give the exact approved line, and restate that character's voice characteristics, delivery, pauses, and expected completion time. Preserve voice roles from Clip 1 and reuse the same label spelling. Label each spoken line; no unattributed lines, no pronouns standing in for a label.
 8. **TIMING MAP** — budget the extension across opening continuation, dialogue, pauses/reactions, movement, and final beat.
 9. **SUBJECT INTEGRITY** — in the riddle pipeline, continue to hide the answer completely; no new clue may emerge through props, gaze, framing, lighting, dialogue, sound, or behavior. In the topic pipeline, hold the same stated topic and angle with no drift.
-10. **CONTINUITY NEGATIVES** — prohibit restarting the scene, redesigning characters, re-rendering or generic-izing faces, changing build or proportions, changing clothing, changing the paper material into CGI / plastic / clay, teleporting, resetting props, changing time/weather, changing art style, changing ambience without cause, or introducing new visual concepts.
+10. **CONTINUITY NEGATIVES** — prohibit restarting the scene, redesigning characters, re-rendering or generic-izing faces, changing build or proportions, changing clothing, changing the locked material into another render family, teleporting, resetting props, changing time/weather, changing art style, changing ambience without cause, or introducing new visual concepts.
 11. **FINAL END STATE** — define the exact physical, emotional, camera, dialogue, and audio state at the end of Clip 2.
 
 ## Speaker attribution — one mouth at a time
@@ -206,6 +232,24 @@ not stylistic; they are the difference between the old man speaking and the kid 
 Use operational instructions that tell Veo exactly what to preserve, what to animate, what to cut, what to say, what not to reveal, and where the clip must end.
 
 Avoid vague phrases such as “make it cinematic,” “animate naturally,” or “continue the scene” without episode-specific detail.
+
+## Answer integrity — check before emitting
+
+A prohibition is not a check. Before either prompt is emitted, answer both questions and state the
+answer in one line:
+
+1. **Does anything in the prompt make the answer easier to guess?** Props, an object, a container, a
+   shape, a silhouette, a written mark — anything a viewer could name and land on the answer. A
+   riddle whose answer is a letter must not show an envelope, a folded paper, a page, a mailbox or a
+   seal; a riddle whose answer is a fish must not show a fish. The *category* of the answer leaks as
+   surely as the answer itself.
+2. **Does the camera, the light, or a character's gaze point at it?** A slow push-in toward an
+   unexplained object, a light held on it, or a character staring at it all indicate the answer even
+   when the object is never named.
+
+If either answer is yes, replace the offending beat *before* offering the prompt — do not emit it and
+let the user catch it. The same check runs at every audience-facing stage: `frame.md`,
+`image-prompt.md` and `render.md`.
 
 ## Final output format
 

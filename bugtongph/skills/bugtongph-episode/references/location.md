@@ -29,9 +29,12 @@ Spread the three across genuinely different place types — shore, inland, built
 At least one should be a place the brief did not suggest.
 
 Each option names: the place, its dominant physical features, **what it looks like at its best**,
-and what it gives the characters to do. Keep every option performable in a handcrafted papercraft
-miniature world (walking, standing, sitting, looking) with no transformations or complex
-choreography.
+and what it gives the characters to do. Keep every option performable in a miniature set
+(walking, standing, sitting, looking) with no transformations or complex choreography.
+
+**LOCATION runs before PROFILE, so do not assume a material here.** The place has to hold up
+whether the characters turn out to be cut-paper sculptures or anything else — describe the location
+and what the light does to it, not how the render should look.
 
 A hint on the command steers the set: `.location dusty shore` produces three dry, dusty
 places. Repeating `.location` rerolls with three fresh places, excluding anything in

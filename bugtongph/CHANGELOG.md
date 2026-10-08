@@ -1,5 +1,90 @@
 # Changelog
 
+## 0.10.14 — the reference image is portrait, and every panel is a different angle
+
+Two changes to the IMAGE stage, both aimed at the one thing that decides whether a clip matches the
+sheet: how much of a face each strip can carry, and whether the strips are genuinely different shots.
+
+The canvas was 16:9. Cut a 16:9 canvas into three strips and each is roughly 5.3:1 — so letterboxed
+that a face has almost no vertical room, which is exactly what FRAME rule 9 needs in order to carry
+the character's identity into the clip.
+
+Separately, the sheet only ever required panels to differ in *position, viewing direction and shot
+size*. That lets three panels share one camera angle and pass, which is the same shot photographed
+three times.
+
+### Changed
+
+- **The image is portrait, 9:16** — not landscape, not square (`frame.md` "Sheet layout — the hard
+  rule" and "Aspect ratio", `image-prompt.md` SHEET LAYOUT and ASPECT RATIO, `render.md` gate 7,
+  `veo-google-flow.md`, `veo-shots.md`, `workflow.md`, `SKILL.md` §6 FRAME, README). The panels stack,
+  so a strip's height is the canvas height divided by the panel count: at 2–5 panels a 9:16 canvas
+  gives strips of roughly 1.13:1, 1.69:1, 2.25:1 and 2.81:1 — near a real camera frame at the default
+  2–3 panels. Strips stay full-width, stacked, and never side by side.
+- **Every panel names its camera angle, and no two adjacent panels may share one** (`frame.md` "Shot
+  progression", "Per-panel specification", "Panel count"; `image-prompt.md` PANEL LIST; `render.md`
+  gates 1 and 13; `SKILL.md` §6 FRAME). The angle is the vertical/rotational camera–subject
+  relationship — eye-level, low, high, overhead, over-the-shoulder, three-quarter, profile, behind.
+  **A change of shot size is explicitly not a change of panel**: a wide shot and a close-up from the
+  same spot at the same angle is the same shot twice, and the size progression must come *with* the
+  angle change. The panel plan and the sheet check now both carry the angle per panel.
+- **The NOTE records why, and what is not sourced.** Google's ingredients guidance says nothing about
+  canvas shape, panels, strips, or composition, and Flow's help does not either. The reasons for the
+  tall canvas — the place must be shown, and each strip needs height for a readable face — are ours.
+
+### Not changed, deliberately
+
+- **The clips cannot be 9:16-shaped by this image.** The clip's ratio (16:9 or 9:16) is chosen in Flow
+  when the clip is generated; the image's shape has no bearing on it. The files now say so instead of
+  implying otherwise.
+- **No output resolution is claimed.** Flow's model page still states none for Veo 3.1 Lite.
+  Resolution is a Flow prompt-box setting, not something a prompt or this plugin can request.
+- **ChatGPT's image tool may return 1024×1536 (2:3), not exactly 9:16.** It takes 1:1, 3:2 and 2:3 and
+  normalises portrait requests. Both are portrait and the layout is unaffected in kind; the files say
+  to describe the returned file as portrait rather than assert an exact ratio.
+
+## 0.10.13 — a clip prompt is a whole prompt, and the material follows the profile
+
+A real run (riddle "Liham", 3 panels, 16s / 2 clips) exposed three separate failures. CLIPS returned
+two ~90-word paragraphs instead of the two structured prompts `clips.md` specifies — no REFERENCE
+AUTHORITY block, no MATERIAL REALITY block, no speaker roster, no numbered sections, no timing map.
+Clip 2 was the shorthand "Continue directly from the final frame", which is a reference to a prompt
+rather than a prompt. And the run's own FRAME and image prompt showed "a mysterious paper-like
+object" while Clip 2 revealed a sealed envelope — for a riddle whose answer is *liham*, a letter.
+
+The same run locked a PROFILE of "tiny robotic technicians, stylized 3D animation" while every
+clip and image rule in the tree hardcoded photographed paper-and-cardboard sculptures with CGI/plastic
+forbidden. The model could not satisfy both, so it dropped the material clause entirely.
+
+### Changed
+
+- **Each clip prompt is complete on its own** (`clips.md`, `SKILL.md` §6, `veo-prompt.md`, quick
+  Step 4). The reader pastes one prompt with no other text. Clip 2 is still a text-only Extend, but
+  it repeats the shared preamble and writes the inherited visual and audio state out in full; the
+  inheritance is never *referred to*. "Continue from the final frame" is now named as a non-artifact.
+- **The material clause follows the locked PROFILE** (`clips.md` "MATERIAL REALITY — second",
+  `veo-shots.md`, `veo-prompt.md`, `image-prompt.md` STYLE LOCK, `render.md` gates 5–6, `frame.md`
+  rule 9, quick Step 3). Paper is the default and keeps its exact wording for a papercraft profile;
+  any other profile states *its own* material as the same kind of physical fact and forbids the
+  families that would replace it. A block naming the wrong material is worse than no block, because
+  a model holding two contradictory instructions drops it.
+- **LOCATION no longer assumes a material** (`location.md`). LOCATION runs before PROFILE, so a
+  location option may not be written as though the characters are already known to be cut paper.
+- **The answer-leak rule is a check, not only a prohibition** (`clips.md` "Answer integrity — check
+  before emitting", `frame.md`, `image-prompt.md`, `render.md`, quick invariant 3). Before a prompt
+  or a panel plan is offered, the answer is named and the artifact is tested against the answer's own
+  *category* — a container, a folded paper, a shape, a silhouette — including an unnamed object the
+  camera pushes in on or a character stares at.
+- **SCRIPT prints the locked riddle line and the budget arithmetic** (`script.md` "What the stage
+  prints"). A menu with no riddle line reads as though the riddle was dropped, and `Timing: 16s, 2
+  clips` alone is a conclusion with its arithmetic removed.
+- **Which skill answers is stated in both skills** (`bugtongph-episode` §0, `bugtongph-quick` §0, and
+  both descriptions). `.img` and `.veo` always mean the minimal flow; everything else, including a
+  plain episode request and a bare `.auto`, means the staged one. `.clips` and `.veo` are documented
+  as different commands so neither is answered with the other's output.
+- **README** documents the clip-prompt contract, the profile-derived material, and the quick-vs-staged
+  split.
+
 ## 0.10.12 — the overview is readable, and "done" means locked
 
 OVERVIEW was specified as terse status lines only, so the one screen meant for judging an episode

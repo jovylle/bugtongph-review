@@ -25,11 +25,18 @@ The validated episode IMAGE controls the current pose, expression, gaze, hand pl
 
 ## Material reality — a hard clause, not a style word
 
-The characters are **real physical paper-and-cardboard sculptures photographed in a real miniature
-set**. Every clip prompt states that, then names what must survive: cut-paper edges, layered paper
-surfaces, folds and creases, paper fibres, matte finish, handmade asymmetry. It also forbids the
-render families that replace them: smooth 3D / CGI, plastic, clay, airbrushed surfaces, and
-generated generic faces.
+The characters are physical objects of a specific material, and **which material is the locked
+profile's decision**. A papercraft profile means the characters are **real physical
+paper-and-cardboard sculptures photographed in a real miniature set**; every clip prompt states that,
+then names what must survive: cut-paper edges, layered paper surfaces, folds and creases, paper
+fibres, matte finish, handmade asymmetry — and forbids the render families that replace them: smooth
+3D / CGI, plastic, clay, airbrushed surfaces, and generated generic faces.
+
+**A profile that locked something else gets its own clause in the same shape.** A stylized-3D profile
+states that material and forbids photographed paper, clay and airbrushed surfaces; a photoreal
+profile states its own and forbids illustration, cartoon shading and cut-paper construction. Read the
+material line out of the locked profile — writing the paper clause onto a non-paper profile is a
+contradiction, and a model holding two contradictory instructions drops the block entirely.
 
 Naming the style (`papercraft diorama`, `handcrafted`, `miniature world`) is **not** a substitute.
 A style noun tells the model to re-render the look from words, which is the opposite of preserving
@@ -39,8 +46,9 @@ what the sheet shows. See `veo-prompt.md` and `clips.md` for the exact clause.
 
 The provided **shot-reference sheet** is the exact visual source of truth for CLIP 1 only.
 
-It is one landscape canvas of 2–5 stacked horizontal panoramic strips with thin separators. Each
-strip is one intended camera shot, read top to bottom as a sequence. Veo should animate the
+It is one **portrait (9:16)** canvas of 2–5 stacked full-width strips with thin separators. Each
+strip is one intended camera shot with its own camera angle, read top to bottom as a sequence. Veo
+should animate the
 established visual states and connect the planned shots. It should not redesign, reinterpret, or
 replace the characters, environment, or visual style — and it must never reproduce the sheet
 itself, its separators, its borders, or its stacked layout onscreen.
@@ -49,7 +57,7 @@ itself, its separators, its borders, or its stacked layout onscreen.
 
 Preserve:
 - character identity as the sheet shows it — face, build, proportions;
-- the paper material and its visible construction;
+- the locked material and its visible construction;
 - environment;
 - composition;
 - lighting;

@@ -32,6 +32,18 @@ block, and each must differ in **beat structure and action**, not in wording.
 A hint steers the set: `.script horror`, `.script mas nakakatakot`, `.script less dialogue`.
 Repeating `.script` rerolls with three fresh scripts and excludes `REJECTED`.
 
+## What the stage prints
+
+Short is required; incomplete is not. In the riddle pipeline, print the **locked riddle line first** —
+the verbatim stored wording — so the user can see what the episode is about without asking. A SCRIPT
+menu with no riddle line reads as though the riddle was dropped.
+
+Then the **BUDGET block with its arithmetic**, then the three options, then the one question.
+
+Never print `Timing: 16s, 2 clips` alone — that is the conclusion with its arithmetic removed, and it
+is indistinguishable from a guess. The riddle's own wording is never written *into* an option (see
+below), but the locked riddle is still shown above them as episode state.
+
 ## What each option must lock
 
 - who speaks, identified before each line;

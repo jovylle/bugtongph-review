@@ -32,12 +32,16 @@ Assemble in this order, every section present, nothing invented:
    most damaging word to put near a reference sheet. The place is still rendered beautifully —
    see `frame.md` "Beauty is in the environment, not in the style": beauty comes from the locked
    light, depth, atmosphere, and texture, never from presentation styling.
-2. **STYLE LOCK** — the profile's material and rendering language stated as a physical fact: these
-   are real paper-and-cardboard sculptures photographed in a real miniature set, with visible
-   cut-paper edges, layered paper surfaces, folds and creases, paper fibres, matte finish, and
-   handmade asymmetry. Name the forbidden render families as well — smooth 3D/CGI, plastic, clay,
-   airbrushed. The sheet has to carry the material the clip prompt is later told to preserve, and
-   it is the image the video is matched against: a style noun here costs fidelity twice.
+2. **STYLE LOCK** — the locked profile's material and rendering language stated as a physical fact,
+   with the families that would replace it named and forbidden. A papercraft profile reads: real
+   paper-and-cardboard sculptures photographed in a real miniature set, with visible cut-paper edges,
+   layered paper surfaces, folds and creases, paper fibres, matte finish, and handmade asymmetry —
+   and smooth 3D/CGI, plastic, clay, and airbrushed surfaces forbidden. **Any other profile states
+   its own material the same way** and forbids the families that would replace it (a stylized-3D
+   profile forbids photographed paper and clay; a photoreal profile forbids illustration, cartoon
+   shading, and cut-paper construction). Never write the paper block onto a profile that did not lock
+   paper. The sheet has to carry the material the clip prompt is later told to preserve, and it is
+   the image the video is matched against: a style noun here costs fidelity twice.
 3. **IDENTITY LOCK** — characters with their uppercase speaker labels, canonical appearance,
    clothing, and the identity mode in force: an attached reference image when the user supplied
    one, or the exact written description that stands in for it in `text` mode.
@@ -49,16 +53,19 @@ Assemble in this order, every section present, nothing invented:
    across, where the shadow falls, where depth separates. This clause carries the episode's
    beauty — keep it concrete, and keep it to the locked conditions rather than inventing weather
    or a new time of day here.
-6. **SHEET LAYOUT** — one landscape canvas split into N stacked horizontal panoramic strips,
-   vertically compact and horizontally wide, thin neutral separators between them, no decorative
-   borders, frames, mattes or shadows around a strip, no grid, no side-by-side panels, landscape
-   (never 9:16). Strips are sequential shots, not simultaneous scenes. See `frame.md`.
+6. **SHEET LAYOUT** — one **portrait (9:16)** canvas split into N stacked full-width strips, each
+   wider than it is tall, thin neutral separators between them, no decorative borders, frames, mattes
+   or shadows around a strip, no grid, no side-by-side panels. The returned file may be 1024×1536
+   (2:3), the tool's portrait size — that is fine. Strips are sequential shots, not simultaneous
+   scenes. See `frame.md`.
 7. **PANEL LIST** — panel by panel, in reading order top → bottom, each with camera position and
-   viewing direction, shot size, lens/perspective feel, character identity and position,
+   viewing direction, **its named camera angle** (eye-level, low, high, overhead, over-the-shoulder,
+   three-quarter, profile, behind), shot size, lens/perspective feel, character identity and position,
    physical state and pose, natural gaze, approximate subject scale, emotional state, important
    props and their position, and continuity with the neighbouring panel. Adjacent panels must be
-   materially different camera setups; a crop or zoom is not a new panel. Include the shot
-   progression (`WIDE → MEDIUM → TIGHT` or the script's actual progression).
+   materially different camera setups **with different angles**; a crop, a zoom, or a change of shot
+   size at the same angle is not a new panel. Include the shot progression (`WIDE → MEDIUM → TIGHT`
+   plus the angle for each).
 8. **MOMENT MAP** — which SCRIPT beat each panel depicts.
 9. **NEGATIVES** — no dialogue, captions, labels, panel numbers, text, arrows, camera
    annotations, storyboard notes, speech bubbles, metadata, decorative UI, watermark, borders or
@@ -67,18 +74,25 @@ Assemble in this order, every section present, nothing invented:
 10. **SUBJECT INTEGRITY** — riddle pipeline: no answer, no answer-related object, no gesture,
     gaze, framing, lighting, or behavioral indication of the answer. Topic pipeline: no answer
     exists, so lock the stated topic and angle instead.
-11. **ASPECT RATIO** — the episode's ratio. Do not force 9:16 here; that belongs to the final
-    video unless the user asked otherwise.
+
+    **This is a check, not only a prohibition** (`clips.md` "Answer integrity — check before
+    emitting"). Before the prompt is offered, name the locked answer to yourself and ask whether any
+    panel shows, frames, lights, or stares at an object in the answer's own category — a container, a
+    folded paper, a shape, a silhouette — even when the object is never identified. If so, replace
+    the beat, then offer the prompt. Do not offer it and wait for the user to catch the leak.
+11. **ASPECT RATIO** — **portrait, 9:16** (the tool may return 1024×1536 / 2:3 — accept it). The
+    clip's ratio (16:9 or 9:16) is chosen separately in Flow when the clip is generated, and this
+    image has no bearing on it.
 
 ## Sheet, not artwork — check before sending
 
-The artifact is a **shot-reference sheet**: one landscape canvas, N stacked panoramic strips, read
+The artifact is a **shot-reference sheet**: one portrait canvas, N stacked full-width strips, read
 top → bottom as sequential shots. It is not a picture of a scene. Confirm all four before the
 generation is requested, and make the first one explicit in the emitted prompt:
 
-- one landscape canvas, strips stacked with thin separators — no grid, no side-by-side panels;
+- one portrait (9:16) canvas, strips stacked with thin separators — no grid, no side-by-side panels;
 - every strip a different camera setup, with the progression visible (wide → medium → tight);
-- the rendering is the locked material (photographed paper sculpture), not a cinematic finish;
+- the rendering is the locked profile's material, not a cinematic finish;
 - nothing that *presents*: no poster composition, no title, no border, no matte, no key art.
 
 A returned image that reads as one composed scene, as artwork, or as a poster is **not** this

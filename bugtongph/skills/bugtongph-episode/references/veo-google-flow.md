@@ -4,8 +4,8 @@
 
 The provided **visual shot-reference sheet** is the exact visual source of truth for **CLIP 1 only**.
 
-It is one landscape canvas of 2–5 stacked horizontal panoramic strips with thin neutral
-separators, each strip vertically compact and horizontally wide. Strips are read top to bottom.
+It is one **portrait (9:16)** canvas of 2–5 stacked full-width strips with thin neutral separators,
+each strip wider than it is tall. Strips are read top to bottom.
 
 The image contains the minimum number of visually separated strips needed
 for Clip 1, normally 2 for a simple ~8-second interaction.
@@ -82,11 +82,11 @@ specification.
 
 ### Material Reality
 
-The characters are real physical paper-and-cardboard sculptures photographed in a
-real miniature set. The video continues that; it does not re-render it.
+The characters are physical objects of **the material the locked profile names**. A
+papercraft profile means real paper-and-cardboard sculptures photographed in a real
+miniature set. The video continues that; it does not re-render it.
 
-Every clip prompt states the surfaces are photographed paper, and names what must
-survive:
+Every clip prompt states the material, then what must survive. For the papercraft case:
 
 - visible cut-paper edges
 - layered paper surfaces
@@ -100,6 +100,13 @@ Then it forbids the render families that replace them:
 - smooth 3D / CGI surfaces
 - plastic, clay, or airbrushed finishes
 - generic generated faces
+
+**A profile that locked something else gets its own clause in the same shape** — a stylized-3D
+profile names what its material must keep and forbids photographed paper, clay and airbrushed
+surfaces; a photoreal profile forbids illustration, cartoon shading and cut-paper construction.
+Never write the paper clause onto a non-paper profile: it contradicts the profile, and a model
+holding two contradictory instructions drops the block entirely. See `clips.md`
+"MATERIAL REALITY — second".
 
 Naming the style — "papercraft diorama", "handcrafted", "miniature world" — is not
 a substitute for this clause. A style noun instructs the model to re-render the
@@ -146,9 +153,10 @@ The intended meaning is:
                           ↓ hard CUT
     STRIP 2          -> CAMERA SHOT 2
 
-The strips are stacked top to bottom on one landscape canvas, vertically compact with thin
+The strips are stacked top to bottom on one **portrait (9:16)** canvas, with thin
 separators between them. Strips are sequential shots — never simultaneous scenes, never a
-side-by-side grid, and never the same shot at three sizes.
+side-by-side grid, and never the same shot at three sizes. Each strip is a different camera angle as
+well as a different shot size.
 
 Additional panels may exist only when Clip 1 genuinely requires them.
 Do not create extra panels simply to provide more visual coverage.
@@ -1193,9 +1201,10 @@ Then propose a simpler replacement script with the same intended effect.
 The image-generation stage creates one visual reference for
 CLIP 1, containing the minimum number of clearly separated camera setups.
 
-**Layout contract: `frame.md`.** One landscape canvas, 2–5 stacked horizontal panoramic strips,
-vertically compact with thin neutral separators, read top to bottom as sequential shots. The
-strips are not simultaneous scenes, and no strip may be a crop or zoom of another. The sheet is a
+**Layout contract: `frame.md`.** One **portrait (9:16)** canvas, 2–5 stacked full-width strips,
+with thin neutral separators, read top to bottom as sequential shots. The
+strips are not simultaneous scenes, and no strip may be a crop or zoom of another — each carries its
+own camera angle. The sheet is a
 production instrument: do not optimize it for cinematic presentation, poster design, or
 comic-book aesthetics.
 
@@ -1414,6 +1423,10 @@ Preserve cut-paper edges, layered surfaces, folds, fibres, matte finish, handmad
 asymmetry. Do not render smooth 3D/CGI, plastic, clay, or airbrushed surfaces.
 Do not generate a generic face.
 
+        ^ PAPER instance, for a papercraft profile. Any other profile states its own
+          material in the same shape and forbids the families that would replace it.
+          See clips.md "MATERIAL REALITY — second".
+
 EPISODE SHOT REFERENCE:
 Use the supplied sheet for pose, expression, gaze, hand placement, position,
 environment, lighting, and camera composition — and for the face, build, clothing
@@ -1598,8 +1611,10 @@ Before finalizing a prompt, verify:
 
 - The supplied image is available, and it is the only image the model will receive.
 - The prompt names that image as the authority for everything visible, and states it first.
-- The MATERIAL REALITY block is present: photographed paper sculptures, with smooth 3D/CGI,
-  plastic, clay, and airbrushed surfaces forbidden, and no generated generic face.
+- The MATERIAL REALITY block is present, and it states the material the **locked profile** names
+  (photographed paper sculptures for a papercraft profile), forbids the families that would
+  replace it (smooth 3D/CGI, plastic, clay, airbrushed for the paper case), and forbids a
+  generated generic face. A block naming a material the profile did not lock fails this check.
 - No section of the prompt restates a face, a build, a clothing construction, or a surface
   material the image already shows. If one does, delete that text — it is an instruction to
   rebuild the character.

@@ -1,8 +1,8 @@
 # Google Flow production handoff
 
-The validated IMAGE is a **visual shot-reference sheet**: one landscape canvas of stacked
-horizontal strips, each strip an independently planned camera setup, generated in a single
-request and validated against the layout contract in `frame.md`.
+The validated IMAGE is a **visual shot-reference sheet**: one portrait (9:16) canvas of stacked
+full-width strips, each strip an independently planned camera setup with its own camera angle,
+generated in a single request and validated against the layout contract in `frame.md`.
 
 Clip 1 interprets that sheet sequentially:
 STRIP 1 → SHOT 1 → hard CUT → STRIP 2 → SHOT 2

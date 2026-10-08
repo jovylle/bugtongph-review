@@ -7,7 +7,10 @@ Read `active-pair-runtime.md` first. It parameterizes legacy hard-coded characte
 Every Flow/Veo prompt should explicitly contain, when applicable:
 
 1. Reference authority — the sheet outranks all text, and it is stated first
-2. Material reality — photographed paper sculptures, with the CGI/plastic families forbidden
+2. Material reality — the locked profile's material stated as a physical fact, with the families that
+   would replace it forbidden. Paper is the default: for a papercraft profile that reads "photographed
+   paper sculptures, with the CGI/plastic families forbidden". A profile that locked something else
+   states *its* material and forbids the families that would replace it — never the paper clause.
 3. Active-profile voice and speaker labels (never the profile's appearance text)
 4. Panel-to-shot mapping
 5. Shot starting state
@@ -50,6 +53,10 @@ fibres, matte finish, and handmade asymmetry exactly as they appear in the sheet
 Do not render smooth 3D CGI, plastic, clay, or airbrushed surfaces.
 Do not generate a generic face — the faces are already designed in the sheet.
 
+        ^ this is the PAPER block, verbatim, for a papercraft profile. Any other
+          profile states its own material in the same shape and forbids the
+          families that would replace it. See clips.md "MATERIAL REALITY — second".
+
 ACTIVE PROFILE — VOICE AND LABELS ONLY:
 Use the active profile for voice/speech characteristics and the uppercase speaker
 labels. It is not an authority on appearance; the sheet is.
@@ -88,7 +95,12 @@ pronouns, no narration, no unattributed lines. State who is silent as well as wh
 
 ## Clip 2
 
-Treat Clip 2 as text-only Extend continuation from the final visual/audio state established at the
-end of Clip 1, especially the final-second continuity. Restate the material-reality block
-verbatim: the extension inherits photographed paper sculptures already on screen, and must not
-re-render the look, the material, or the faces from its own text.
+Treat Clip 2 as a text-only Extend continuation from the final visual/audio state established at the
+end of Clip 1, especially the final-second continuity. Restate the material-reality block verbatim —
+the extension inherits the material already on screen, and must not re-render the look, the material,
+or the faces from its own text.
+
+**Clip 2 is a complete prompt, not a note about Clip 1.** Extend does not let the extension read
+Clip 1's prompt, so the shared preamble is repeated, the inherited state is written out in full, and
+the prompt can be pasted on its own. Never compress it into "continue directly from the final frame"
+or "same as the previous clip" — that is a reference, not an artifact (`clips.md`).

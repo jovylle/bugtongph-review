@@ -22,10 +22,11 @@ memory of prior work.
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.12**.
-- **Release state:** `main` is at **v0.10.10** (`211e0ff`, pushed). `dev`'s **0.10.11 and 0.10.12 are
-  committed locally and not yet pushed or released** — push `dev`, merge into `main` from a
-  throwaway worktree, tag, then verify from the remote's own refs.
+- `dev` = all work. Currently checked out, currently **0.10.14**.
+- **Release state:** `main` is at **v0.10.10** (`211e0ff`, pushed). `dev`'s **0.10.11 through 0.10.14
+  are unpushed**, and 0.10.13 + 0.10.14 are still uncommitted in the working tree — commit them,
+  push `dev`, merge into `main` from a throwaway worktree, tag, then verify from the remote's own
+  refs.
 
 ```
 python3 pack.py --dev     # dev flavor only, for testing while on dev
@@ -195,6 +196,29 @@ survive. A green local validator is not host proof — run the probe against the
 
 ## Open items
 
+- **The 0.10.14 portrait canvas is unproven.** The image is now 9:16 with stacked full-width strips,
+  so each strip has real height for a face. Nothing has been generated since. Generate one sheet and
+  check four things: the canvas comes back portrait (9:16 or 2:3 — ChatGPT's image tool normalises
+  portrait to 1024×1536), the strips are still full-width and never side by side, a face in a tight
+  strip is materially larger than the 16:9 version gave, and **each panel is visibly a different
+  camera angle** rather than the same shot at three sizes. If the tall canvas makes the strips read as
+  a grid or a comic layout, say so — that is the failure mode this change risks.
+- **The 0.10.14 angle rule is prose.** FRAME must name an angle per panel and no two adjacent panels
+  may share one; IMAGE validates new gate 1. Nothing enforces it but the model reading the files. On
+  the same test run, confirm the FRAME output actually shows an angle for every panel.
+- **The clips cannot be 9:16-shaped by the image, and no clip can be 1:1.** The clip's ratio is chosen
+  in Flow at generation (only 16:9 and 9:16 exist for every Veo 3.1 Lite feature — checked 2026-10-08).
+  Do not write an image-shape instruction into a clip prompt.
+- **The 0.10.13 material rule is prose.** MATERIAL REALITY is now instantiated from the locked
+  PROFILE (paper is the default, not the rule). Nothing enforces it. On a real run check both halves:
+  a non-paper profile such as "stylized 3D animation" must produce a clause naming *that* material
+  (and forbidding paper), and a papercraft profile must still produce the paper block verbatim.
+- **The 0.10.13 clip-prompt completeness is prose too.** Re-run `.clips` on a built episode and check
+  four things: each prompt opens with REFERENCE AUTHORITY and MATERIAL REALITY, Clip 2 restates its
+  inherited visual and audio state in full rather than "continue from the final frame", the speaker
+  roster appears in both, and the answer-leak check is actually reported. That run is also the
+  regression test for the finding that produced this version — the 0.10.12 build returned two
+  ~90-word paragraphs in place of the two structured prompts `clips.md` specifies.
 - **The 0.10.6 fidelity clauses are unproven against a real generation.** They are the correct
   reading of the failure (text outranking the sheet) and they are now first in the prompt, but no
   clip has been generated and compared since. Generate one Clip 1 from an existing validated sheet

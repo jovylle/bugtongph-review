@@ -1,6 +1,6 @@
 ---
 name: bugtongph-episode
-description: Run the bugtongPH Filipino episode pipeline. Use when the user invokes .auto, .riddle, .topic, .vlog, .vblog, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong or topic episode.
+description: Run the bugtongPH Filipino episode pipeline. Use when the user invokes .auto, .riddle, .topic, .vlog, .vblog, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong or topic episode. A plain episode request belongs here; .img and .veo belong to bugtongph-quick, and .veo is not .clips.
 ---
 
 # bugtongPH Episode Pipeline
@@ -17,6 +17,12 @@ skill's own directory (`skills/bugtongph-episode/`).
 Command ownership: `.img` and `.veo` belong to the sibling `bugtongph-quick` skill (riddle
 to one image to one prompt, with no stages or state). This skill owns the staged pipeline
 commands below. Do not run `.img` or `.veo` from here.
+
+**Which skill answers.** Both skills ship in this one plugin and are always loaded, so this rule —
+not the host's guess — decides. A request that names `.img` or `.veo` goes to `bugtongph-quick`.
+Everything else comes here, including a plain "make me a bugtong video", a bare `.auto`, and a
+resumed episode. The two clip commands are not interchangeable: `.clips` is this pipeline's clip
+step, `.veo` is the quick flow's, and neither may be answered with the other's output.
 
 ## 1. Execution model
 
@@ -350,10 +356,11 @@ Offer 3 scripts: dialogue plus actions, exact lines, beats, and ending state, pa
 stated for each option. The last creative choice.
 
 ### FRAME
-Offer the panel plan for the **visual shot-reference sheet**: 2–5 stacked horizontal strips on one
-landscape canvas (default 2–3), each strip a fully specified camera setup with materially
-different camera position, shot size, and subject emphasis, in a readable shot progression
-(wide → medium → tight). Text-only; never request image generation. The layout contract lives in
+Offer the panel plan for the **visual shot-reference sheet**: 2–5 stacked full-width strips on one
+**portrait (9:16)** canvas (default 2–3), each strip a fully specified camera setup with materially
+different camera position, **camera angle**, shot size, and subject emphasis — no two adjacent panels
+may share an angle — in a readable shot progression (wide → medium → tight, with the angle named for
+each panel). Text-only; never request image generation. The layout contract lives in
 `references/frame.md` and is a hard rule, not a creative preference.
 
 The place must also be shown: at least one strip gives the environment real room and is composed
@@ -381,11 +388,14 @@ validated sheet as the Ingredient reference at 8 seconds; Clip 2 is text-only Ex
 Clip 1's final visual/audio state. Never generate an image here.
 
 At this stage the validated sheet is the character authority, not the profile text. Both prompts
-open with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — photographed paper
-sculptures, with smooth CGI / plastic / clay forbidden — and no section may restate a face, build,
-clothing, or material that the sheet already shows. A returned clip that drifts from the sheet is
-a failure, not a take: compare it against the sheet before continuing, and repair it by changing
-only the authority blocks. See `references/clips.md` "Clip acceptance".
+open with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — the material taken from
+the locked profile (photographed paper sculpture for a papercraft profile, that profile's own
+material otherwise), with the families that would replace it forbidden — and no section may restate
+a face, build, clothing, or material that the sheet already shows. Each prompt is complete on its
+own and can be pasted with no other text: Clip 2 restates everything it inherits rather than
+referring to Clip 1. A returned clip that drifts from the sheet is a failure, not a take: compare it
+against the sheet before continuing, and repair it by changing only the authority blocks. See
+`references/clips.md` "Clip acceptance".
 
 The clip also showcases the environment: the establishing shot gives the locked place room, and the
 beauty comes from the locked light, depth, and atmosphere — never from added scenery, a new time of
