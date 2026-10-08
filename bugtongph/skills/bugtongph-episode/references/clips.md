@@ -17,7 +17,23 @@ The final prompts must instantiate actual episode details from the locked subjec
 
 Model: **Veo 3.1 Lite**, 8 seconds. See `veo-3-1-lite.md` — ingredients require an 8s clip, and only Lite can extend one.
 
-Every clip is exactly **8 seconds**. A 16-second story is Clip 1 (8s) plus a text-only Extend (8s); longer stories chain further 8s extends. Never emit a prompt for a 9–15 second clip. Pace the dialogue with `tagalog-pacing.md` — natural conversational Tagalog is 1.5–2.2 words/second.
+Every clip is exactly **8 seconds**. A 16-second story is Clip 1 (8s) plus a text-only Extend (8s); a 24-second story is Clip 1 plus two chained Extends, and three clips is the maximum. Never emit a prompt for a 9–15 second clip. Pace the dialogue with `tagalog-pacing.md` — natural conversational Tagalog is 1.8–2.2 words/second, the riddle recitation 1.4–1.7.
+
+## Draft clips (`.auto draft`)
+
+Under `.auto draft` no sheet exists yet. Write the prompts exactly as below, with two
+differences:
+
+- read the panels from the **locked FRAME plan** wherever this file says "the validated sheet" —
+  it is the plan the sheet will be generated from and validated against;
+- print one operator line **above** the prompt blocks, never inside them:
+  `DRAFT — generate the sheet from the image prompt above, bring it back here for .image
+  validation, then attach that sheet as Clip 1's Ingredient.`
+
+Every prompt keeps REFERENCE AUTHORITY verbatim ("The attached shot-reference sheet…"): it reads
+correctly once the sheet is attached in Flow, so there is no placeholder to fill in. Clip
+acceptance runs once a clip comes back, against the sheet that validated. See `runtime-state.md`
+"Draft clips".
 
 Never invoke image generation during `.clips`.
 
@@ -149,8 +165,8 @@ Then the numbered sections:
 9. **DIALOGUE / VOICE LOCK** — bind every line to a speaker before writing it. For each line, in order: the **exact uppercase label** from the speaker roster, then the exact approved dialogue in quotes, then that character's voice characteristics, pacing, and emphasis. Never write an unattributed line, never use a pronoun in place of a label, and never add narration or off-screen voice. State plainly that each line is spoken by that character only. Preserve label spelling exactly as it appears in the script.
 10. **AUDIO / AMBIENCE** — specify the actual environment sounds, voice clarity, silence/reaction beats, minimal music unless approved, and Clip 1 ending audio state.
 11. **SUBJECT INTEGRITY** — in the riddle pipeline, explicitly preserve the unanswered riddle and prohibit visual, behavioral, camera, sound, or environmental clues to the answer. The recited riddle's wording is read from the **current RIDDLE lock** here and reproduced verbatim — never from a copy held in the script. A riddle swapped after the script was locked is already valid: recite the current riddle, and touch nothing else. In the topic pipeline there is no answer: instead lock the stated topic and angle and prohibit drifting to a different subject.
-12. **VISUAL NEGATIVES / FAILURE PREVENTION** — prohibit redesign, identity drift, re-rendered or generic faces, changed build or proportions, changed clothing construction, changed material, smooth CGI / plastic / clay / airbrushed surfaces, extra characters, text, captions, labels, borders, visible storyboard/panel structure, comic treatment, random cuts, camera-facing behavior, object manipulation not in the script, and answer clues.
-13. **FINAL PERFORMANCE TARGET** — restate the exact intended beginning-to-ending physical and emotional state of Clip 1 and the precise state that Clip 2 must inherit.
+12. **VISUAL NEGATIVES / FAILURE PREVENTION** — prohibit redesign, identity drift, re-rendered or generic faces, changed build or proportions, changed clothing construction, changed material, every render family the MATERIAL REALITY block forbids, extra characters, text, captions, labels, borders, visible storyboard/panel structure, comic treatment, random cuts, camera-facing behavior, object manipulation not in the script, and answer clues.
+13. **FINAL PERFORMANCE TARGET** — restate the exact intended beginning-to-ending physical and emotional state of Clip 1 and, in a 2- or 3-clip episode, the precise final-second state Clip 2 must inherit.
 
 ### Panel interpretation rule
 
@@ -167,7 +183,7 @@ A clip is not accepted because it was generated. When the user shows or reports 
 compare it against the validated sheet it was given and say what the comparison found. The clip
 fails when any of these is true:
 
-1. **Material** — surfaces read as smooth 3D/CGI, plastic, clay, or airbrushed rather than photographed paper.
+1. **Material** — surfaces read as a different material from the locked profile's: for a papercraft profile, smooth 3D/CGI, plastic, clay, or airbrushed rather than photographed paper; for any other profile, a family its MATERIAL REALITY block forbids.
 2. **Faces** — a face is a generic invention instead of the face in the sheet. The commonest form is a re-imagined elderly face, or a child's expression exaggerated past the sheet's.
 3. **Build / proportions** — a character's body build, head size, or scale changed.
 4. **Clothing / props** — construction, colour, or props were reinterpreted instead of continued.
@@ -265,8 +281,8 @@ not stylistic; they are the difference between the old man speaking and the kid 
    one shot, give them separate sequential timing windows and name each window's speaker.
 5. **Bind the voice in the same breath as the line.** Label, line, then that character's voice
    characteristics — so the timbre attaches to the label rather than to whatever face is nearest.
-6. **Restate the roster in Clip 2.** Extend does not inherit the speaker map; name the speaker
-   and the voice again.
+6. **Restate the roster in every Extend.** Extend does not inherit the speaker map; name the
+   speaker and the voice again in Clip 2 and Clip 3.
 7. **Never let a line change speaker between the script and the prompt.** The script's labels are
    the authority; if a line needs to move, fix the script first.
 
@@ -278,8 +294,8 @@ Avoid vague phrases such as “make it cinematic,” “animate naturally,” or
 
 ## Answer integrity — check before emitting
 
-A prohibition is not a check. Before either prompt is emitted, answer both questions and state the
-answer in one line:
+A prohibition is not a check. Before any clip prompt is emitted, answer both questions and state
+the answer in one line, outside the prompt block and without naming the answer:
 
 1. **Does anything in the prompt make the answer easier to guess?** Props, an object, a container, a
    shape, a silhouette, a written mark — anything a viewer could name and land on the answer. A
@@ -297,8 +313,9 @@ let the user catch it. The same check runs at every audience-facing stage: `fram
 ## Word count gate — check before emitting
 
 A short clip prompt is an incomplete one. Before printing any prompt, state its approximate word
-count. If the count is under the minimum, the prompt is missing sections — identify which ones
-and complete them before emitting.
+count. If a multi-shot dialogue clip is under the minimum, the prompt is missing sections —
+identify which ones and complete them before emitting. A genuinely simple scene may come in under
+it only when every section is present (see "Minimum prompt depth"); never pad to reach it.
 
 | Prompt | Minimum |
 |---|---|

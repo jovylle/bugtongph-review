@@ -35,14 +35,15 @@ Nano Banana 2 Lite, Nano Banana 2.1).
    for very short beats. Panel count is chosen at FRAME, and the sheet's layout contract is in
    `frame.md`.
 5. **One clip duration, one clip length.** Never plan dialogue that needs more than the
-   available 8 seconds minus breathing, pauses, and the ending beat. Use 1.5–2.2
-   words/second — natural conversational Tagalog (see `tagalog-pacing.md`).
+   available 8 seconds minus breathing, pauses, and the ending beat. Use 1.8–2.2
+   words/second — natural conversational Tagalog — and 1.4–1.7 for the riddle (see
+   `tagalog-pacing.md`).
 6. **Frames-to-video is available** (4s/6s/8s). If an episode needs a locked ending state,
    FRAME may produce a first and last frame instead of a single sheet; the clip then uses
    Frames to Video rather than Ingredients. This is an alternative mode, not the default.
 7. **Duration sets the clip count — 8 seconds per clip, always.** 16 seconds of story is
    Clip 1 (8s) plus Clip 2 (a text-only Extend of Clip 1's final state, 8s). 24 seconds is
-   three chained 8s extends. There is no single 16-second clip on this model, so never write
+   three clips: Clip 1 plus two chained 8s Extends, the maximum. There is no single 16-second clip on this model, so never write
    a prompt for one, and never let a script be presented as "16 seconds" without stating that
    it is two clips.
 8. **Extend inherits from the LAST SECOND of the source clip.** Google's own Veo model page

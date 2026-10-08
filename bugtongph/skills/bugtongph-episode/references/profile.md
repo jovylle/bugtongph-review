@@ -22,9 +22,9 @@ voice character.
 
 **Which one is suggested depends on whether a character image exists in this conversation.** An
 identity that cannot be bound must never be offered as if it could: the catalog turnarounds ship
-inside the plugin package and the session cannot attach them, so a catalog character with no image
-is a description holding an identity it can never match. Full rule in `reference-binding.md`
-"Which profile is offered, by asset availability".
+inside the plugin package and the skill cannot put them in the conversation by itself, so a catalog
+character with no image is a description holding an identity it can never match. Full rule in
+`reference-binding.md` "Which profile is offered, by asset availability".
 
 **No image from the user** — an invented profile leads, because it promises nothing it cannot
 deliver:
@@ -114,13 +114,15 @@ Every profile locks one identity mode, `text` or `attached` — full contract in
   stage proceeds. Write it precisely enough to be reused. Identity is *held by description*, so
   the sheet is what fixes the look for the episode — and at CLIPS the validated sheet, not the
   description, is what the video is held to.
-- **`attached` (opt-in)** — the user attaches a turnaround image in the conversation, and that
-  image becomes the identity authority and the reference image input, giving an exact match.
+- **`attached` (opt-in)** — a turnaround image is in the conversation, and that image becomes the
+  identity authority and the reference image input, giving an exact match.
 
 `profile-01` and `profile-02-mich` each ship a turnaround
-(`assets/character-turnaround.png`, `assets/mich-turnaround.png`). The plugin cannot attach
-those for you — a path inside the package is not an image the session can supply. So the
-turnaround is **offered** to the user to attach, and `text` proceeds if they do not.
+(`assets/character-turnaround.png`, `assets/mich-turnaround.png`). The mode is settled when the
+profile locks: an image already attached, or one the host loads from the installed files (Codex
+`view_image`), gives `attached`; otherwise the user gets the pinned download link and `text`
+proceeds until they attach it. See `reference-binding.md` "How a shipped turnaround reaches the
+conversation".
 
 **An invented bundle is never labelled `profile-01`.** `profile-01` is one fixed identity — the
 Old Man + Kid with the blue neck scarf. An invented bundle is offered under its own descriptive
@@ -157,7 +159,7 @@ Material / rendering language:
 Scale conventions:
   ...
 Visual identity mode:
-  text (written description is the authority) | attached (user supplies a turnaround)
+  text (written description is the authority) | attached (a turnaround is in the conversation)
 Speaker labels:
   Character A: LABEL
   Character B: LABEL
@@ -200,7 +202,7 @@ pronouns ("he", "the other one") in their place.
 ### profile-01 — shipped, never mutated
 
 Old Man + Kid with Blue Neck Scarf, handcrafted Filipino papercraft diorama. Shipped turnaround:
-`assets/character-turnaround.png` (offered to the user to attach). Speaker labels: `OLD MAN`,
+`assets/character-turnaround.png` (bound per `reference-binding.md`). Speaker labels: `OLD MAN`,
 `KID`. Must never be mutated.
 
 ### profile-02-mich — permanent
@@ -221,10 +223,10 @@ Material / rendering language:
 Scale conventions:
   Human scale, head-and-shoulders framing for the identity match; a single adult woman only.
 Visual identity mode:
-  attached (user attaches assets/mich-turnaround.png) | text (written description only)
+  attached (assets/mich-turnaround.png in the conversation) | text (written description only)
   assets/mich-turnaround.png — front view and right-side profile of the same face, plain
-  grey background, neutral expression, no makeup look. Offered to the user to attach; it is
-  the exact-match identity reference when they do.
+  grey background, neutral expression, no makeup look. Bound per reference-binding.md; it is
+  the exact-match identity reference once it is in the conversation.
 Speaker labels:
   MICH
 Voice profiles:
@@ -239,15 +241,15 @@ Voice profiles:
     articulation: relaxed, natural, non-broadcast
     emotional range: warm, curious, dry humor
     pauses and breathing: natural breaths at line ends
-    Filipino delivery: natural conversational Tagalog, 1.5–2.2 words/second
+    Filipino delivery: natural conversational Tagalog, 1.8–2.2 words/second
 Status:
-  permanent, reusable — turnaround available to attach
+  permanent, reusable — turnaround shipped
 ```
 
 `profile-02-mich` is a **real-person-style photoreal** profile, so its art direction is
 live-action realism, not papercraft. Do not render Mich in the `profile-01` papercraft style,
 and do not carry `profile-01`'s characters into her episodes. Her written description above is
-the default identity authority; the turnaround gives an exact match when the user attaches it.
+the default identity authority; the turnaround gives an exact match once it is in the conversation.
 
 Mich is a single adult subject. Do not add, merge, or duplicate characters in her profile, and
 do not depict her as a minor.

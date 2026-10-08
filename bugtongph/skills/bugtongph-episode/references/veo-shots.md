@@ -4,15 +4,16 @@
 
 Identity comes from the profile's locked **identity mode** (see `reference-binding.md`):
 
-- `attached` — the turnaround image the user attached in the conversation is the primary source
+- `attached` — the turnaround image in the conversation is the primary source
   of truth for character identity and appearance. Use the image reference itself when available;
   do not replace it with a newly invented textual description.
 - `text` — the written profile is the source of truth **while a panel is being designed**. It is
   applied identically in every panel.
 
 `profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
-`assets/mich-turnaround.png`. Those files are offered to the user to attach; a path inside the
-plugin package is not an image the session can supply, so their absence is never a failure.
+`assets/mich-turnaround.png`. Those files count only once they are in the conversation
+(`reference-binding.md` "How a shipped turnaround reaches the conversation"), so their absence is
+never a failure.
 
 **At CLIPS the validated sheet outranks both.** It is the only image the video model receives, so
 for anything visible in it — face, build, clothing construction, surface material, scale,

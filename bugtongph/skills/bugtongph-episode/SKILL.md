@@ -1,6 +1,6 @@
 ---
 name: bugtongph-episode
-description: Run the bugtongPH Filipino episode pipeline. Use when the user invokes .auto, .riddle, .topic, .vlog, .vblog, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong or topic episode. A plain episode request belongs here; .img and .veo belong to bugtongph-quick, and .veo is not .clips.
+description: Run the bugtongPH Filipino episode pipeline. Use when the user invokes .auto (including .auto draft), .riddle, .topic, .vlog, .vblog, .location, .environment, .profile, .script, .frame, .overview, .image, .render, .clips, .produce, .channel, .release, .review, or .workflow, or asks to build, resume, or inspect a bugtong or topic episode. A plain episode request belongs here; .img and .veo belong to bugtongph-quick, and .veo is not .clips.
 ---
 
 # bugtongPH Episode Pipeline
@@ -65,7 +65,7 @@ Never two stages in one turn on that path. A short reply (`1`, `A`, `yes`, `ok`,
 `.auto` is the **unattended** path, and the exception to the stop-and-wait rule. It preselects
 at every stage, taking **option 1 (suggested)** each time, without asking gate questions —
 except at **PROFILE**, where it draws one eligible profile at random (see §5). It runs in
-**two phases**, each ending with a progress display:
+**two phases**:
 
 ```text
 Phase 1  RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
@@ -73,26 +73,10 @@ Phase 1  RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
 Phase 2  (next .auto) -> CLIPS                               ← stops, episode complete
 ```
 
-After IMAGE validates, `.auto` **stops and prints a full progress display** showing every
-stage as ✓ done or ○ pending:
-
-```text
-── progress ──────────────────────────────────────
-RIDDLE      ✓  <wording>                (answer hidden)
-LOCATION    ✓  <place>
-ENVIRONMENT ✓  <condition set>
-PROFILE     ✓  <id> (<selection>) — <mode>
-SCRIPT      ✓  <beat summary> (<clip count> clips)
-FRAME       ✓  <panel count> panels
-IMAGE       ✓  validated
-CLIPS       ○  not yet
-──────────────────────────────────────────────────
-→ .auto  to continue to clips
-→ .auto fresh  for a new episode
-```
-
-The next `.auto` sees IMAGE ✓ and CLIPS ○ and runs CLIPS. After CLIPS completes, it prints the
-same display with CLIPS ✓ and offers `.auto fresh`.
+Every `.auto` stop prints the **progress display** — the OVERVIEW block with its IMAGE and CLIPS
+rows and one next-step line, defined once in `references/overview.md` "Progress display". The
+next `.auto` resumes from the first incomplete checkpoint (§2 "Plain `.auto`"): after a validated
+image that is CLIPS. After CLIPS, the display shows every stage ✓ and offers `.auto fresh`.
 
 While it runs it prints the preselected trail as a compact block — one line per stage — so the
 run stays reviewable, and so a single stage command afterwards (`.script less dialogue`) can
@@ -103,20 +87,21 @@ an image failing validation twice) rather than improvising. PROFILE is the one s
 suggested option is not taken: it is a random draw, and an empty eligible set stops the run
 instead of falling back to `profile-01`.
 
-**`.auto draft`** runs the same chain but **never calls image generation**. At IMAGE PROMPT it
-assembles and prints the full image prompt as text only. It then immediately continues to CLIPS
-and produces all clip prompts (the REFERENCE AUTHORITY block uses a placeholder since no
-validated sheet exists yet). The result is the complete set of copy-ready prompts — paste the
-image prompt into ChatGPT, generate the sheet, then paste the clip prompts into Google Flow:
+**`.auto draft`** runs the same chain but **never calls image generation**. It prints the full
+image prompt as text, skips IMAGE, and writes every clip prompt from the locked FRAME plan, marked
+**DRAFT**:
 
 ```text
 RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME
-             -> OVERVIEW -> IMAGE PROMPT (text only) -> CLIPS (draft prompts) <- stops
+             -> OVERVIEW -> IMAGE PROMPT (text only) -> CLIPS (DRAFT)   <- stops
 ```
 
-In `.auto draft` mode the clip prompts note that the sheet has not been generated yet and
-carry a `[ATTACH SHEET]` placeholder in the REFERENCE AUTHORITY block. Everything else in
-each prompt is fully instantiated from the locked episode plan.
+Each clip prompt is the normal, complete, paste-ready prompt — REFERENCE AUTHORITY verbatim, no
+placeholder to edit. The sheet instruction goes **outside** the prompt blocks, as one operator
+line: generate the sheet from the image prompt, bring it back here for `.image` validation, then
+attach that sheet as Clip 1's Ingredient. Validation is not optional: the answer-clue gate runs on
+the sheet, and a draft has never seen one. A sheet that passes clears the DRAFT marker and the clip
+prompts stand unchanged; see `references/runtime-state.md` "Draft clips".
 
 A plain stage command is always the gated conversational path and is unaffected.
 
@@ -154,7 +139,9 @@ version number in this file or its references.
 - If there is no recoverable active episode, start a new run in the `production` channel at
   the first gate — RIDDLE, unless the topic pipeline was selected.
 - If an unfinished episode exists, resume its first incomplete checkpoint using the channel
-  recorded on that run. **IMAGE done, CLIPS not done → run CLIPS (Phase 2).**
+  recorded on that run. **IMAGE done, CLIPS not done → run CLIPS (Phase 2).** IMAGE blocked
+  (`!`) → retry IMAGE per `runtime-state.md` "A blocked image". DRAFT clips with no image →
+  generate and validate the image; the clips are not rebuilt.
 - Do not silently replace an explicit riddle, topic, location, environment, profile, script,
   channel, or release.
 - If every stage through CLIPS is already complete, say so and offer `.auto fresh`.
@@ -228,12 +215,13 @@ everything downstream of it.
 
 `.auto` uses the exact same stage contracts as the standalone commands. There is no
 simplified auto-only implementation and no auto-only approval bypass — it takes **option 1
-(suggested)** at every stage and does not ask the gate questions, running the whole chain in one
+(suggested)** at every stage and does not ask the gate questions, running each phase in one
 continuous pass.
 
 ```text
-RIDDLE|TOPIC -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERVIEW
-             -> IMAGE PROMPT -> IMAGE -> CLIPS
+.auto        RIDDLE|TOPIC -> ... -> OVERVIEW -> IMAGE PROMPT -> IMAGE      <- stop (phase 1)
+.auto again  CLIPS                                                          <- stop (phase 2)
+.auto draft  RIDDLE|TOPIC -> ... -> OVERVIEW -> IMAGE PROMPT -> CLIPS (DRAFT) <- stop
 ```
 
 The first stage is whichever content pipeline the run selected — RIDDLE by default, TOPIC
@@ -304,7 +292,7 @@ Every profile locks one **identity mode**:
 | Mode | Identity authority | Binding |
 | --- | --- | --- |
 | `text` | the written profile, while the sheet is being designed | nothing to attach; generation proceeds |
-| `attached` | an image the user attaches in the conversation | that image is used as the reference image input |
+| `attached` | an image in the conversation — attached by the user, or loaded by the host from the installed files | that image is used as the reference image input |
 | `clips` (automatic) | the validated shot-reference sheet, for everything visible | the sheet is the Ingredient input; the profile supplies only voice and labels |
 
 Which profile is `(suggested)` depends on whether a character image is actually in the
@@ -315,11 +303,14 @@ character is never suggested as a text-only description. See `references/referen
 
 Shipped turnarounds — `assets/character-turnaround.png` (`profile-01`),
 `assets/mich-turnaround.png` (`profile-02-mich`) — are the canonical definitions those written
-profiles come from. At the IMAGE gate, if the locked profile has a shipped turnaround and no
-image is yet in the session, the skill attempts to self-supply it: first via `read_skill_file`,
-then via GitHub raw URL, then falls back to `text` mode. A missing turnaround is **never**
-grounds for blocking the image stage. Never use a previous episode's image as an identity
-reference. See `references/reference-binding.md` "Shipped turnarounds — automatic binding".
+profiles come from. Image generation only uses an image already in the conversation, and a skill
+cannot put a packaged file there by itself. So when such a profile locks, the mode is settled then
+— not at IMAGE: an image already attached → `attached`; else, where the host can show a local
+file (Codex `view_image`), load it from `assets/` → `attached`; else give the user the pinned
+download link once (gated path) or in the trail (`.auto`), and proceed in `text`. A missing
+turnaround is **never** grounds for blocking the image stage. Never use a previous episode's image
+as an identity reference. See `references/reference-binding.md` "How a shipped turnaround reaches
+the conversation".
 
 **Speaker labels.** Fix one short uppercase label per character at profile lock (`OLD MAN`,
 `KID`, `MICH`) and use it identically in the profile, the image prompt, the script dialogue, and
@@ -376,8 +367,8 @@ image later never re-selects the profile. See `references/profile.md` "Selection
 Which bundle is `(suggested)` depends on whether a character image is in the conversation: with an
 attached image the matching catalog profile leads in `attached` mode; with no image an AI-invented
 bundle leads, and the catalog profiles are listed as further choices for a user who will supply
-the image. A catalog character is never suggested as a text-only description, because its shipped
-turnaround cannot be bound and the match would be unwinnable. The suggestion guides the gate only —
+the image. A catalog character is never suggested as a text-only description, because without its
+turnaround in the conversation the match would be unwinnable. The suggestion guides the gate only —
 it does not decide an unattended run. See `reference-binding.md`.
 
 `profile-01` is always the Old Man + Kid with the blue neck scarf — its fixed label, with
@@ -387,7 +378,8 @@ characters. See `references/profile.md`.
 
 ### SCRIPT
 Offer 3 scripts: dialogue plus actions, exact lines, beats, and ending state, paced at
-1.5–2.2 natural conversational Tagalog words/second, with the spoken arithmetic and clip count
+1.8–2.2 natural conversational Tagalog words/second (1.4–1.7 for the riddle), with the spoken
+arithmetic and clip count
 stated for each option. The last creative choice.
 
 ### FRAME
@@ -418,17 +410,19 @@ identity source (`text` or `attached`), then accept or regenerate. The only stag
 request image generation. Command `.image`; `.render` is the legacy alias.
 
 ### CLIPS
-Plan the shots (the retired DRAFTS step), then produce copy-ready prompts. Clip 1 uses the
-validated sheet as the Ingredient reference at 8 seconds; Clip 2 is text-only Extend from
-Clip 1's final visual/audio state. Never generate an image here.
+Plan the shots (the retired DRAFTS step), then produce one copy-ready prompt per clip — 1, 2, or
+3, the locked clip count. Clip 1 uses the validated sheet as the Ingredient reference at 8
+seconds; Clip 2 is a text-only Extend from Clip 1's final second, and Clip 3 one from Clip 2's.
+Never generate an image here. Under `.auto draft` there is no sheet yet: the prompts are written
+from the locked FRAME plan and marked DRAFT until a sheet validates (`clips.md` "Draft clips").
 
-At this stage the validated sheet is the character authority, not the profile text. Both prompts
-open with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — the material taken from
+At this stage the validated sheet is the character authority, not the profile text. Every prompt
+opens with a **REFERENCE AUTHORITY** block and a **MATERIAL REALITY** block — the material taken from
 the locked profile (photographed paper sculpture for a papercraft profile, that profile's own
 material otherwise), with the families that would replace it forbidden — and no section may restate
 a face, build, clothing, or material that the sheet already shows. Each prompt is complete on its
-own and can be pasted with no other text: Clip 2 restates everything it inherits rather than
-referring to Clip 1. A returned clip that drifts from the sheet is a failure, not a take: compare it
+own and can be pasted with no other text: an Extend restates everything it inherits rather than
+referring to the clip before it. A returned clip that drifts from the sheet is a failure, not a take: compare it
 against the sheet before continuing, and repair it by changing only the authority blocks. See
 `references/clips.md` "Clip acceptance".
 
@@ -455,7 +449,12 @@ content pipeline's first stage — `RIDDLE` or `TOPIC`, never both:
 `TOPIC  | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS`
 
 Use `✓` complete, `●` current, `○` pending, `~` changed this turn, `!` failed/blocking. When
-an image substage is active, name it beneath the main status.
+an image substage is active, name it beneath the main status; after `.auto draft`, name `CLIPS
+DRAFT — sheet not generated` there the same way.
+
+A `.auto` stop also prints the progress display (`references/overview.md` "Progress display").
+It is the overview, printed **in addition to** the one stage line — it does not replace it, and
+no other response prints it.
 
 **Do not print channel, release, or workflow in the status line.** They are recorded in episode
 state for routing and reported only on request, through `.channel`, `.release`, and `.workflow`.
@@ -474,7 +473,8 @@ approach, frame, light, or otherwise indicate the answer or an answer-related ob
 
 ## 10. Timing and feasibility
 
-Pace dialogue as **natural conversational Tagalog at 1.5–2.2 words/second** (≈90–135 wpm).
+Pace dialogue as **natural conversational Tagalog at 1.8–2.2 words/second** (≈105–135 wpm), and
+the riddle recitation and heavy thinking beats in the slow band, 1.4–1.7.
 The retired 2.5–3.5 words/second figure was reading speed and produced rushed scripts with no
 room to think. Count the spoken words, divide by the rate, then add breath gaps (0.3–0.6s per
 line), a listener reaction (0.5–1.5s), and the ending beat (0.5–1.0s). State that arithmetic
@@ -483,8 +483,8 @@ for every option. See `references/tagalog-pacing.md`.
 Every clip is **8 seconds** — ingredients and extend on Veo 3.1 Lite are 8s only — and one clip
 holds only about **eleven words of speech**. Count the riddle's own words first: over about 9
 words and it cannot share a clip with a reaction, so the episode is 2 clips. A story that needs
-16 seconds is **two clips**: Clip 1 plus a text-only Extend; 24 seconds is three chained
-extends. Never present 16 seconds as a single clip, and never let a duration appear without its
+16 seconds is **two clips**: Clip 1 plus a text-only Extend; 24 seconds is **three clips**: Clip
+1 plus two chained Extends. Three is the maximum. Never present 16 seconds as a single clip, and never let a duration appear without its
 clip count or its arithmetic.
 
 Simplify unreliable transformations, complex choreography, precise manipulation, identity
@@ -505,9 +505,8 @@ Nested forms: `.auto production|beta|dev|fresh|resume|draft`; `.auto riddle|topi
 `.workflow info`.
 
 `.auto draft` — full pipeline, no image generation. Produces the IMAGE PROMPT (text only)
-and all CLIP PROMPTS in one run. Clip prompts carry a `[ATTACH SHEET]` placeholder in the
-REFERENCE AUTHORITY block — replace it with the validated sheet when submitting Clip 1 to
-Google Flow.
+and all clip prompts, marked DRAFT, in one run. Generate the sheet from the image prompt, bring it
+back for `.image` validation, then attach it as Clip 1's Ingredient in Google Flow.
 
 **Reading a locked item needs no command.** Plain questions — `what's the riddle again?`,
 `what's the script?`, `which profile?` — reprint it, read-only. `.review <stage>` still works as
@@ -567,7 +566,7 @@ files whose trigger applies.
 | `references/tagalog-pacing.md` | Writing or timing any dialogue, or whenever a duration or clip count must be justified |
 | `references/render.md` | Running `.image`, or resuming at an image-generation boundary |
 | `references/runtime-state.md` | Checkpointing, resuming, or recovering after an image-generation boundary |
-| `references/clips.md` | Planning the shots and writing the Clip 1 and Clip 2 prompts |
+| `references/clips.md` | Planning the shots and writing the clip prompts (Clips 1–3) |
 | `references/release-channels.md` | `.channel`, `.release`, or any channel and version reasoning |
 | `references/workflow.md` | Inspecting or explaining the workflow contract |
 | `references/authority.md` | Resolving conflicts between sources, or defining what outranks what |

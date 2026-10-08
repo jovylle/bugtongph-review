@@ -19,7 +19,7 @@ This is the **only** stage allowed to request image generation. `.script`, `.fra
 - locked LOCATION, ENVIRONMENT, and SCRIPT;
 - FRAME panel plan;
 - the approved image prompt from `.image-prompt`;
-- for an `attached`-mode profile, the image the user attached in the conversation.
+- for an `attached`-mode profile, the turnaround image in the conversation.
 
 ## Channel parity
 
@@ -44,19 +44,21 @@ There is nothing to resolve and nothing to attach; proceed to generation and hol
 from the profile text, identically in every panel. Do not block.
 
 Text mode is not the suggested default for a catalog character when no image is in the
-conversation: the shipped turnaround cannot be bound, so the description would promise a match it
-cannot deliver. If the user explicitly chose a catalog profile with no image attached, proceed in
-`text` mode and say in one line that the character is held by description rather than matched to
-its turnaround. See `reference-binding.md` "Which profile is offered, by asset availability".
+conversation: the description would promise a match to its turnaround that it cannot deliver. If
+the user explicitly chose a catalog profile with no image in the conversation, proceed in `text`
+mode and say in one line that the character is held by description rather than matched to its
+turnaround. See `reference-binding.md` "Which profile is offered, by asset availability".
 
-**`attached` mode.** The user attached a turnaround image in this conversation. That image must
-actually be used as the reference image input, and it outranks descriptive text for anything
-visible in it. If the user asked for `attached` but no image is present in the conversation, ask
-once for it; if it still does not arrive, continue in `text` mode and say so in one line.
+**`attached` mode.** A turnaround image is in this conversation — attached by the user, or loaded
+by the host when the profile locked. That image must actually be used as the reference image
+input, and it outranks descriptive text for anything visible in it. If the mode is `attached` but
+the image is no longer in the conversation, ask once for it; if it still does not arrive, continue
+in `text` mode and say so in one line.
 
-Never block IMAGE waiting for a reference the plugin cannot supply: a file path inside the
-plugin package is not an image the session can attach, so a shipped `assets/*.png` alone is
-never grounds for blocking.
+The mode was settled at PROFILE (`reference-binding.md` "How a shipped turnaround reaches the
+conversation"); this stage does not try to fetch a turnaround. Never block IMAGE waiting for a
+reference the plugin cannot supply: a shipped `assets/*.png` is not in the conversation just
+because it ships, so it is never grounds for blocking.
 
 This replaces the older rule that treated a missing canonical asset as an automatic IMAGE
 block. The failure that rule was guarding against — a silently redesigned character — is now
@@ -80,7 +82,7 @@ FAILED_REQUIRES_REGENERATION
 
 - **READY_FOR_GENERATION** — the approved prompt is complete and an image is actually needed.
 - **REFERENCE_BOUND** — the identity source is settled and available: the profile is in `text`
-  mode, or in `attached` mode with the user's image present in the conversation.
+  mode, or in `attached` mode with the turnaround present in the conversation.
 - **GENERATION_REQUESTED** — mark this immediately before requesting. The request must match
   the current prompt and profile.
 - **IMAGE_PRESENT_PENDING_VALIDATION** — an image arrived. Inspect it before requesting
@@ -135,7 +137,8 @@ Reject and regenerate only the failed artifact for:
 9. text or text-like marks, labels, panel numbers, arrows, annotations, watermark, or a frame
    drawn around a strip. *Thin separators between strips are expected and correct — they are
    not a defect;* frames, mattes and shadows around a strip are;
-10. answer clue or answer-directed behavior;
+10. answer clue or answer-directed behavior — including any object, shape, or silhouette in the
+    answer's own category, and any prominent object the image prompt's inventory does not list;
 11. accidental extra shot, collage, or a panel count that disagrees with FRAME;
 12. missing, duplicated, or merged panels against the FRAME count;
 13. panels that are merely crops, zooms or re-frames of the same shot instead of materially

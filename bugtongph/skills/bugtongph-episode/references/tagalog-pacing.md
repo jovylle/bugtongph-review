@@ -68,7 +68,7 @@ Every clip is **8 seconds**. Longer stories are served by chained clips, not a l
 ```text
 <= 8s  -> 1 clip
   16s  -> 2 clips: Clip 1 (8s) + Clip 2 (text-only Extend, 8s)
-  24s  -> 3 clips, each an 8s extend of the previous
+  24s  -> 3 clips: Clip 1 (8s) + Clip 2 (Extend) + Clip 3 (Extend of Clip 2) — the maximum
 ```
 
 Never describe a 16-second script as one clip, and never write a prompt for a 9–15 second

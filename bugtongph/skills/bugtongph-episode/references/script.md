@@ -95,7 +95,7 @@ Rules:
 3. **Name the silent listener.** When one character speaks, the other is explicitly not
    speaking — see `clips.md`, which carries that into the prompt as a mouth-movement rule.
 4. **Labels are per-character, not per-line.** A character keeps one label for the whole
-   episode and across both clips.
+   episode and across every clip.
 5. **The same label spells the same in every file.** A label that changes between the script and
    the clip prompt is how a line lands on the wrong person.
 
@@ -105,8 +105,8 @@ The script's prose may still describe beats normally; only the dialogue block is
 
 Eight seconds is tiny: one clip holds roughly **eleven words of speech**. Read
 `tagalog-pacing.md` before writing any option; it carries the arithmetic, the word caps per
-clip count, and the riddle word-to-seconds table. The band is 1.5–2.2 words/second for natural
-conversational Tagalog (≈90–135 wpm); the retired 2.5–3.5 figure was reading speed.
+clip count, and the riddle word-to-seconds table. The band is 1.8–2.2 words/second for natural
+conversational Tagalog (≈105–135 wpm), 1.4–1.7 for slow, deliberate lines; the retired 2.5–3.5 figure was reading speed.
 
 Work in this order, every time:
 
@@ -152,11 +152,14 @@ Every clip is **8 seconds**. Never present a longer single clip:
 ```text
 <= 8s  -> 1 clip
   16s  -> 2 clips: Clip 1 (8s) + Clip 2 (text-only Extend, 8s)
-  24s  -> 3 clips, each an 8s extend of the previous
+  24s  -> 3 clips: Clip 1 (8s) + Clip 2 (Extend) + Clip 3 (Extend of Clip 2) — the maximum
 ```
 
 When a script needs 16 seconds, say plainly that it is **two clips**, and say what happens in
-each. If the user asks for more time to think, that time belongs in the second clip. State the
+each. If the user asks for more time to think, that time belongs in the second clip. A 24-second
+script is **three clips** — say what each one carries (for a bugtong, typically the recitation,
+the thinking, then the reaction and ending), and keep each clip's final second settled, because
+the next clip inherits only that second. Never plan more than three. State the
 clip count next to the duration, always — "16 seconds" alone is ambiguous.
 
 ## Feasibility

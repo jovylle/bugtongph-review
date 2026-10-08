@@ -72,25 +72,33 @@ Assemble in this order, every section present, nothing invented:
    frames around a strip, comic layout, collage, poster treatment, grid, split-screen furniture,
    or extra characters; no redesign or identity drift.
 
-   **Riddle pipeline — name the answer explicitly.** DALL-E has no knowledge of the episode's
-   riddle. A generic "no answer hints" instruction is meaningless to it. The locked answer **must
-   be named by its exact word** in the NEGATIVES block of the emitted prompt:
+   **Close the world with an inventory.** The NEGATIVES end with one positive line listing
+   everything the scene contains, so the generator has nothing left to fill in:
 
    ```text
-   Do not show [ANSWER], any object whose category is [ANSWER], any shape or silhouette
-   that resembles [ANSWER], or any container that could hold or conceal [ANSWER].
-   This scene shows only [characters and described elements]. Nothing else.
+   The only things in this scene are: <each character by label>, <each prop the SCRIPT and FRAME
+   name>, and <the locked place's fixed features>. Nothing else appears in any strip.
    ```
 
-   Substitute the actual locked answer word. This line belongs in the prompt text — not only in
-   a pre-emit check — because DALL-E only knows what the prompt tells it.
+   **Never name the answer, its category, or anything that stands for it — not even to forbid
+   it.** The answer is excluded by never entering the prompt, not by a "do not show" line. A
+   forbidden noun is still a noun the generator reads, so naming it puts it in the picture; and the
+   prompt is shown to the user, so the line would also print the answer (`riddle.md` "Scope of
+   answer visibility", `SKILL.md` §9).
 
-10. **SUBJECT INTEGRITY** — riddle pipeline: before assembling this section, name the locked
-    answer to yourself and audit every panel for objects in the answer's category — a container, a
-    folded paper, a shape, a silhouette, a material, a behavior — even when the object is never
-    identified. If any panel shows one, replace the beat before offering the prompt. Then confirm in
-    one line that the check passed and the named exclusion appears in the NEGATIVES block above.
-    Topic pipeline: no answer exists — instead lock the stated topic and angle.
+   NOTE — ours, not sourced: no image-model documentation was checked for how it handles negation.
+   The rule follows Google's Veo prompt guidance (describe what you want, not what to avoid). The
+   0.10.17 attempt to name the answer in the prompt was reverted because of it.
+
+10. **SUBJECT INTEGRITY** — riddle pipeline: **this is a check, not only a prohibition**
+    (`clips.md` "Answer integrity — check before emitting"). Before the prompt is offered, name the
+    locked answer to yourself and audit every panel *and every item in the inventory* for the
+    answer or its category — a container, a folded paper, a shape, a silhouette, a material, a
+    behaviour — even when the object is never identified, and for any panel that frames, lights, or
+    stares at one. If anything fails, replace the beat or drop the item, then offer the prompt. Do
+    not offer it and wait for the user to catch the leak. Report the result in one line **outside**
+    the prompt block (`answer check: passed`), without naming the answer. Topic pipeline: no answer
+    exists — instead lock the stated topic and angle.
 11. **ASPECT RATIO** — **portrait, 9:16** (the tool may return 1024×1536 / 2:3 — accept it). The
     clip's ratio (16:9 or 9:16) is chosen separately in Flow when the clip is generated, and this
     image has no bearing on it.

@@ -18,7 +18,7 @@ The active profile defines:
 - voice identity;
 - speech characteristics.
 
-Shipped turnarounds, offered to the user to attach (see `reference-binding.md`):
+Shipped turnarounds — bound only once the image is in the conversation (see `reference-binding.md`):
 
 | Profile | Turnaround |
 | --- | --- |
@@ -29,7 +29,7 @@ The validated IMAGE defines the current episode pose, expression, gaze, hand pla
 
 ## Identity precedence
 
-In `attached` mode the user's attached image is the primary identity authority, and text descriptions are supporting constraints that must not redesign a character visible in it.
+In `attached` mode the image in the conversation is the primary identity authority, and text descriptions are supporting constraints that must not redesign a character visible in it.
 
 In `text` mode the written profile is the authority **while a panel is being designed** — at FRAME, IMAGE PROMPT, and IMAGE. It is applied consistently across every panel and cannot be swapped mid-episode.
 
@@ -51,7 +51,7 @@ Never silently:
 
 ## Voice continuity
 
-Each speaking character must keep one stable production voice profile through Clip 1 and Clip 2.
+Each speaking character must keep one stable production voice profile across every clip of the episode.
 
 Voice profiles should describe production characteristics rather than identifiable people.
 

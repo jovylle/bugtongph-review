@@ -122,6 +122,7 @@ new riddle      -> nothing void. Every stage stays ✓, including CLIPS.
 new location    -> ENVIRONMENT SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new environment -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
 new profile     -> SCRIPT IMAGE-PROMPT IMAGE CLIPS void
+new identity mode (same profile) -> IMAGE-PROMPT IMAGE CLIPS void
 new script      -> IMAGE-PROMPT IMAGE CLIPS void
 new frame       -> IMAGE-PROMPT IMAGE CLIPS void
 new image       -> CLIPS void
@@ -212,6 +213,9 @@ TOPIC  | LOCATION | ENVIRONMENT | PROFILE | SCRIPT | FRAME | IMAGE | CLIPS
 Never print channel, release, or workflow alongside it. Those are reported only when asked, via
 `.channel`, `.release`, and `.workflow`.
 
+The one addition: a `.auto` stop prints the progress display (`overview.md` "Progress display")
+above the stage line. It is the overview, not a second status line.
+
 ## 10. Anti-loop
 
 - A reroll fires only once the previous option set was fully displayed. An identical repeat
@@ -232,11 +236,19 @@ questions.
    continuous run**, not one stage per
    turn: it does not stop between stages. It prints the preselected trail as a compact block,
    one line per stage, as it goes.
-2. It **stops once the image has been generated and validated.** CLIPS is the last step and runs
-   only when the user asks for it (`.clips`, or `.auto clips`).
+2. It runs in **two phases**. Phase 1 **stops once the image has been generated and validated**
+   and prints the progress display. Phase 2 is the **next `.auto`**: it finds IMAGE ✓ and CLIPS ○
+   and writes every clip prompt for the locked clip count (1, 2, or 3). `.clips` does the same on
+   the gated path. A plain `.auto` always resumes from the first incomplete checkpoint
+   (`runtime-state.md`): a blocked image is retried per "A blocked image", and a finished episode
+   is reported as finished, never redone.
+   - **`.auto draft`** runs Phase 1 without image generation — the image prompt is printed as
+     text — and goes straight on to CLIPS, marked DRAFT. The sheet still has to come back for
+     `.image` validation before the clips are final (`runtime-state.md` "Draft clips").
 3. It never takes option 2 or 3 on its own, and never invents an option when none is valid.
 4. It runs the same stage contracts, the same validation gates, and the same 8-second budget as
-   the gated path. Unattended does not mean unchecked.
+   the gated path. Unattended does not mean unchecked. (`.auto draft` defers only the IMAGE gates,
+   to the moment its sheet comes back.)
 
    - **The trail is mandatory.** One line per stage, in order, printed as the run goes. A stage that
      produced nothing, or was skipped, is a **failed run** and is reported as one — never passed
@@ -252,8 +264,9 @@ questions.
    (Notion unconnected *and* the bundled set unreadable or exhausted), **no eligible profile can
    be drawn** (`AUTO_PROFILE_SELECTION_FAILED: unable to select an eligible random profile` —
    never a fallback to `profile-01`), the script cannot fit its clip budget, or an image fails
-   validation twice. A profile whose turnaround simply was not attached is **not** a blocker —
-   unattended runs continue in `text` identity mode.
+   validation twice. A profile whose turnaround is not in the conversation is **not** a blocker —
+   unattended runs continue in `text` identity mode and print the download link in the trail
+   (`reference-binding.md`).
 6. A plain stage command (`.script`, `.location`, …) is always the gated conversational path and
    is unaffected by this. Repeating a stage command still rerolls it.
 

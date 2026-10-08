@@ -1,5 +1,78 @@
 # Changelog
 
+## 0.10.18 — answer never named, honest turnaround binding, `.auto` and `.auto draft` finished
+
+Corrects three things 0.10.16–0.10.17 got wrong, and sweeps the wording those releases left stale.
+
+### Fixed — the image prompt no longer names the answer
+
+0.10.17 put the answer into the image prompt as a "do not show [ANSWER]" line. That broke the
+secrecy rule (`riddle.md`, `SKILL.md` §9: the answer never appears in the image prompt), printed the
+answer to the user with the prompt, and handed the generator the very noun it was meant to avoid.
+Reverted. The NEGATIVES now end with a closed, positive inventory — "The only things in this scene
+are: …. Nothing else appears." — and the internal answer audit checks every panel and every
+inventory item. The audit's result is reported outside the prompt, without the answer. Render gate
+10 now also fails an object in the answer's category, or a prominent object the inventory does not
+list. The quick skill's image step follows the same rule. (`image-prompt.md` §9–§10, `render.md`,
+`bugtongph-quick`)
+
+### Fixed — turnaround binding describes only what actually works
+
+0.10.16 assumed that `"Read"` in `capabilities` registers a `read_skill_file` tool that returns a
+skill's image into the chat. Neither is true: `capabilities` is a descriptive label in the host
+schema and registers nothing, and `read_skill_file` belongs to an unrelated framework (Haystack).
+Image generation only uses images already in the conversation. Now:
+
+- the mode is settled **when the profile locks**, not at IMAGE — OVERVIEW and the image prompt's
+  IDENTITY LOCK are written from it;
+- order: an image already attached → `attached`; else, where the host can show a local file (Codex
+  `view_image`), load it from the installed `assets/` → `attached` (unverified in a live run); else
+  ask once with a download link pinned to tag `v0.10.10` (under `.auto`, the link goes in the trail
+  and the run continues in `text`);
+- attaching later and sending `.profile use <id>` re-locks the same profile in `attached` mode, a
+  new cascade row that voids the image prompt, image and clips only;
+- `capabilities` is back to `["Instructions"]`;
+- every "cannot attach" / "offered to attach" line across the tree now says the same thing.
+
+(`reference-binding.md`, `SKILL.md` §5–§6, `profile.md`, `identity.md`, `active-pair-runtime.md`,
+`render.md`, `veo-shots.md`, `overview.md`, `reroll-and-options.md` §6, both manifests)
+
+### Fixed — `.auto` and `.auto draft` finished
+
+- `reroll-and-options.md` §11, the `.auto` authority, still said clips run only on request. It now
+  states the two phases. SKILL §3, README and HANDOFF match.
+- **A blocked image** (`IMAGE !`) is defined: the next `.auto` validates any image that arrived,
+  otherwise repairs only the prompt clause the failed gate points to, generates once, and stops for
+  the user after two more failures. (`runtime-state.md`)
+- **The progress display is defined once** (`overview.md` "Progress display") as the overview plus
+  one next-step line, printed in addition to the single stage line. SKILL §1's second, different
+  copy is gone, and §8 / `reroll-and-options.md` §9 say it is not a second status line.
+- **`.auto draft`**: clip prompts are marked DRAFT and written from the locked FRAME plan. The
+  `[ATTACH SHEET]` placeholder is gone — REFERENCE AUTHORITY stays verbatim, and the "generate the
+  sheet, bring it back for `.image`" instruction is one operator line outside the prompt blocks. A
+  sheet that validates clears DRAFT and keeps the clips; "new image → CLIPS void" does not apply to
+  a draft's first sheet. DRAFT clips do not count as CLIPS done. (`runtime-state.md` "Draft
+  clips", `clips.md` "Draft clips", `overview.md`, SKILL §1/§3/§8/§11, frontmatter)
+
+### Changed — wording swept to match
+
+- **Three clips everywhere:** manifests' longDescription ("one to three"), README, the quick skill
+  (`.veo 3`, "1, 2 or 3?", a Clip 3 bullet), SKILL §6/§10/§12, `script.md`, `tagalog-pacing.md`,
+  `veo-3-1-lite.md`, `veo-prompt.md`, `workflow.md`, `identity.md`, `veo-google-flow.md`. "24s is
+  three chained extends" is now "Clip 1 plus two Extends — the maximum".
+- **Pacing labels:** natural conversational is 1.8–2.2 words/second and slow is 1.4–1.7, per
+  `tagalog-pacing.md`. Nine places called 1.5–2.2 "natural", including the 0.10.15 fix.
+- **Material:** `clips.md` §12 and clip acceptance, `reference-binding.md`, and
+  `veo-google-flow.md` no longer forbid CGI/plastic/clay for every profile or demand photographed
+  paper of a non-paper profile.
+- **`clips.md` word count gate:** applies to multi-shot dialogue clips; a genuinely simple scene may
+  come in under it when every section is present, matching "Minimum prompt depth".
+- **HANDOFF:** release state, the "Notion only" and "production default" lines, the `.auto` text,
+  and new open items (no install probe on this machine; the unverified Codex path; the inventory
+  and `.auto` changes still need a real run).
+
+---
+
 ## 0.10.17 — reliable .auto, .auto draft, word count gate, answer named in image prompt
 
 Four improvements from a real session debug and user requests.
@@ -22,6 +95,8 @@ validate the sheet, then paste the clip prompts into Google Flow. (`SKILL.md` §
 
 ### Fixed — answer must be named explicitly in image prompt NEGATIVES
 
+> Reverted in 0.10.18: naming the answer broke the secrecy rule. See 0.10.18.
+
 The answer-leak pre-emit check ran internally but never put the answer word into the actual
 prompt text sent to DALL-E. DALL-E has no knowledge of the episode's riddle — a generic
 "no answer hints" instruction is meaningless to it. The NEGATIVES block now requires the
@@ -41,6 +116,9 @@ carries no context from its siblings. (`clips.md` "Word count gate")
 ---
 
 ## 0.10.16 — catalog turnarounds self-supply at IMAGE
+
+> Retracted in 0.10.18: the `"Read"` capability registers no tool and `read_skill_file` is not a
+> ChatGPT or Codex tool. See 0.10.18 "turnaround binding".
 
 Catalog profiles (`profile-01`, `profile-02-mich`) now try to put their own shipped turnaround
 into the session automatically — so the user doesn't have to find and attach the file manually.

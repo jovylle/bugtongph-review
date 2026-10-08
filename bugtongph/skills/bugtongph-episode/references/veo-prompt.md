@@ -93,7 +93,9 @@ Write dialogue as `LABEL: "line"`, using the exact uppercase label fixed at PROF
 pronouns, no narration, no unattributed lines. State who is silent as well as who speaks — see
 `clips.md` "Speaker attribution — one mouth at a time".
 
-## Clip 2
+## Clip 2 and Clip 3
+
+Clip 3, in a 3-clip episode, follows every rule below with Clip 2 as its source.
 
 Treat Clip 2 as a text-only Extend continuation from the final visual/audio state established at the
 end of Clip 1, especially the final-second continuity. Restate the material-reality block verbatim —

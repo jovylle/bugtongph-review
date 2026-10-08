@@ -43,10 +43,11 @@ Reference and asset paths below resolve relative to this skill's own directory,
    unconnected is not a blocker — fall back to the bundled set and say so. Stop only when
    both sources fail.
 2. **Identity.** Lock an identity mode per `../bugtongph-episode/references/reference-binding.md`.
-   `attached` means the user attached an image in the conversation, and that image is the
-   reference input; `text` means the written profile description holds the character while
-   the image is designed. A file path inside the plugin package is not an image the session can
-   supply, so never block waiting for one, and never claim it is bound when no image is present.
+   `attached` means a character image is in the conversation, and that image is the reference
+   input; `text` means the written profile description holds the character while the image is
+   designed. A shipped turnaround reaches the conversation only by the steps in that file's "How
+   a shipped turnaround reaches the conversation" — never block waiting for one, and never claim
+   it is bound when no image is present.
    When no image is in the conversation, do not present a catalog character as the suggested
    default — offer an invented character instead, since a text-only description of a catalog
    character promises a match it cannot deliver. Fix one uppercase label per character
@@ -70,7 +71,7 @@ Reference and asset paths below resolve relative to this skill's own directory,
 | `.img` | Start or continue the flow, deciding the current step from the conversation. |
 | `.img reroll` | Redo **the current step**: another riddle, another three scripts, or another image. |
 | `.veo` | Produce the clips from the current image (skips ahead when an image already exists). |
-| `.veo 1` / `.veo 2` | Same, with the clip count set explicitly. |
+| `.veo 1` / `.veo 2` / `.veo 3` | Same, with the clip count set explicitly. |
 
 Plain replies drive it: `approve` / `ok` advances, `plot 2` picks, and any described change
 (`warmer light`, `less dialogue in shot 2`) is applied to the current step.
@@ -103,10 +104,12 @@ Then stop. Do not plan, and do not choose a scene yet.
 Offer **exactly three** script options, numbered 1–3, with option 1 marked `(suggested)`. Each is one short paragraph that locks:
 location and atmosphere, starting positions and physical states, the beat sequence, who
 speaks (each line written as `LABEL: "line"` with the fixed uppercase character labels), and the
-ending state. Each must be performable in roughly 8 seconds of Filipino
-dialogue, and must avoid transformations, complex choreography, and simultaneous major
+ending state. Each must fit 8 seconds of Filipino dialogue per clip — 1, 2, or 3 clips, stated
+with the arithmetic — and must avoid transformations, complex choreography, and simultaneous major
 events. Use `../bugtongph-episode/references/script.md` for what a script must lock, with the
-1.5–2.2 conversational Tagalog words/second timing rule (see `../bugtongph-episode/references/tagalog-pacing.md`) and room reserved for breaths, pauses, and reactions.
+1.8–2.2 conversational Tagalog words/second timing rule, 1.4–1.7 for the riddle (see
+`../bugtongph-episode/references/tagalog-pacing.md`), and room reserved for breaths, pauses, and
+reactions.
 
 The three must differ in **setting and beat**, not in wording. Nothing may use the hidden
 answer as story inspiration or as visual information.
@@ -139,6 +142,12 @@ The image must contain no dialogue, captions, labels, panel numbers, borders, co
 layout, collage, grid, storyboard structure, poster treatment, cinematic key-art styling, or
 answer clue — it is a plain visual reference for the video model, not a finished picture.
 
+End the image prompt with a closed inventory — `The only things in this scene are: …. Nothing
+else appears.` — listing the labelled characters, the script's props, and the place's fixed
+features. **Never name the answer or its category in the prompt, not even to forbid it**: the
+generator reads a forbidden noun as a noun, and the prompt is shown to the user. See
+`../bugtongph-episode/references/image-prompt.md` §9–§10.
+
 Then stop.
 
 - `reroll` or a described change → regenerate. In `attached` mode identity does not drift while
@@ -147,12 +156,12 @@ Then stop.
 
 ### Step 4 — CLIPS
 
-Ask the clip count unless it was already given: **1 or 2?** Default to 1; use 2 only when
-the scene genuinely needs a handoff between beats.
+Ask the clip count unless it was already given: **1, 2 or 3?** Default to 1; use 2 or 3 only
+when the script's own word count needs them (`../bugtongph-episode/references/tagalog-pacing.md`).
 
 Produce exactly that many **copy-ready** prompts. **Each one stands alone** — the reader pastes a
 single prompt into Google Flow with no other text, so each carries the whole shared preamble
-(REFERENCE AUTHORITY, MATERIAL REALITY, the speaker roster) and neither depends on the other having
+(REFERENCE AUTHORITY, MATERIAL REALITY, the speaker roster) and none depends on another having
 been read:
 
 - Clip 1 — the required blocks and all numbered sections in
@@ -163,6 +172,8 @@ been read:
   in `clips.md`: the material-reality block restated verbatim, the inherited visual and audio state
   written out in full. Never compress it to "continue directly from the final frame" — that is a
   reference, not an artifact. Never generate another image.
+- Clip 3 (when three are asked for) — the same, per the Clip 3 sections in `clips.md`, inheriting
+  from Clip 2's final second.
 
 The generated image is the authority for everything visible: face, build, clothing
 construction, material, scale, and composition. The prompt carries the character as voice and
@@ -204,7 +215,7 @@ flow can produce, because the prompt still describes the previous picture.
 | `../bugtongph-episode/references/image-prompt.md` | Step 3, for the material clause the image must carry |
 | `../bugtongph-episode/references/clips.md` | Step 4, for the required prompt sections and clip acceptance |
 | `../bugtongph-episode/references/veo-google-flow.md` | Step 4, for timing, shot, cut, and feasibility rules |
-| `../bugtongph-episode/assets/character-turnaround.png` | Step 3, when the user attaches it for an exact identity match |
+| `../bugtongph-episode/assets/character-turnaround.png` | Step 3, when it is in the conversation for an exact identity match (`reference-binding.md`) |
 
 Deliberately not used here: channels, release, workflow contract, `.profile` registry,
 runtime state, FRAME staging, image validation gates, legacy `.pipeline`.

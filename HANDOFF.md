@@ -15,16 +15,16 @@ memory of prior work.
 | Manifests | `bugtongph/plugin.json`, `bugtongph/.codex-plugin/plugin.json` |
 | Builder | `pack.py` (repo root) |
 | Validator | `validate-plugin.py` (repo root) |
-| Host install probe | `~/.hermes/skills/software-development/codex-plugin-packaging/scripts/verify_plugin_install.py` |
+| Host install probe | `~/.hermes/skills/software-development/codex-plugin-packaging/scripts/verify_plugin_install.py` — **missing on this machine** since 0.10.15 |
 | Build output (git-ignored) | `dist/` |
 | Pre-pipeline original, for reference | `original-extracted/` |
 
 ## Branches and releases
 
 - `main` = production. Commits here ship; each release is tagged `vX.Y.Z`.
-- `dev` = all work. Currently checked out, currently **0.10.14**.
-- **Release state:** `main` is at **v0.10.10** (`211e0ff`, pushed). `dev`'s **0.10.11 through 0.10.14
-  are unpushed**, and 0.10.13 + 0.10.14 are still uncommitted in the working tree — commit them,
+- `dev` = all work. Currently checked out, currently **0.10.18**.
+- **Release state:** `main` is at **v0.10.10** (`211e0ff`, pushed). `origin/dev` has 0.10.11–0.10.14
+  (`35ac834`). **0.10.15 through 0.10.18 are committed on local `dev` and unpushed.** To release:
   push `dev`, merge into `main` from a throwaway worktree, tag, then verify from the remote's own
   refs.
 
@@ -54,13 +54,15 @@ previously cached copy.
    options could be described by the same sentence, they are one option.
 4. **Any correction returns to OVERVIEW and waits**; multiple rejections queue as PENDING
    FIXES and are handled upstream-first.
-5. **The riddle comes from Notion only.** Never model memory, web search, or a generated
-   riddle. Preserve stored wording exactly. Keep the answer operator-only — it must never be
-   indicated in any audience-facing output.
-6. **Every clip is 8 seconds.** One clip holds ~11 words of speech. Count the riddle's own
+5. **The riddle comes from Notion, or the bundled set when Notion is absent.** Never model
+   memory, web search, or a generated riddle. Preserve stored wording exactly. Keep the answer operator-only — it must never be
+   indicated in any audience-facing output — including the image prompt, so it is never named
+   there, not even as a "do not show" exclusion.
+6. **Every clip is 8 seconds, and an episode is 1, 2, or 3 clips.** One clip holds ~11 words of speech. Count the riddle's own
    words first; over ~9 words it cannot share a clip with a reaction, so most episodes are 2
    clips. Never state a duration without its clip count and its arithmetic.
-7. **The status line is the stage line only.** No channel, release, or workflow.
+7. **The status line is the stage line only.** No channel, release, or workflow. A `.auto` stop
+   also prints the progress display (the overview), in addition to the stage line.
 8. **Veo 3.1 Lite is the only target.** Veo 3.2 is not in Flow; do not target it.
 9. **At CLIPS the validated sheet is the character authority**, above the attached turnaround and
    above the written profile. Every clip prompt opens with a REFERENCE AUTHORITY block and a
@@ -105,8 +107,8 @@ topic:  TOPIC  -> LOCATION -> ENVIRONMENT -> PROFILE -> SCRIPT -> FRAME -> OVERV
 | FRAME | panel count 2–5 (default 2–3) | the ingredient-sheet panel plan, text only |
 | OVERVIEW | — | shows everything locked; the hub every correction returns to |
 | IMAGE PROMPT | — | the prompt formula, text only (cheap gate before generation) |
-| IMAGE | — | binds the reference asset, generates, validates |
-| CLIPS | — | shot plan + copy-ready Clip 1 (Ingredient, 8s) and Clip 2 (Extend) prompts |
+| IMAGE | — | generates in the identity mode settled at PROFILE, validates |
+| CLIPS | — | shot plan + one copy-ready prompt per clip: Clip 1 (Ingredient, 8s), Clips 2–3 (Extends) |
 
 RIDDLE is the default; TOPIC runs only on `.topic` or `.auto topic` / `.auto fresh topic`
 (`.vlog` and `.vblog` are aliases for `.topic`).
@@ -117,21 +119,26 @@ the current lock at CLIPS). Everything from LOCATION onward is a structural chai
 — see `reroll-and-options.md` §6, and note that the episode *language* is structural even though the
 riddle identity is not.
 
-`.auto` is the unattended mode: takes option 1 at every gate, stops once the image is generated
-and validated. CLIPS runs only on request.
+`.auto` is the unattended mode: takes option 1 at every gate (a random draw at PROFILE) and runs in
+two phases — it stops once the image is generated and validated and prints the progress display;
+the next `.auto` writes the clips. A blocked image is retried by the next `.auto`. `.auto draft`
+skips image generation, prints the image prompt and DRAFT clip prompts, and waits for the sheet to
+come back for `.image` validation. Authority: `reroll-and-options.md` §11, `runtime-state.md`.
 
 ## Profiles
 
 | Profile | Kind | Reference asset |
 | --- | --- | --- |
-| `profile-01` | production default | `assets/character-turnaround.png` |
+| `profile-01` | shipped catalog (not a default — there is none) | `assets/character-turnaround.png` |
 | `profile-02-mich` | permanent, reference-backed | `assets/mich-turnaround.png` |
 
 Which profile is **suggested** at PROFILE depends on whether a character image is actually in the
 conversation: with one attached, the matching catalog profile leads in `attached` mode; with none,
 an AI-invented profile leads and the catalog profiles are listed for a user who will supply the
-image. A catalog character is never suggested as a text-only description — the shipped turnaround
-cannot be attached, so a description would promise a match it cannot deliver. See
+image. A catalog character is never suggested as a text-only description — the skill cannot put
+its turnaround in the conversation by itself, so a description would promise a match it cannot
+deliver. The mode is settled at PROFILE lock: image already attached, or loaded by a host that can
+show local files (Codex `view_image`), or the user gets a tag-pinned download link. See
 `reference-binding.md` "Which profile is offered, by asset availability". At CLIPS the validated
 sheet overrides the profile for everything visible.
 
@@ -198,6 +205,22 @@ survive. A green local validator is not host proof — run the probe against the
 
 ## Open items
 
+- **0.10.15–0.10.18 were never install-verified.** The host probe is missing on this machine, so
+  only `validate-plugin.py` ran. Restore the probe (or install by hand and check both skills load
+  and the `defaultPrompt` entries survive) before releasing to `main`.
+- **0.10.16's binding was wrong and is rolled back in 0.10.18.** `interface.capabilities` is a
+  label that registers no tool, and `read_skill_file` is a Haystack tool, not a ChatGPT or Codex
+  one. Image generation only uses images already in the conversation. Still unverified: the Codex
+  `view_image` path (step 2 of `reference-binding.md`), and where a ChatGPT-hosted plugin's files
+  live, if anywhere the model can reach. Test both before claiming either.
+- **The 0.10.18 closed inventory is unproven.** The image prompt no longer names the answer; it ends
+  with "The only things in this scene are: …". Re-run the riddle whose answer leaked into the sheet
+  and check the sheet with render gate 10.
+- **The 0.10.17/0.10.18 two-phase `.auto` and `.auto draft` are prose.** On a real run check: the
+  first `.auto` stops after a validated image with the progress display; the second writes the
+  clips; a blocked image is retried with the prompt repaired, not resent unchanged; `.auto draft`
+  prints no image, prints the clips with no placeholder inside them, and a sheet brought back to
+  `.image` clears DRAFT without rebuilding the clips.
 - **The 0.10.14 portrait canvas is unproven.** The image is now 9:16 with stacked full-width strips,
   so each strip has real height for a face. Nothing has been generated since. Generate one sheet and
   check four things: the canvas comes back portrait (9:16 or 2:3 — ChatGPT's image tool normalises
@@ -245,8 +268,6 @@ survive. A green local validator is not host proof — run the probe against the
 - **Two images in one request** is unverified — the plugin asks for 2 candidates and falls back
   to 1. Do not assert the host supports it.
 - **Veo 3.1 Lite output resolution** is not stated by Google, so the plugin asserts none.
-- **`.auto` stopping before CLIPS** is a deliberate default; flip it if the user prefers
-  unattended clips.
 - **Silent second clip** is mitigated (explicit audio, no dead-air ending, extend the individual
   clip, check the model) but the post-production voice-over fallback is documented rather than
   automated.

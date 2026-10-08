@@ -22,15 +22,27 @@ ENVIRONMENT ✓ <weather, time, ambience>
 PROFILE     ✓ <profile id> — <characters: labels + a short look/style line>
 SCRIPT      ✓ <2–3 lines of story: what happens, beat by beat> (<spoken seconds> / <clip count>)
 FRAME       ✓ <panel count> strips — <shot progression>, ~<seconds> per shot in an 8s clip
-IMAGE       ✓ validated  (or ○ not yet / ! blocked)
-CLIPS       ○ not yet    (or ✓ <N> prompts ready)
+IMAGE       ✓ validated  (or ○ not yet / ○ not generated (draft) / ! blocked — <failed gate>)
+CLIPS       ○ not yet    (or ✓ <N> prompts ready / ✓ <N> DRAFT prompts)
 
 PENDING FIXES (0)
 ```
 
-The IMAGE and CLIPS rows always appear. Before IMAGE exists they show `○`; after IMAGE validates they show `✓ validated`; after CLIPS they show `✓ N prompts ready`.
+The IMAGE and CLIPS rows always appear, so the overview also shows how far the episode got.
 
-**`.auto` stops show this full display**, extended below the OVERVIEW header, so the user can always see exactly where the episode stands.
+## Progress display
+
+Every `.auto` stop prints this same block — the progress display — followed by **one** next-step
+line, and then the usual single stage line (`SKILL.md` §8). It is not a second format: it is the
+overview, printed at the stop.
+
+| Stopped at | Next-step line |
+| --- | --- |
+| IMAGE ✓, CLIPS ○ | `→ .auto to write the clip prompts` |
+| IMAGE ! | `→ .auto to retry the image, or fix the named item first` |
+| CLIPS DRAFT | `→ generate the sheet from the image prompt, then .image here to validate it` |
+| CLIPS ✓ | `→ episode complete — .auto fresh for a new one` |
+| a blocker before IMAGE | the blocker in one line, and the command that clears it |
 
 Never re-explain a stage past these lines, and never preview the clips.
 
@@ -56,8 +68,9 @@ and the characters are now shown in full while the state marks stay terse.
    inside an 8-second clip`. Lite requires 8s for ingredients, so this is the real budget.
 2. **The locked profile and its identity mode**: the profile id, how it was selected (`random`
    under `.auto`, or `user` / `suggested` at the gate), and the mode — `text` (the written profile
-   holds the character; no setup) or `attached` (the user supplied a turnaround image, giving an
-   exact match), because that changes what the image stage can promise. A run whose selection step
+   holds the character; no setup) or `attached` (a turnaround image is in the conversation, giving
+   an exact match), because that changes what the image stage can promise. In `text` mode for a
+   catalog profile, repeat the turnaround download link here once. A run whose selection step
    failed stops here instead, reporting `AUTO_PROFILE_SELECTION_FAILED: unable to select an
    eligible random profile` — never a fallback to `profile-01`.
 3. **The timing budget**: the riddle's own spoken seconds, the clip count, and the words left

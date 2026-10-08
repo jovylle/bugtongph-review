@@ -13,54 +13,61 @@ Lock exactly one mode at PROFILE:
 | Mode | Identity authority | How the image enters |
 | --- | --- | --- |
 | `text` | the written profile: characters, appearance, clothing, material, scale, voice | no image; generation proceeds from description |
-| `attached` | an image present in the conversation | skill-supplied via `read_skill_file`, or user-attached — both result in `attached` mode |
+| `attached` | an image present in the conversation | the user attached it, or the host loaded it from the installed plugin's files |
 
 Neither mode is the whole story. Once the episode reaches CLIPS the **validated sheet** outranks
 both for everything visible — see "Authority order" and "Which profile is offered, by asset
 availability" below.
 
 `text` needs no setup and is fine for an invented profile. For a catalog character with a shipped
-turnaround, the skill now attempts to self-supply the image at the IMAGE gate before falling back
-to `text` — see "Shipped turnarounds — automatic binding" below.
+turnaround, the mode is settled by the steps below.
 
-## Shipped turnarounds — automatic binding
+## How a shipped turnaround reaches the conversation
 
 `profile-01` ships `assets/character-turnaround.png` and `profile-02-mich` ships
 `assets/mich-turnaround.png`. These are the canonical definitions of those characters and the
 source of the written profile text.
 
-When the locked profile has a shipped turnaround and no image is yet in the conversation, the
-IMAGE gate attempts to self-supply it in this order:
+Image generation only uses an image that is **already in the conversation** — one the user
+attached, or one generated earlier in the thread. A skill can only name a file: no skill tool
+returns a packaged image to the chat, and the manifest's `capabilities` list is a label that
+registers no tool. So a shipped turnaround is never bound just because it ships.
 
-**Step 1 — `read_skill_file` (try first)**
+Settle the mode **when the profile locks**, not at IMAGE: OVERVIEW and the IMAGE PROMPT's
+IDENTITY LOCK are both written from it, and a mode that changes later leaves them describing the
+wrong source. Try, in order:
 
-Call:
-```text
-read_skill_file("bugtongph-episode", "assets/character-turnaround.png")
-```
-(or `"assets/mich-turnaround.png"` for `profile-02-mich`)
+1. **Already in the conversation.** The user attached the turnaround, or a character sheet for
+   this profile → `attached`.
+2. **Loaded from the installed files.** Where the plugin is installed as files on disk and the
+   host has a tool that shows a local image in the conversation (Codex: `view_image`), load the
+   turnaround from this skill's `assets/` directory. If it is now visible in the conversation →
+   `attached`. If there is no such tool or no such file, go to step 3 without comment.
+3. **Ask once** (gated path only):
 
-If the host returns `ImageContent`, the image is now in the session as a content part — exactly
-as if the user had attached it. Proceed as `attached` mode.
+   ```text
+   profile-01 has a reference turnaround. I can't attach files myself here. Download it from
+   https://raw.githubusercontent.com/jovylle/bugtongph-review/v0.10.10/bugtongph/skills/bugtongph-episode/assets/character-turnaround.png
+   and drop it into this chat, and I'll match it exactly. Or say "text only" and I'll hold the
+   characters from the written profile.
+   ```
 
-**Step 2 — GitHub raw URL fallback (if Step 1 fails or is unsupported)**
+   For `profile-02-mich` the file is `.../assets/mich-turnaround.png` at the same tag. The image
+   arrives → `attached`. The user says text only, or nothing arrives → `text`, said in one line.
 
-Present the direct link and ask the user to drag or paste the image into the chat:
+The links are pinned to a release tag so the image cannot change under a locked profile. A link
+in text is **not** a reference: the image counts only once it is attached.
 
-```text
-profile-01 turnaround: https://raw.githubusercontent.com/jovylle/bugtongph-review/main/bugtongph/skills/bugtongph-episode/assets/character-turnaround.png
+**Under `.auto`** step 3 never asks — an unattended run does not stop for this. It locks `text`
+and puts the link in the PROFILE line of the trail. Attaching the image afterwards and sending
+`.profile use <id>` re-locks the same profile in `attached` mode, which voids the IMAGE PROMPT,
+IMAGE and CLIPS (`reroll-and-options.md` §6) and returns to OVERVIEW.
 
-profile-02-mich turnaround: https://raw.githubusercontent.com/jovylle/bugtongph-review/main/bugtongph/skills/bugtongph-episode/assets/mich-turnaround.png
-```
+Never block IMAGE. Never claim an image is bound when none is in the conversation.
 
-If the image arrives → `attached` mode. If the user declines or nothing arrives → Step 3.
-
-**Step 3 — text mode (if both fail)**
-
-Proceed as `text` mode and say in one line that identity will be held by description rather than
-matched to the reference.
-
-Never block IMAGE. Never claim an image is bound when none is present in the conversation.
+NOTE — unverified: step 2 is read from OpenAI's own image-generation skill text, not from a run of
+this plugin. Where a ChatGPT-hosted plugin's files live, and whether they can be shown in the
+conversation there, is unknown.
 
 ## Authority order
 
@@ -86,11 +93,12 @@ conversation. An identity that cannot be bound must never be offered as if it co
 - **An image is present** — the user attached a turnaround or any character sheet: offer the
   matching catalog profile as option 1 `(suggested)` in `attached` mode. The image is the
   authority and an exact match is achievable.
-- **No image is present** — do **not** present a catalog character as the suggested default. Its
-  turnaround is a path inside the plugin package and cannot be attached, so the "canonical"
-  identity would be held by description alone: the mode that drifts. Offer an **AI-invented
-  profile** as option 1 `(suggested)` instead, and keep the catalog profiles listed as further
-  choices for a user who wants one and will supply the image.
+- **No image is present** — do **not** present a catalog character as the suggested default. The
+  skill cannot put its turnaround in the conversation by itself (step 2 above works only where the
+  host can load local files), so the "canonical" identity would be held by description alone: the
+  mode that drifts. Offer an **AI-invented profile** as option 1 `(suggested)` instead, and keep
+  the catalog profiles listed as further choices for a user who wants one and will attach the
+  image from the link.
 
 Never describe a catalog character in words and imply the result will match its shipped
 turnaround. Either the image is in the conversation, or the episode invents its own characters.
@@ -104,8 +112,8 @@ A render is a failure, and must be regenerated, when:
   clothing, wrong apparent age, wrong material or art style, or characters swapped with each
   other;
 - at CLIPS, the returned clip contradicts the validated sheet — re-rendered or generic faces,
-  changed build, changed clothing construction, or a material that reads as smooth CGI / plastic /
-  clay instead of photographed paper. See `clips.md` "Clip acceptance".
+  changed build, changed clothing construction, or a material other than the one the locked
+  profile names. See `clips.md` "Clip acceptance".
 
 Character **swap** is the most common of these: two characters delivered with each other's
 appearance, clothing, or voice. It is a failure in either mode.

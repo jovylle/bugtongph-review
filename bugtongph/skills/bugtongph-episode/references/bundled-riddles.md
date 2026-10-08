@@ -82,7 +82,7 @@ swapping it voids nothing (`reroll-and-options.md` §6). The language is differe
 episode is spoken in, so changing it after the script is locked does invalidate the script and
 everything built on it.
 
-Pacing: the 1.5–2.2 words/second band in `tagalog-pacing.md` is calibrated for Tagalog. Bisaya
+Pacing: the words/second bands in `tagalog-pacing.md` (natural 1.8–2.2, slow 1.4–1.7) is calibrated for Tagalog. Bisaya
 has similar word length and can use the same band; **English is shorter per word**, so an English
 episode carries more words in the same time — do not reuse the Tagalog word counts for it.
 

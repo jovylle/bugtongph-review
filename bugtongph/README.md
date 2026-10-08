@@ -3,7 +3,8 @@
 A ChatGPT/Codex plugin for producing Filipino video episodes. The subject comes from one of
 two content pipelines — a *bugtong* (riddle) selected from Notion, or a fresh topic invented by
 the model — then one locked Character + Art Style + Voice profile per episode, script and
-camera planning, a validated Clip 1 render, and two copy-ready Google Flow / Veo prompts.
+camera planning, a validated Clip 1 render, and one to three copy-ready Google Flow / Veo prompts
+(one per 8-second clip).
 
 ## Try it (30 seconds)
 
@@ -17,7 +18,9 @@ immediately, with no setup at all:
 `.auto` is the **unattended** path: it preselects every stage — riddle or topic, location,
 environment, profile, script, frame — on the suggested option, prints the trail as it goes, and
 runs straight through to generating the image, without asking at each gate. It stops once the
-image is validated. `.clips` is then one more command.
+image is validated and shows what is done and what is not. Send `.auto` again and it writes the
+clip prompts. `.auto draft` does everything except generate the image: it prints the image prompt
+and the clip prompts in one go, and you bring the generated sheet back for `.image` to check it.
 
 The stage commands (`.riddle`, `.location`, `.script`, …) are the other mode: each one asks a
 single question and stops, so you can steer any single choice. Reply with the number of the
@@ -27,9 +30,9 @@ Once that is comfortable:
 
 - `.topic` — no riddle; the AI invents the topic.
 - `.riddle bisaya` — play in Bisaya instead of Tagalog (also `.riddle english`).
-- `.clips` — the two copy-ready Veo prompts, after the image.
+- `.clips` — the copy-ready Veo prompts (1–3 clips), after the image.
 - `.img` — the quick path: one riddle, three scripts, one image, no staging.
-- `.veo` — the quick path's clip step, after `.img` (`.veo 1` / `.veo 2` for the count).
+- `.veo` — the quick path's clip step, after `.img` (`.veo 1` / `.veo 2` / `.veo 3` for the count).
 
 ## Install (local, personal marketplace)
 
@@ -72,19 +75,21 @@ Connect Notion to use your own curated records instead.
 | Mode | How it works |
 | --- | --- |
 | `text` | the written profile holds the character while the sheet is designed. No setup; the sheet, not the description, is what the video is later held to. |
-| `attached` | attach a turnaround image in the chat and it is used as the reference image input, for an exact match. |
+| `attached` | a turnaround image is in the chat and it is used as the reference image input, for an exact match. |
 
 Which profile is **suggested** depends on whether an image is actually in the chat. With a
 character image attached, the matching catalog profile leads and an exact match is achievable.
 With no image, an **AI-invented profile** leads instead, and the catalog profiles stay listed for
-someone who will supply the image — because a catalog character's turnaround cannot be attached
-for you, so offering it as a text-only default would promise a match it can never deliver.
+someone who will supply the image — because the plugin cannot put a catalog character's turnaround
+in the chat by itself, so offering it as a text-only default would promise a match it can never
+deliver.
 
 The plugin ships `character-turnaround.png` (profile-01) and `mich-turnaround.png`
-(profile-02-mich), but it **cannot attach them for you** — a file path inside a plugin package
-is not an image the session can supply. Attach one and it becomes the authority; do not, and the
-episode either invents its own characters or holds the catalog one by description. It never blocks
-waiting for an image.
+(profile-02-mich). Image generation only uses images already in the chat, so when you pick one of
+those profiles the plugin gives you a download link (pinned to a release tag): download the image,
+attach it, and it becomes the authority. In Codex, where the plugin's files are on disk, it may
+load the image itself. If no image arrives, the episode holds the catalog character by
+description. It never blocks waiting for an image.
 
 **No profile is the default.** `.auto` does not take the suggested option at PROFILE: it loads the
 eligible profiles, drops the invalid and rejected ones, **draws one at random**, and locks it
@@ -130,7 +135,7 @@ bugtongph/
 
 **Minimal** — `.img`, then approve through four gated steps: `RIDDLE → SCRIPTS → IMAGE →
 CLIPS`. One riddle at a time (with reroll), three scripts to pick from, one image, then one
-or two copy-ready Veo prompts. No stages, no checkpoints, no channels, no persisted state.
+to three copy-ready Veo prompts. No stages, no checkpoints, no channels, no persisted state.
 See `skills/bugtongph-quick/`.
 
 **Staged** — `.auto`, or the same stages one at a time, in one of two content pipelines:
@@ -258,23 +263,23 @@ Never commit an installed copy, and never edit a build output.
 
 ## Commands
 
-Minimal: `.img` (`.img reroll`), `.veo` (`.veo 1` / `.veo 2`)
+Minimal: `.img` (`.img reroll`), `.veo` (`.veo 1` / `.veo 2` / `.veo 3`)
 
 Staged:
 
-`.auto` `.riddle` `.topic` `.location` `.environment` `.profile` `.script` `.frame` `.overview`
+`.auto` `.auto draft` `.riddle` `.topic` `.location` `.environment` `.profile` `.script` `.frame` `.overview`
 `.image` `.clips` `.produce` `.channel` `.release` `.workflow`
 
 The two sets ship in one plugin and are always both loaded, so these rules decide which answers:
 `.img` and `.veo` always mean the **minimal** flow, and everything else — a bare `.auto`, any
 staged command, a plain "make me a bugtong video", a resumed episode — means the **staged** one.
-`.clips` and `.veo` are not the same command: `.clips` builds both prompts from the validated
+`.clips` and `.veo` are not the same command: `.clips` builds the prompts from the validated
 shot-reference sheet, `.veo` produces them from a plain quick-path image.
 
 ### Clip prompts are whole prompts
 
-`.clips` returns **two complete, independently pasteable prompts**. Neither one refers to the other:
-Clip 2 is a text-only Extend, but it restates everything it inherits — the shared preamble, the
+`.clips` returns **one complete, independently pasteable prompt per clip** (1–3). None refers to
+another: Clips 2 and 3 are text-only Extends, but each restates everything it inherits — the shared preamble, the
 inherited visual state, the inherited audio state — so it can be pasted on its own. A prompt that
 says "continue from the final frame" and stops is a note about a prompt, not an artifact.
 

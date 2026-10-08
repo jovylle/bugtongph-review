@@ -551,7 +551,7 @@ For bugtongPH:
 
 - OLD MAN always uses a consistent elderly male voice identity.
 - KID always uses a consistent youthful male voice identity.
-- The voice identity must remain consistent between Clip 1 and Clip 2.
+- The voice identity must remain consistent across every clip (Clip 1 through Clip 3).
 - Never swap the characters' voices.
 - Do not invent a specific TTS provider, commercial voice ID, or model ID
   unless one has been explicitly supplied by the production workflow.
@@ -667,7 +667,7 @@ Consider:
 - hesitation
 - pronunciation of longer words
 
-As a practical guideline, allow approximately **1.5 to 2.2 words per second** for natural conversational Filipino dialogue (slow deliberate delivery: 1.4–1.7). See `tagalog-pacing.md` for the full breakdown and the budget overhead table.
+As a practical guideline, allow approximately **1.8 to 2.2 words per second** for natural conversational Filipino dialogue (slow, deliberate delivery such as the riddle: 1.4–1.7). See `tagalog-pacing.md` for the full breakdown and the budget overhead table.
 
 Available clip duration is not equal to available dialogue duration.
 
@@ -1117,7 +1117,7 @@ Do not make Clip 2 start with a different acoustic environment without a
 story reason.
 
 If clips are generated independently, describe the same environmental audio
-character in both prompts, but do not claim that this guarantees identical
+character in every prompt, but do not claim that this guarantees identical
 waveform continuity.
 
 Do not introduce an unrelated sound merely to make a cut feel dramatic.
@@ -1147,9 +1147,10 @@ Do not change:
 
 Do not introduce a different visual style halfway through the clip.
 
-Do not let the look slip into a smooth 3D/CGI, plastic, clay, or airbrushed finish. These
-characters are photographed paper: cut edges, layered surfaces, folds, fibres, matte finish, and
-handmade asymmetry.
+Do not let the look slip into a render family the locked profile forbids. For a papercraft
+profile that means no smooth 3D/CGI, plastic, clay, or airbrushed finish: these characters are
+photographed paper — cut edges, layered surfaces, folds, fibres, matte finish, and handmade
+asymmetry.
 
 The visual reference panels may contain different camera framings, but they must still look like the same physical papercraft world.
 
@@ -1528,7 +1529,7 @@ Before giving the user a Veo prompt, verify:
 - Are their identities consistent with the supplied image — face, build, proportions?
 - Are their faces consistent with the supplied image rather than with a written description?
 - Are their clothing and accessories consistent?
-- Does the material still read as photographed paper, not smooth 3D/CGI?
+- Does the material still read as the locked profile's material (photographed paper for a papercraft profile), not a family it forbids?
 - Is any prompt section re-describing a face, build, clothing, or material the image already
   shows? If yes, cut the description — it is an instruction to rebuild the character.
 - Is there any unnecessary character transformation?
@@ -1590,13 +1591,13 @@ Before giving the user a Veo prompt, verify:
 - Is the voice assigned to the correct character?
 - Is the Old Man clearly an elderly male voice?
 - Is the Kid clearly a youthful male voice?
-- Is each character's voice identity consistent across Clip 1 and Clip 2?
+- Is each character's voice identity consistent across every clip?
 - Are voices prevented from swapping between characters?
-- Is dialogue paced naturally at approximately 1.5–2.2 conversational Tagalog words per second (see `tagalog-pacing.md`)?
+- Is dialogue paced naturally at approximately 1.8–2.2 conversational Tagalog words per second, and the riddle at 1.4–1.7 (see `tagalog-pacing.md`)?
 - Is there enough time for breathing and pauses?
 - Is there enough time for listener processing and reaction?
 - Does Clip 1 end on a stable audio state rather than an avoidable speech cutoff?
-- Does Clip 2 inherit the final audio state of Clip 1?
+- Does each Extend inherit the final audio state of the clip before it?
 - Is environmental ambience consistent across the clip transition?
 - Is environmental ambience believable?
 - Is background music minimal or absent unless requested?
