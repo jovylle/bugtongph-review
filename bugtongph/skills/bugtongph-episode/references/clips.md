@@ -2,15 +2,16 @@
 
 ## Core contract
 
-Return exactly **two independently copy-ready prompts** and nothing that substitutes for them.
+Return **one, two, or three independently copy-ready prompts** — one per clip in the episode's
+locked clip count — and nothing that substitutes for them.
 
 **Each prompt stands alone.** The reader pastes one prompt into Google Flow with no other text. A
 prompt that says "continue from the final frame", "as before", "same as above", or otherwise leans
-on the sibling clip is not an artifact — it is a note about one. Clip 2 is still a text-only Extend,
-but every state it inherits is *restated in full* (see "Clip 2 — Extend continuation"); the
-inheritance is never referred to. Each prompt also carries the whole shared preamble — REFERENCE
-AUTHORITY, MATERIAL REALITY, the supplemental text rule and the speaker roster — so neither one
-depends on the other having been read first.
+on another clip is not an artifact — it is a note about one. Clips 2 and 3 are text-only Extends,
+but every state each inherits is *restated in full* (see "Clip 2 — Extend continuation" and "Clip 3
+— second Extend"); the inheritance is never referred to. Each prompt also carries the whole shared
+preamble — REFERENCE AUTHORITY, MATERIAL REALITY, the supplemental text rule and the speaker
+roster — so no prompt depends on another having been read first.
 
 The final prompts must instantiate actual episode details from the locked subject (RIDDLE or TOPIC) + LOCATION + ENVIRONMENT + PROFILE + SCRIPT + FRAME + the validated IMAGE sheet. Do not merely list generic prompt categories.
 
@@ -25,6 +26,7 @@ Never invoke image generation during `.clips`.
 For a normal multi-shot dialogue scene:
 - Clip 1 target: **700–1200 words**.
 - Clip 2 target: **600–1000 words**.
+- Clip 3 target: **600–1000 words** (3-clip episodes only).
 
 Shorter prompts are acceptable only when the scene is genuinely simple, but every applicable requirement below must still be explicitly instantiated. Do not add filler to reach a word count. Specificity is the priority.
 
@@ -54,6 +56,9 @@ transition, and audio state. Fit every shot plus the dialogue into the 8-second 
 For Clip 2, plan a text-only Extend from the exact final visual and audio state of Clip 1 —
 especially the final second. Never invent Clip 2 panels, and never carry a plan across a
 rejected or replaced image.
+
+For Clip 3 (3-clip episodes only), plan a second text-only Extend from the exact final visual
+and audio state of Clip 2. Clip 3 never invents new panels and never refers to Clip 1 directly.
 
 ## Clip 1 — Ingredient/reference video
 
@@ -206,6 +211,44 @@ shorten Clip 2 into a note about Clip 1.
 10. **CONTINUITY NEGATIVES** — prohibit restarting the scene, redesigning characters, re-rendering or generic-izing faces, changing build or proportions, changing clothing, changing the locked material into another render family, teleporting, resetting props, changing time/weather, changing art style, changing ambience without cause, or introducing new visual concepts.
 11. **FINAL END STATE** — define the exact physical, emotional, camera, dialogue, and audio state at the end of Clip 2.
 
+## Clip 3 — second Extend (3-clip episodes only)
+
+Clip 3 is a **text-only Extend** from the completed Clip 2 video. It is included only when the
+episode's locked clip count is 3. It follows the same rules and structure as Clip 2, inheriting
+from Clip 2's final second instead of Clip 1's.
+
+The shared preamble (REFERENCE AUTHORITY, MATERIAL REALITY, supplemental text rule, speaker
+roster) is repeated in full. The inherited state from Clip 2's final second is written out in
+full. Nothing may be assumed or referred to by name from Clip 1 or Clip 2.
+
+### Required sections
+
+Same 11 sections as Clip 2 — apply them to Clip 3 in exactly the same way, with "Clip 2" as the
+source and "Clip 3" as the current prompt:
+
+1. **EXTEND MASTER INSTRUCTION** — state this is a direct continuation of Clip 2, not a restart;
+   restate MATERIAL REALITY verbatim from the locked profile.
+2. **INHERITED VISUAL STATE** — the exact final-second character positions, pose, gaze, expression,
+   clothing, props, environment, lighting, scale, art/material language, and camera state from
+   Clip 2. State that this inherited state is the visual authority; faces and material carry over
+   unchanged.
+3. **INHERITED AUDIO STATE** — the final ambience, speaker/voice state, completed line or silence,
+   breath, reaction, and acoustic environment at the Clip 2 handoff.
+4. **CONTINUATION START STATE** — exactly where and how the first frame of Clip 3 begins.
+5. **CONTINUATION ACTION** — the next approved action or interaction, including physical causality.
+6. **CAMERA PLAN** — whether the camera holds, gently reframes, or performs one concrete planned
+   move.
+7. **DIALOGUE / VOICE PLAN** — next speaker by exact uppercase roster label, exact approved line,
+   voice characteristics, delivery, and expected completion time.
+8. **TIMING MAP** — budget the 8 seconds across continuation, dialogue, pauses/reactions, movement,
+   and final beat.
+9. **SUBJECT INTEGRITY** — riddle pipeline: continue to hide the answer; topic pipeline: hold the
+   same topic and angle.
+10. **CONTINUITY NEGATIVES** — same prohibitions as Clip 2: no restarts, no redesigns, no
+    re-renders, no resets, no new visual concepts.
+11. **FINAL END STATE** — the exact physical, emotional, camera, dialogue, and audio state at the
+    end of Clip 3.
+
 ## Speaker attribution — one mouth at a time
 
 Veo assigns speech from the prompt, so an ambiguous prompt gets the line wrong. These rules are
@@ -258,5 +301,8 @@ CLIP 1 — GOOGLE FLOW / VEO PROMPT
 [full copy-ready prompt]
 
 CLIP 2 — GOOGLE FLOW / VEO EXTEND PROMPT
+[full copy-ready prompt]
+
+CLIP 3 — GOOGLE FLOW / VEO EXTEND PROMPT  ← 3-clip episodes only
 [full copy-ready prompt]
 ```

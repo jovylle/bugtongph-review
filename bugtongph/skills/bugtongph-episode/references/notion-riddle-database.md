@@ -6,9 +6,9 @@ before any `.riddle`, `.script` auto-entry, `.auto`, or `.auto fresh` run.
 ## Source of truth
 
 The only permitted riddle source is the connected Notion database named
-`bugtongPH Riddle Database`. It is exposed through the bundled `notion` MCP server
-declared in the plugin's `mcp.json` / `.mcp.json`. If that server is not connected or
-not authenticated, RIDDLE blocks — see "Blocked states" below.
+`bugtongPH Riddle Database`. It is accessible through the registered Notion app declared
+in the plugin's `.app.json`. If the Notion app connection is not available or not
+authenticated, RIDDLE falls back to the bundled set — see "Blocked states" below.
 
 ## Resolving the database
 
@@ -65,7 +65,7 @@ Notion being unavailable is **no longer a blocker** — the picker falls back to
 
 Report the blocker and stop at RIDDLE only when:
 
-- the `notion` MCP server is unavailable or unauthenticated **and** `assets/riddles.json` cannot
+- the Notion app connection is unavailable or unauthenticated **and** `assets/riddles.json` cannot
   be read;
 - the `bugtongPH Riddle Database` resolves but returns no record with usable riddle text **and**
   the bundled set is exhausted or unreadable.

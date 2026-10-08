@@ -7,7 +7,7 @@ memory of prior work.
 
 | Thing | Path |
 | --- | --- |
-| Repo (everything) | `/Users/jovyllebermudez/fore/lab/bugtongph-review` |
+| Repo (everything) | `/Users/jovylle.bermudez/foreAcn/lab/bugtongph-review` |
 | Remote | `https://github.com/jovylle/bugtongph-review` (public) |
 | Plugin source tree — **the only place you edit** | `bugtongph/` |
 | Episode skill (staged pipeline) | `bugtongph/skills/bugtongph-episode/SKILL.md` + `references/*.md` (27 files) |
@@ -63,11 +63,13 @@ previously cached copy.
 7. **The status line is the stage line only.** No channel, release, or workflow.
 8. **Veo 3.1 Lite is the only target.** Veo 3.2 is not in Flow; do not target it.
 9. **At CLIPS the validated sheet is the character authority**, above the attached turnaround and
-   above the written profile. Both clip prompts open with a REFERENCE AUTHORITY block and a
-   MATERIAL REALITY block (real paper sculptures photographed in a real set; smooth CGI, plastic,
-   clay, and airbrushed surfaces forbidden), and no section may restate a face, build, clothing
-   construction, or material the sheet already shows. A returned clip is compared against the
-   sheet before continuing — see `clips.md` "Clip acceptance".
+   above the written profile. Every clip prompt opens with a REFERENCE AUTHORITY block and a
+   MATERIAL REALITY block — the material block is **instantiated from the locked PROFILE**, not
+   hardcoded to paper. A papercraft profile uses the paper wording; any other profile states its
+   own material as the same kind of physical fact and forbids the render families that would replace
+   it. No section may restate a face, build, clothing construction, or material the sheet already
+   shows. A returned clip is compared against the sheet before continuing — see `clips.md` "Clip
+   acceptance".
 10. **The environment is part of what the episode shows.** Locations are chosen for what they look
    like at their best, conditions are chosen for what the light does to the place, and at least one
    strip gives the environment real room. Beauty comes from the locked light, depth, and atmosphere

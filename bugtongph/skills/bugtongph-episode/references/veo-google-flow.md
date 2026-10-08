@@ -511,7 +511,7 @@ For bugtongPH use:
 
 ```text
 OLD MAN: "..."
-KID WITH BLUE NECK SCARF: "..."
+KID: "..."
 ```
 
 Never use ambiguous dialogue such as:
@@ -550,8 +550,7 @@ requirement.
 For bugtongPH:
 
 - OLD MAN always uses a consistent elderly male voice identity.
-- KID WITH BLUE NECK SCARF always uses a consistent youthful male voice
-  identity.
+- KID always uses a consistent youthful male voice identity.
 - The voice identity must remain consistent between Clip 1 and Clip 2.
 - Never swap the characters' voices.
 - Do not invent a specific TTS provider, commercial voice ID, or model ID
@@ -668,7 +667,7 @@ Consider:
 - hesitation
 - pronunciation of longer words
 
-As a practical guideline, allow approximately **2.5 to 3.5 words per second** for clear conversational Filipino dialogue.
+As a practical guideline, allow approximately **1.5 to 2.2 words per second** for natural conversational Filipino dialogue (slow deliberate delivery: 1.4–1.7). See `tagalog-pacing.md` for the full breakdown and the budget overhead table.
 
 Available clip duration is not equal to available dialogue duration.
 
@@ -1433,7 +1432,7 @@ environment, lighting, and camera composition — and for the face, build, cloth
 construction, and surface material, which the text must not restate.
 
 PANEL 1 / SHOT 1:
-The shot begins with OLD MAN on the left and KID WITH BLUE NECK SCARF on the right, matching the supplied panel exactly.
+The shot begins with OLD MAN on the left and KID on the right, matching the supplied panel exactly.
 ...
 ```
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.10.15 — five bugs fixed, Clip 3 documented
+
+Five cross-file inconsistencies fixed, and the 3-clip CLIPS contract completed.
+
+### Fixed
+
+- **Stale pacing figure in `veo-google-flow.md` §12** — "2.5 to 3.5 words per second" replaced
+  with the correct 1.5–2.2 w/s (slow deliberate: 1.4–1.7). §12 now matches §30 of the same file
+  and `tagalog-pacing.md`.
+- **Stale MCP reference in `notion-riddle-database.md`** — two occurrences of "bundled `notion`
+  MCP server declared in `mcp.json` / `.mcp.json`" replaced with the correct description: the
+  registered Notion app declared in `.app.json` (the MCP path was removed in 0.8.0).
+- **Wrong speaker label in `veo-google-flow.md` §11 and §11.1 and the example prompt** — three
+  occurrences of `KID WITH BLUE NECK SCARF` used as a speaker label replaced with `KID`, matching
+  all authority files (`clips.md`, `script.md`, `identity.md`, `veo-prompt.md`).
+- **Hardcoded paper MATERIAL REALITY in `HANDOFF.md` non-negotiable #9** — updated to say the
+  block is instantiated from the locked PROFILE, not hardcoded to paper. Paper is the default for
+  papercraft profiles; any other profile states its own material (stale since 0.10.13).
+- **Wrong repo path in `HANDOFF.md` top table** — corrected from
+  `/Users/jovyllebermudez/fore/lab/bugtongph-review` to
+  `/Users/jovylle.bermudez/foreAcn/lab/bugtongph-review`.
+
+### Added
+
+- **Clip 3 contract in `clips.md`** — the 3-clip CLIPS case was documented in `tagalog-pacing.md`
+  and `script.md` but `clips.md` only defined Clip 1 and Clip 2. Added: core contract updated from
+  "exactly two" to "one, two, or three"; shot-plan guidance for Clip 3; a full "Clip 3 — second
+  Extend" section with all 11 required sections; Clip 3 word-count target (600–1000 words); and
+  the optional Clip 3 block in the final output format.
+
+---
+
 ## 0.10.14 — the reference image is portrait, and every panel is a different angle
 
 Two changes to the IMAGE stage, both aimed at the one thing that decides whether a clip matches the
